@@ -22,6 +22,7 @@
         >
           <v-text-field
             v-model="price"
+            type="number"
             :rules="priceRules"
             label="Purchace price"
             required
@@ -84,7 +85,15 @@ export default {
   },
   methods: {
     save () {
-      alert('Saved! NOT!')
+      const item = {
+        id: Date.now(),
+        name: this.name,
+        price: this.price,
+        date: this.date
+      }
+      this.$store.dispatch('addItem', item).then(() => {
+        this.$router.push('/')
+      })
     }
   }
 }
