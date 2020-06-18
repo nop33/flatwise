@@ -12,6 +12,8 @@
               :rules="rateRules"
               type="number"
               label="Annual depreciation rate (%)"
+              min="0"
+              max="100"
               required
             ></v-text-field>
           </v-col>
