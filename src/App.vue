@@ -5,11 +5,7 @@
       color="primary"
       dark
     >
-
-      <v-btn to="/add">
-        <v-icon>mdi-plus</v-icon>
-        <span>Add item</span>
-      </v-btn>
+      <v-toolbar-title>Flatwise</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
