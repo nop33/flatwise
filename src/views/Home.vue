@@ -83,25 +83,28 @@
             :headers="headers"
             :items="items"
             :items-per-page="20"
+            hide-default-footer
+            show-expand
             class="elevation-1"
           >
             <template v-slot:item.name="{ item }">
               <strong>{{ item.name }}</strong>
             </template>
-            <template v-slot:item.actions="{ item }">
-              <v-btn
-                icon
-                class="mr-5"
-                :to="`edit/${item.id}`"
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                @click="deleteItem(item)"
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+            <template v-slot:expanded-item="{ headers, item }">
+              <td :colspan="headers.length" class="text-right">
+                <v-btn
+                  class="mr-5 my-5 primary white--text"
+                  :to="`edit/${item.id}`"
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  class="my-5 red white--text"
+                  @click="deleteItem(item)"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </td>
             </template>
           </v-data-table>
         </v-col>
@@ -137,10 +140,10 @@ export default {
           value: 'name'
         },
         { text: 'Price (CHF)', value: 'price' },
-        { text: 'Purchace Date', value: 'date' },
-        { text: 'Number of days since purchace', value: 'noDaysBetween' },
+        { text: 'Purchace date', value: 'date' },
+        { text: 'Days since purchace', value: 'noDaysBetween' },
         { text: 'Price on move out date (CHF)', value: 'priceOnMoveOutDate' },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { value: 'data-table-expand' }
       ],
       // form data
       valid: false,
