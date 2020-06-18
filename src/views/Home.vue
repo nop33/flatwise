@@ -71,7 +71,7 @@
     </v-container>
     <v-btn
       fab
-      color="red"
+      color="red white--text"
       bottom
       right
       fixed
