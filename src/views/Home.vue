@@ -46,7 +46,7 @@
           >
             <v-text-field
               v-model="total"
-              label="Total"
+              label="Total (CHF)"
               readonly
             ></v-text-field>
           </v-col>
@@ -98,10 +98,10 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { text: 'Price', value: 'price' },
+        { text: 'Price (CHF)', value: 'price' },
         { text: 'Purchace Date', value: 'date' },
         { text: 'Number of days since purchace', value: 'noDaysBetween' },
-        { text: 'Price on move out date', value: 'priceOnMoveOutDate' }
+        { text: 'Price on move out date (CHF)', value: 'priceOnMoveOutDate' }
       ],
       // form data
       valid: false,
