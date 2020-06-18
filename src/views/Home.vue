@@ -61,7 +61,11 @@
             :items="items"
             :items-per-page="20"
             class="elevation-1"
-          ></v-data-table>
+          >
+            <template v-slot:item.name="{ item }">
+              <strong>{{ item.name }}</strong>
+            </template>
+          </v-data-table>
         </v-col>
       </v-row>
     </v-container>
