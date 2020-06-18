@@ -65,6 +65,16 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-btn
+      fab
+      color="red"
+      bottom
+      right
+      fixed
+      to="/add"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
   </div>
 </template>
 
