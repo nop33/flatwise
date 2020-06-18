@@ -55,10 +55,17 @@
       </v-row>
       <v-row>
         <v-btn
-          color="warning"
+          class="mr-2"
+          color="primary"
           @click="save"
         >
           Save
+        </v-btn>
+        <v-btn
+          color="warning"
+          to="/"
+        >
+          Cancel
         </v-btn>
       </v-row>
     </v-container>
