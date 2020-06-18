@@ -55,7 +55,7 @@
     </v-form>
     <v-container>
       <v-row justify="center">
-        <v-col md="8">
+        <v-col>
           <v-data-table
             :headers="headers"
             :items="items"
