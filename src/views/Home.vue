@@ -22,7 +22,7 @@
         <v-row>
           <v-col
             cols="12"
-            md="2"
+            md="4"
           >
             <v-text-field
               v-model="depreciationRate"
@@ -37,7 +37,7 @@
 
           <v-col
             cols="12"
-            md="2"
+            md="4"
           >
             <v-text-field
               v-model="lowestPriceRate"
@@ -72,17 +72,6 @@
               </template>
               <v-date-picker v-model="date" scrollable @input="$refs.dialog.save(date)"></v-date-picker>
             </v-dialog>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="total"
-              label="Total (CHF)"
-              readonly
-            ></v-text-field>
           </v-col>
         </v-row>
       </v-container>
