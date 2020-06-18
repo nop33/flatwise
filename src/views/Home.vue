@@ -82,6 +82,21 @@
             <template v-slot:item.name="{ item }">
               <strong>{{ item.name }}</strong>
             </template>
+            <template v-slot:item.actions="{ item }">
+              <v-btn
+                icon
+                class="mr-5"
+                :to="`edit/${item.id}`"
+              >
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn
+                icon
+                @click="deleteItem(item)"
+              >
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
           </v-data-table>
         </v-col>
       </v-row>
@@ -119,6 +134,7 @@ export default {
         { text: 'Purchace Date', value: 'date' },
         { text: 'Number of days since purchace', value: 'noDaysBetween' },
         { text: 'Price on move out date (CHF)', value: 'priceOnMoveOutDate' },
+        { text: 'Actions', value: 'actions', sortable: false }
       ],
       // form data
       valid: false,
@@ -154,8 +170,14 @@ export default {
     }
   },
   methods: {
+    deleteItem (item) {
+      confirm(`Are you sure you wanna delete the ${item.name}?`)
+      this.$store.dispatch('deleteItem', item)
+    },
     calculatePriceOnMoveOutDate (item, rate) {
-      return Math.floor(item.price - (item.noDaysBetween * (this.depreciationRate / 100 / 365) * item.price))
+      const lowestPrice = Math.floor(item.price * this.lowestPriceRate / 100)
+      const priceOnDate = Math.floor(item.price - (item.noDaysBetween * (this.depreciationRate / 100 / 365) * item.price))
+      return Math.max(priceOnDate, lowestPrice)
     },
     calculateNumberOfDaysOwned (date) {
       return Math.floor(daysBetween(date, this.date))

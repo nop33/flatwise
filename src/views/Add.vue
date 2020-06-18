@@ -9,7 +9,7 @@
           md="4"
         >
           <v-text-field
-            v-model="name"
+            v-model="item.name"
             :rules="nameRules"
             label="Item name"
             required
@@ -21,7 +21,7 @@
           md="4"
         >
           <v-text-field
-            v-model="price"
+            v-model="item.price"
             type="number"
             :rules="priceRules"
             label="Purchace price"
@@ -35,13 +35,13 @@
         >
           <v-dialog
             ref="dialog"
-            :return-value.sync="date"
+            :return-value.sync="item.date"
             persistent
             width="290px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="date"
+                v-model="item.date"
                 label="Purchace date"
                 prepend-icon="mdi-calendar"
                 readonly
@@ -49,7 +49,7 @@
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="date" scrollable @input="$refs.dialog.save(date)"></v-date-picker>
+            <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
           </v-dialog>
         </v-col>
       </v-row>
@@ -75,12 +75,15 @@
 
 <script>
 export default {
+  props: ['id'],
   data () {
     return {
       valid: false,
-      name: '',
-      price: 0,
-      date: new Date().toISOString().substr(0, 10),
+      item: {
+        name: '',
+        price: 0,
+        date: ''
+      },
       nameRules: [
         v => !!v || 'Name is required'
       ],
@@ -90,15 +93,13 @@ export default {
       ]
     }
   },
+  created () {
+    this.item = this.$store.getters.itemById(this.$props.id)
+  },
   methods: {
     save () {
-      const item = {
-        id: Date.now(),
-        name: this.name,
-        price: this.price,
-        date: this.date
-      }
-      this.$store.dispatch('addItem', item).then(() => {
+      const action = Object.prototype.hasOwnProperty.call(this.item, 'id') ? 'updateItem' : 'addItem'
+      this.$store.dispatch(action, this.item).then(() => {
         this.$router.push('/')
       })
     }
