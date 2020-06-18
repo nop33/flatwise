@@ -1,5 +1,22 @@
 <template>
   <div class="home">
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-card
+            class="mx-auto blue lighten-5"
+          >
+            <v-card-text>
+              <blockquote
+                class="blockquote"
+              >
+                If you move out on <strong>{{humanReadableDate}}</strong> you'll get back <strong>{{ total }} CHF</strong>
+              </blockquote>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
     <v-form v-model="valid">
       <v-container>
         <v-row>
@@ -167,6 +184,11 @@ export default {
         total += item.priceOnMoveOutDate
       })
       return total
+    },
+    humanReadableDate () {
+      const date = new Date(this.date)
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+      return new Intl.DateTimeFormat('en-GB', options).format(date)
     }
   },
   methods: {
