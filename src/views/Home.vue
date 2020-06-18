@@ -5,13 +5,28 @@
         <v-row>
           <v-col
             cols="12"
-            md="4"
+            md="2"
           >
             <v-text-field
               v-model="depreciationRate"
               :rules="rateRules"
               type="number"
               label="Annual depreciation rate (%)"
+              min="0"
+              max="100"
+              required
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="2"
+          >
+            <v-text-field
+              v-model="lowestPriceRate"
+              :rules="rateRules"
+              type="number"
+              label="Lowest price (%)"
               min="0"
               max="100"
               required
@@ -103,11 +118,12 @@ export default {
         { text: 'Price (CHF)', value: 'price' },
         { text: 'Purchace Date', value: 'date' },
         { text: 'Number of days since purchace', value: 'noDaysBetween' },
-        { text: 'Price on move out date (CHF)', value: 'priceOnMoveOutDate' }
+        { text: 'Price on move out date (CHF)', value: 'priceOnMoveOutDate' },
       ],
       // form data
       valid: false,
       depreciationRate: 20,
+      lowestPriceRate: 20,
       lastname: '',
       rateRules: [
         v => !!v || 'Rate is required',
