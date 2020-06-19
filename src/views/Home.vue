@@ -187,8 +187,10 @@ export default {
   },
   methods: {
     deleteItem (item) {
-      confirm(`Are you sure you wanna delete the ${item.name}?`)
-      this.$store.dispatch('deleteItem', item)
+      if (confirm(`Are you sure you wanna delete the ${item.name}?`)) {
+        this.items.splice(this.items.indexOf(this.items.find(i => i.id === item.id)), 1)
+        this.$store.dispatch('deleteItem', item)
+      }
     },
     calculatePriceOnMoveOutDate (item) {
       const lowestPrice = Math.floor(item.price * this.lowestPriceRate / 100)
