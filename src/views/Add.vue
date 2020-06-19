@@ -1,75 +1,78 @@
 <template>
   <div>
-    <h1>Add a new item</h1>
     <v-form v-model="valid">
-    <v-container>
-      <v-row>
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-text-field
-            v-model="item.name"
-            :rules="nameRules"
-            label="Item name"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-text-field
-            v-model="item.price"
-            type="number"
-            :rules="priceRules"
-            label="Purchace price"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-dialog
-            ref="dialog"
-            :return-value.sync="item.date"
-            persistent
-            width="290px"
+      <v-container>
+        <h1>Add a new item</h1>
+        <v-row>
+          <v-col
+            cols="12"
+            md="4"
           >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="item.date"
-                label="Purchace date"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
-          </v-dialog>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-btn
-          class="mr-2"
-          color="primary"
-          @click="save"
-        >
-          Save
-        </v-btn>
-        <v-btn
-          color="warning"
-          to="/"
-        >
-          Cancel
-        </v-btn>
-      </v-row>
-    </v-container>
-  </v-form>
+            <v-text-field
+              v-model="item.name"
+              :rules="nameRules"
+              label="Item name"
+              required
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-text-field
+              v-model="item.price"
+              type="number"
+              :rules="priceRules"
+              label="Purchace price"
+              suffix="CHF"
+              required
+            ></v-text-field>
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-dialog
+              ref="dialog"
+              :return-value.sync="item.date"
+              persistent
+              width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="item.date"
+                  label="Purchace date"
+                  append-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
+            </v-dialog>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-btn
+              class="mr-2"
+              color="primary"
+              @click="save"
+            >
+              Save
+            </v-btn>
+            <v-btn
+              color="warning"
+              to="/"
+            >
+              Cancel
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-form>
   </div>
 </template>
 

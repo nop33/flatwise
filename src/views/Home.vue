@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home mb-15">
     <v-container>
       <v-row>
         <v-col>
@@ -34,7 +34,7 @@
                 <v-text-field
                   v-model="moveOutDate"
                   label="Move out date"
-                  prepend-icon="mdi-calendar"
+                  append-icon="mdi-calendar"
                   readonly
                   v-bind="attrs"
                   v-on="on"
