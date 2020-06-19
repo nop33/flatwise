@@ -27,23 +27,27 @@ export default new Vuex.Store({
     ADD_ITEM (state, item) {
       state.items.push(item)
     },
-    UPDATE_ITEM (state, itemToUpdate) {
+    UPDATE_ITEM (state, itemData) {
+      const item = state.items.find(item => item.id === itemData.id)
+      item.name = itemData.name
+      item.price = itemData.price
+      item.date = itemData.date
       // update on firebase
     },
-    DELETE_ITEM (state, itemToDelete) {
-      state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemToDelete.id)), 1)
+    DELETE_ITEM (state, itemData) {
+      state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)
     }
   },
   actions: {
-    addItem ({ commit }, item) {
-      item.id = Date.now()
-      commit('ADD_ITEM', item)
+    addItem ({ commit }, itemData) {
+      itemData.id = Date.now()
+      commit('ADD_ITEM', itemData)
     },
-    updateItem ({ commit }, item) {
-      commit('UPDATE_ITEM', item)
+    updateItem ({ commit }, itemData) {
+      commit('UPDATE_ITEM', itemData)
     },
-    deleteItem ({ commit }, item) {
-      commit('DELETE_ITEM', item)
+    deleteItem ({ commit }, itemData) {
+      commit('DELETE_ITEM', itemData)
     }
   },
   modules: {

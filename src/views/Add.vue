@@ -81,7 +81,7 @@ export default {
       valid: false,
       item: {
         name: '',
-        price: 0,
+        price: '',
         date: ''
       },
       nameRules: [
@@ -94,7 +94,9 @@ export default {
     }
   },
   created () {
-    this.item = this.$store.getters.itemById(this.$props.id)
+    if (this.$props.id) {
+      this.item = { ...this.$store.getters.itemById(this.$props.id) }
+    }
   },
   methods: {
     save () {
