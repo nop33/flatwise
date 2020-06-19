@@ -5,6 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    depreciationRate: 20,
+    lowestPriceRate: 20,
     items: [
       {
         id: 1,
@@ -36,6 +38,10 @@ export default new Vuex.Store({
     },
     DELETE_ITEM (state, itemData) {
       state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)
+    },
+    UPDATE_SETTINGS (state, settingsData) {
+      state.depreciationRate = settingsData.depreciationRate
+      state.lowestPriceRate = settingsData.lowestPriceRate
     }
   },
   actions: {
@@ -48,6 +54,9 @@ export default new Vuex.Store({
     },
     deleteItem ({ commit }, itemData) {
       commit('DELETE_ITEM', itemData)
+    },
+    updateSettings ({ commit }, settingsData) {
+      commit('UPDATE_SETTINGS', settingsData)
     }
   },
   modules: {

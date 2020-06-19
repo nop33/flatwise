@@ -20,6 +20,11 @@ const routes = [
     name: 'Edit',
     props: route => ({ id: +route.params.id }), // cast to number
     component: () => import(/* webpackChunkName: "edit" */ '../views/Add.vue')
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
   }
 ]
 

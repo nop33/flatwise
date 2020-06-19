@@ -24,36 +24,6 @@
             cols="12"
             md="4"
           >
-            <v-text-field
-              v-model.number="depreciationRate"
-              :rules="rateRules"
-              type="number"
-              label="Annual depreciation rate (%)"
-              min="0"
-              max="100"
-              required
-            ></v-text-field>
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-text-field
-              v-model.number="lowestPriceRate"
-              :rules="rateRules"
-              type="number"
-              label="Lowest price (%)"
-              min="0"
-              max="100"
-              required
-            ></v-text-field>
-          </v-col>
-
-        <v-col
-            cols="12"
-            md="4"
-          >
             <v-dialog
               ref="dialog"
               :return-value.sync="moveOutDate"
@@ -132,6 +102,7 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
@@ -155,12 +126,6 @@ export default {
 
       // form data
       valid: false,
-      depreciationRate: 20,
-      lowestPriceRate: 20,
-      rateRules: [
-        v => !!v || 'Rate is required',
-        v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
-      ],
       moveOutDate: new Date().toISOString().substr(0, 10),
       dateRules: [
         v => !!v || 'Date is required'
@@ -169,6 +134,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['depreciationRate', 'lowestPriceRate']),
     total () {
       let total = 0
       this.items.forEach(item => {
