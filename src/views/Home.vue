@@ -10,7 +10,7 @@
               <blockquote
                 class="blockquote"
               >
-                If you move out on <strong>{{humanReadableDate}}</strong> you'll get back <strong>{{ total }} CHF</strong>
+                If you move out on <strong>{{ humanReadableMoveOutDate }}</strong> you'll get back <strong>{{ total }} CHF</strong>
               </blockquote>
             </v-card-text>
           </v-card>
@@ -25,7 +25,7 @@
             md="4"
           >
             <v-text-field
-              v-model="depreciationRate"
+              v-model.number="depreciationRate"
               :rules="rateRules"
               type="number"
               label="Annual depreciation rate (%)"
@@ -40,7 +40,7 @@
             md="4"
           >
             <v-text-field
-              v-model="lowestPriceRate"
+              v-model.number="lowestPriceRate"
               :rules="rateRules"
               type="number"
               label="Lowest price (%)"
@@ -56,13 +56,13 @@
           >
             <v-dialog
               ref="dialog"
-              :return-value.sync="date"
+              :return-value.sync="moveOutDate"
               persistent
               width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="date"
+                  v-model="moveOutDate"
                   label="Move out date"
                   prepend-icon="mdi-calendar"
                   readonly
@@ -70,7 +70,7 @@
                   v-on="on"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="date" scrollable @input="$refs.dialog.save(date)"></v-date-picker>
+              <v-date-picker v-model="moveOutDate" scrollable @input="$refs.dialog.save(moveOutDate)"></v-date-picker>
             </v-dialog>
           </v-col>
         </v-row>
@@ -90,19 +90,25 @@
             <template v-slot:item.name="{ item }">
               <strong>{{ item.name }}</strong>
             </template>
+            <template v-slot:item.noDaysBetween="{ item }">
+              {{ calculateNumberOfDaysOwned(item.date) }}
+            </template>
+            <template v-slot:item.priceOnMoveOutDate="{ item }">
+              {{ calculatePriceOnMoveOutDate(item) }}
+            </template>
             <template v-slot:expanded-item="{ headers, item }">
               <td :colspan="headers.length" class="text-right">
                 <v-btn
                   class="mr-5 my-5 primary white--text"
                   :to="`edit/${item.id}`"
                 >
-                  <v-icon>mdi-pencil</v-icon>
+                  <v-icon left>mdi-pencil</v-icon> Edit
                 </v-btn>
                 <v-btn
                   class="my-5 red white--text"
                   @click="deleteItem(item)"
                 >
-                  <v-icon>mdi-delete</v-icon>
+                  <v-icon left>mdi-delete</v-icon> Delete
                 </v-btn>
               </td>
             </template>
@@ -132,6 +138,7 @@ export default {
   data () {
     return {
       // table data
+      items: [],
       headers: [
         {
           text: 'Item',
@@ -145,16 +152,16 @@ export default {
         { text: 'Price on move out date (CHF)', value: 'priceOnMoveOutDate' },
         { value: 'data-table-expand' }
       ],
+
       // form data
       valid: false,
       depreciationRate: 20,
       lowestPriceRate: 20,
-      lastname: '',
       rateRules: [
         v => !!v || 'Rate is required',
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ],
-      date: new Date().toISOString().substr(0, 10),
+      moveOutDate: new Date().toISOString().substr(0, 10),
       dateRules: [
         v => !!v || 'Date is required'
         // TODO: Add rule to not allow past dates
@@ -162,39 +169,34 @@ export default {
     }
   },
   computed: {
-    items () {
-      const items = [...this.$store.state.items]
-      items.forEach(item => {
-        item.noDaysBetween = this.calculateNumberOfDaysOwned(item.date)
-        item.priceOnMoveOutDate = this.calculatePriceOnMoveOutDate(item)
-      })
-      return items
-    },
     total () {
       let total = 0
       this.items.forEach(item => {
-        total += item.priceOnMoveOutDate
+        total += this.calculatePriceOnMoveOutDate(item)
       })
       return total
     },
-    humanReadableDate () {
-      const date = new Date(this.date)
+    humanReadableMoveOutDate () {
+      const date = new Date(this.moveOutDate)
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
       return new Intl.DateTimeFormat('en-GB', options).format(date)
     }
+  },
+  created () {
+    this.items = this.$store.state.items.map(item => ({ ...item }))
   },
   methods: {
     deleteItem (item) {
       confirm(`Are you sure you wanna delete the ${item.name}?`)
       this.$store.dispatch('deleteItem', item)
     },
-    calculatePriceOnMoveOutDate (item, rate) {
+    calculatePriceOnMoveOutDate (item) {
       const lowestPrice = Math.floor(item.price * this.lowestPriceRate / 100)
-      const priceOnDate = Math.floor(item.price - (item.noDaysBetween * (this.depreciationRate / 100 / 365) * item.price))
+      const priceOnDate = Math.floor(item.price - (this.calculateNumberOfDaysOwned(item.date) * (this.depreciationRate / 100 / 365) * item.price))
       return Math.max(priceOnDate, lowestPrice)
     },
     calculateNumberOfDaysOwned (date) {
-      return Math.floor(daysBetween(date, this.date))
+      return Math.floor(daysBetween(date, this.moveOutDate))
     }
   }
 }
