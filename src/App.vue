@@ -5,7 +5,14 @@
       color="primary"
       dark
     >
-      <v-toolbar-title>Flatwise</v-toolbar-title>
+      <v-toolbar-title>
+        <router-link
+          to="/"
+          class="white--text text-decoration-none"
+        >
+          Flatwise
+        </router-link>
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
