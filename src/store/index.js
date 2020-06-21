@@ -14,9 +14,7 @@ export default new Vuex.Store({
   },
   mutations: {
     ADD_ITEM (state, itemToAdd) {
-      if (!state.items.find(item => item.id === itemToAdd.id)) {
-        state.items.push(itemToAdd)
-      }
+      state.items.push(itemToAdd)
     },
     UPDATE_ITEM (state, itemData) {
       const item = state.items.find(item => item.id === itemData.id)
@@ -31,6 +29,9 @@ export default new Vuex.Store({
     UPDATE_SETTINGS (state, settingsData) {
       state.depreciationRate = settingsData.depreciationRate
       state.lowestPriceRate = settingsData.lowestPriceRate
+    },
+    INITIALIZE_STORE (state, items) {
+      state.items = items
     }
   },
   actions: {
@@ -46,6 +47,9 @@ export default new Vuex.Store({
     },
     updateSettings ({ commit }, settingsData) {
       commit('UPDATE_SETTINGS', settingsData)
+    },
+    initializeStore ({ commit }, items) {
+      commit('INITIALIZE_STORE', items)
     }
   },
   modules: {

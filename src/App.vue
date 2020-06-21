@@ -25,9 +25,24 @@
 
     </v-app-bar>
 
-    <v-content>
-       <router-view></router-view>
-    </v-content>
+    <v-main>
+        <router-view v-if="!loading"></router-view>
+        <v-container fill-height fluid v-else>
+          <v-row
+            align="center"
+            justify="center"
+          >
+            <v-col>
+              <v-progress-circular
+                :size="50"
+                color="primary"
+                indeterminate
+                align="center"
+              ></v-progress-circular>
+            </v-col>
+          </v-row>
+        </v-container>
+    </v-main>
   </v-app>
 </template>
 
@@ -36,7 +51,18 @@ export default {
   name: 'App',
 
   data: () => ({
-    //
-  })
+    loading: true
+  }),
+  created () {
+    this.$db.items.get().then(response => {
+      const items = response.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+      }))
+      this.$store.dispatch('initializeStore', items).then(() => {
+        this.loading = false
+      })
+    })
+  }
 }
 </script>
