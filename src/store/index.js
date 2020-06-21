@@ -7,27 +7,16 @@ export default new Vuex.Store({
   state: {
     depreciationRate: 20,
     lowestPriceRate: 20,
-    items: [
-      {
-        id: 1,
-        name: 'Sofa',
-        price: 1250,
-        date: '2019-08-01'
-      },
-      {
-        id: 2,
-        name: 'Balcony rug',
-        price: 70,
-        date: '2020-06-01'
-      }
-    ]
+    items: []
   },
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId)
   },
   mutations: {
-    ADD_ITEM (state, item) {
-      state.items.push(item)
+    ADD_ITEM (state, itemToAdd) {
+      if (!state.items.find(item => item.id === itemToAdd.id)) {
+        state.items.push(itemToAdd)
+      }
     },
     UPDATE_ITEM (state, itemData) {
       const item = state.items.find(item => item.id === itemData.id)
