@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    loading: true,
     depreciationRate: 20,
     lowestPriceRate: 20,
     items: []
@@ -32,12 +33,20 @@ export default new Vuex.Store({
     },
     INITIALIZE_STORE (state, items) {
       state.items = items
+    },
+    TOGGLE_LOADER (state, toggle) {
+      state.loading = toggle
     }
   },
   actions: {
     addItem ({ commit }, itemData) {
-      itemData.id = Date.now()
-      commit('ADD_ITEM', itemData)
+      commit('TOGGLE_LOADER', true)
+      const id = Date.now()
+      Vue.prototype.$db.items.doc(`${id}`).set(itemData).then(() => {
+        itemData.id = id
+        commit('ADD_ITEM', itemData)
+        commit('TOGGLE_LOADER', false)
+      })
     },
     updateItem ({ commit }, itemData) {
       commit('UPDATE_ITEM', itemData)
@@ -50,6 +59,9 @@ export default new Vuex.Store({
     },
     initializeStore ({ commit }, items) {
       commit('INITIALIZE_STORE', items)
+    },
+    toggleLoader ({ commit }, toggle) {
+      commit('TOGGLE_LOADER', toggle)
     }
   },
   modules: {

@@ -47,12 +47,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'App',
-
-  data: () => ({
-    loading: true
-  }),
+  computed: {
+    ...mapState(['loading'])
+  },
   created () {
     this.$db.items.get().then(response => {
       const items = response.docs.map(doc => ({
@@ -60,7 +61,7 @@ export default {
         id: doc.id
       }))
       this.$store.dispatch('initializeStore', items).then(() => {
-        this.loading = false
+        this.$store.dispatch('toggleLoader', false)
       })
     })
   }
