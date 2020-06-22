@@ -1,6 +1,6 @@
 <template>
   <div class="home mb-15">
-    <v-container>
+    <v-container v-if="flatmateMovingOut">
       <v-row>
         <v-col>
           <v-card
@@ -10,7 +10,7 @@
               <blockquote
                 class="blockquote"
               >
-                If you move out on <strong>{{ humanReadableMoveOutDate }}</strong> you'll get back <strong>{{ total }} CHF</strong>
+                When {{ flatmateMovingOut }} moves out on <strong>{{ humanReadableMoveOutDate }}</strong> they'll get back <strong>{{ total }} CHF</strong>
               </blockquote>
             </v-card-text>
           </v-card>
@@ -42,6 +42,16 @@
               </template>
               <v-date-picker v-model="moveOutDate" scrollable @input="$refs.dialog.save(moveOutDate)"></v-date-picker>
             </v-dialog>
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <v-select
+              :items="flatmates"
+              label="Who is leaving?"
+              v-model="flatmateMovingOut"
+            ></v-select>
           </v-col>
         </v-row>
       </v-container>
@@ -130,14 +140,16 @@ export default {
       dateRules: [
         v => !!v || 'Date is required'
         // TODO: Add rule to not allow past dates
-      ]
+      ],
+      flatmates: [],
+      flatmateMovingOut: ''
     }
   },
   computed: {
     ...mapState(['depreciationRate', 'lowestPriceRate']),
     total () {
       let total = 0
-      this.items.forEach(item => {
+      this.items.filter(item => item.shareAmongst.includes(this.flatmateMovingOut)).forEach(item => {
         total += this.calculatePriceOnMoveOutDate(item)
       })
       return total
@@ -150,6 +162,7 @@ export default {
   },
   created () {
     this.items = this.$store.state.items.map(item => ({ ...item }))
+    this.flatmates = [...this.$store.state.flatmates]
   },
   methods: {
     deleteItem (item) {
