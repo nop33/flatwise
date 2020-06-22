@@ -8,7 +8,7 @@ export default new Vuex.Store({
     loading: true,
     depreciationRate: 20,
     lowestPriceRate: 20,
-    items: []
+    items: [] // will be filled from firestore
   },
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId)
@@ -22,7 +22,6 @@ export default new Vuex.Store({
       item.name = itemData.name
       item.price = itemData.price
       item.date = itemData.date
-      // update on firebase
     },
     DELETE_ITEM (state, itemData) {
       state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)
@@ -49,10 +48,19 @@ export default new Vuex.Store({
       })
     },
     updateItem ({ commit }, itemData) {
-      commit('UPDATE_ITEM', itemData)
+      commit('TOGGLE_LOADER', true)
+      const { id, ...data } = itemData
+      Vue.prototype.$db.items.doc(id).set(data).then(() => {
+        commit('UPDATE_ITEM', itemData)
+        commit('TOGGLE_LOADER', false)
+      })
     },
     deleteItem ({ commit }, itemData) {
-      commit('DELETE_ITEM', itemData)
+      commit('TOGGLE_LOADER', true)
+      Vue.prototype.$db.items.doc(itemData.id).delete().then(() => {
+        commit('DELETE_ITEM', itemData)
+        commit('TOGGLE_LOADER', false)
+      })
     },
     updateSettings ({ commit }, settingsData) {
       commit('UPDATE_SETTINGS', settingsData)
