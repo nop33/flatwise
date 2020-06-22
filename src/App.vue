@@ -55,12 +55,25 @@ export default {
     ...mapState(['loading'])
   },
   created () {
-    this.$db.items.get().then(response => {
-      const items = response.docs.map(doc => ({
+    let items = []
+    let settings = {}
+    const itemsPromise = this.$db.items.get().then(response => {
+      items = response.docs.map(doc => ({
         ...doc.data(),
         id: doc.id
       }))
-      this.$store.dispatch('initializeStore', items).then(() => {
+    })
+    const settingsPromise = this.$db.settings.get().then(response => {
+      settings = response.docs[0].data()
+      settings.id = response.docs[0].id
+    })
+    const promises = [
+      itemsPromise,
+      settingsPromise
+    ]
+
+    Promise.all(promises).then(() => {
+      this.$store.dispatch('initializeStore', { items, settings }).then(() => {
         this.$store.dispatch('toggleLoader', false)
       })
     })

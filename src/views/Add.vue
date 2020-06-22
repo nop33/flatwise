@@ -56,6 +56,18 @@
         </v-row>
         <v-row>
           <v-col>
+            <v-autocomplete
+              v-model="item.shareAmongst"
+              :disabled="isUpdating"
+              :items="flatmates"
+              chips
+              label="Share amongst"
+              multiple
+            ></v-autocomplete>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-btn
               class="mr-2"
               color="primary"
@@ -85,7 +97,8 @@ export default {
       item: {
         name: '',
         price: '',
-        date: ''
+        date: '',
+        shareAmongst: []
       },
       nameRules: [
         v => !!v || 'Name is required'
@@ -93,12 +106,18 @@ export default {
       priceRules: [
         v => !!v || 'Price is required',
         v => v > 0 || 'Price cannot be 0 or below'
-      ]
+      ],
+      flatmates: [],
+      isUpdating: false
     }
   },
   created () {
+    this.flatmates = [...this.$store.state.flatmates]
+
     if (this.$props.id) {
       this.item = { ...this.$store.getters.itemById(this.$props.id) }
+    } else {
+      this.item.shareAmongst = [...this.flatmates]
     }
   },
   methods: {

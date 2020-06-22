@@ -8,8 +8,9 @@ export default new Vuex.Store({
     loading: true,
     depreciationRate: 20,
     lowestPriceRate: 20,
-    items: [], // will be filled from firestore
-    flatmates: ['Ilias', 'Alex', 'Alexi D.']
+    flatmates: [],
+    settingsId: '',
+    items: [] // will be filled from firestore
   },
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId)
@@ -23,6 +24,7 @@ export default new Vuex.Store({
       item.name = itemData.name
       item.price = itemData.price
       item.date = itemData.date
+      item.shareAmongst = itemData.shareAmongst
     },
     DELETE_ITEM (state, itemData) {
       state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)
@@ -32,8 +34,12 @@ export default new Vuex.Store({
       state.lowestPriceRate = settingsData.lowestPriceRate
       state.flatmates = settingsData.flatmates
     },
-    INITIALIZE_STORE (state, items) {
+    INITIALIZE_STORE (state, { items, settings }) {
       state.items = items
+      state.depreciationRate = settings.depreciationRate
+      state.lowestPriceRate = settings.lowestPriceRate
+      state.flatmates = settings.flatmates
+      state.settingsId = settings.id
     },
     TOGGLE_LOADER (state, toggle) {
       state.loading = toggle
@@ -64,11 +70,15 @@ export default new Vuex.Store({
         commit('TOGGLE_LOADER', false)
       })
     },
-    updateSettings ({ commit }, settingsData) {
-      commit('UPDATE_SETTINGS', settingsData)
+    updateSettings ({ state, commit }, settingsData) {
+      commit('TOGGLE_LOADER', true)
+      Vue.prototype.$db.settings.doc(state.settingsId).set(settingsData).then(() => {
+        commit('UPDATE_SETTINGS', settingsData)
+        commit('TOGGLE_LOADER', false)
+      })
     },
-    initializeStore ({ commit }, items) {
-      commit('INITIALIZE_STORE', items)
+    initializeStore ({ commit }, data) {
+      commit('INITIALIZE_STORE', data)
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)
