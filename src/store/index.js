@@ -8,7 +8,8 @@ export default new Vuex.Store({
     loading: true,
     depreciationRate: 20,
     lowestPriceRate: 20,
-    items: [] // will be filled from firestore
+    items: [], // will be filled from firestore
+    flatmates: ['Ilias', 'Alex', 'Alexi D.']
   },
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId)
@@ -29,6 +30,7 @@ export default new Vuex.Store({
     UPDATE_SETTINGS (state, settingsData) {
       state.depreciationRate = settingsData.depreciationRate
       state.lowestPriceRate = settingsData.lowestPriceRate
+      state.flatmates = settingsData.flatmates
     },
     INITIALIZE_STORE (state, items) {
       state.items = items

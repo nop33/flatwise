@@ -36,6 +36,17 @@
         </v-row>
         <v-row>
           <v-col>
+            <v-combobox
+              v-model="flatmatesSelect"
+              :items="flatmates"
+              label="Flatmates"
+              multiple
+              chips
+            ></v-combobox>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-btn
               class="mr-2"
               color="primary"
@@ -64,6 +75,8 @@ export default {
       valid: false,
       depreciationRate: '',
       lowestPriceRate: '',
+      flatmatesSelect: [],
+      flatmates: [],
       rateRules: [
         v => !!v || 'Rate is required',
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
@@ -73,12 +86,15 @@ export default {
   created () {
     this.depreciationRate = this.$store.state.depreciationRate
     this.lowestPriceRate = this.$store.state.lowestPriceRate
+    this.flatmates = this.$store.state.flatmates
+    this.flatmatesSelect = this.flatmates
   },
   methods: {
     save () {
       this.$store.dispatch('updateSettings', {
         depreciationRate: this.depreciationRate,
-        lowestPriceRate: this.lowestPriceRate
+        lowestPriceRate: this.lowestPriceRate,
+        flatmates: this.flatmatesSelect
       }).then(() => {
         this.$router.push('/')
       })
