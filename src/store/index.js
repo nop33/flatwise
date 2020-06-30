@@ -48,7 +48,7 @@ export default new Vuex.Store({
   actions: {
     addItem ({ commit }, itemData) {
       commit('TOGGLE_LOADER', true)
-      const id = Date.now()
+      const id = Date.now().toString()
       Vue.prototype.$db.items.doc(`${id}`).set(itemData).then(() => {
         itemData.id = id
         commit('ADD_ITEM', itemData)
