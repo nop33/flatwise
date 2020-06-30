@@ -2,16 +2,21 @@
   <div class="home mb-15">
     <v-container v-if="flatmateMovingOut">
       <v-row>
+        <v-col v-for="flatmate in flatmates" :key="flatmate">
+          <v-card
+            class="mx-auto blue lighten-5"
+          >
+            <v-card-text>
+              {{ flatmate }} gets back {{ totalReimbursementFor[flatmate] }} CHF
+            </v-card-text>
+          </v-card>
+        </v-col>
         <v-col>
           <v-card
             class="mx-auto blue lighten-5"
           >
             <v-card-text>
-              <blockquote
-                class="blockquote"
-              >
-                When {{ flatmateMovingOut }} moves out on <strong>{{ humanReadableMoveOutDate }}</strong> they'll get back <strong>{{ total }} CHF</strong>
-              </blockquote>
+              The new flatmate pays {{ totalForNewFlatmate }} CHF
             </v-card-text>
           </v-card>
         </v-col>
@@ -147,11 +152,30 @@ export default {
   },
   computed: {
     ...mapState(['depreciationRate', 'lowestPriceRate']),
-    total () {
-      let total = 0
-      this.items.filter(item => item.shareAmongst.includes(this.flatmateMovingOut)).forEach(item => {
-        total += this.calculatePriceOnMoveOutDate(item)
+    totalReimbursementFor () {
+      const reimbursements = {}
+
+      this.flatmates.forEach(flatmate => {
+        reimbursements[flatmate] = 0
       })
+
+      this.items.forEach(item => {
+        const depreciatedPrice = this.calculatePriceOnMoveOutDate(item)
+        if (item.shareAmongst.includes(this.flatmateMovingOut)) {
+          reimbursements[this.flatmateMovingOut] += depreciatedPrice / item.shareAmongst.length
+        } else {
+          item.shareAmongst.forEach(flatmateRemaining => {
+            reimbursements[flatmateRemaining] += (depreciatedPrice / item.shareAmongst.length) - (depreciatedPrice / (item.shareAmongst.length + 1))
+          })
+        }
+      })
+      return reimbursements
+    },
+    totalForNewFlatmate () {
+      let total = 0
+      for (const keyValuePair of Object.entries(this.totalReimbursementFor)) {
+        total += keyValuePair[1]
+      }
       return total
     },
     humanReadableMoveOutDate () {
