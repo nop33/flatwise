@@ -68,7 +68,6 @@
             :headers="headers"
             :items="items"
             :items-per-page="20"
-            hide-default-footer
             show-expand
             class="elevation-1"
           >
