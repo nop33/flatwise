@@ -68,26 +68,31 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: ['id'],
   data () {
     return {
       valid: false,
-      depreciationRate: '',
-      lowestPriceRate: '',
       flatmatesSelect: [],
-      flatmates: [],
       rateRules: [
         v => !!v || 'Rate is required',
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ]
     }
   },
-  created () {
-    this.depreciationRate = this.$store.state.depreciationRate
-    this.lowestPriceRate = this.$store.state.lowestPriceRate
-    this.flatmates = this.$store.state.flatmates
-    this.flatmatesSelect = this.flatmates
+  computed: {
+    ...mapState([
+      'flatmates',
+      'depreciationRate',
+      'lowestPriceRate'
+    ])
+  },
+  watch: {
+    flatmates (newValue) {
+      this.flatmatesSelect = newValue
+    }
   },
   methods: {
     save () {

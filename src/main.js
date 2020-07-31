@@ -4,7 +4,8 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import VueFirestore from 'vue-firestore'
-import Firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 Vue.config.productionTip = false
 
@@ -14,7 +15,7 @@ require('firebase/firestore')
 
 Vue.use(VueFirestore)
 
-const firebaseApp = Firebase.initializeApp({
+const firebaseApp = firebase.initializeApp({
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID

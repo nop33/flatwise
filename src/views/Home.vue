@@ -114,16 +114,15 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
 import { mapState } from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 export default {
   name: 'Home',
   data () {
     return {
       // table data
-      items: [],
       headers: [
         {
           text: 'Item',
@@ -145,12 +144,16 @@ export default {
         v => !!v || 'Date is required'
         // TODO: Add rule to not allow past dates
       ],
-      flatmates: [],
       flatmateMovingOut: ''
     }
   },
   computed: {
-    ...mapState(['depreciationRate', 'lowestPriceRate']),
+    ...mapState([
+      'depreciationRate',
+      'lowestPriceRate',
+      'items',
+      'flatmates'
+    ]),
     totalReimbursementFor () {
       const reimbursements = {}
 
@@ -184,13 +187,16 @@ export default {
     }
   },
   created () {
-    this.items = this.$store.state.items.map(item => ({ ...item }))
-    this.flatmates = [...this.$store.state.flatmates]
+    const self = this
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (!user) {
+        self.$router.push('/sign')
+      }
+    })
   },
   methods: {
     deleteItem (item) {
       if (confirm(`Are you sure you wanna delete the ${item.name}?`)) {
-        this.items.splice(this.items.indexOf(this.items.find(i => i.id === item.id)), 1)
         this.$store.dispatch('deleteItem', item)
       }
     },

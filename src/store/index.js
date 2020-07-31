@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    user: null,
     loading: true,
     depreciationRate: 20,
     lowestPriceRate: 20,
@@ -16,6 +17,9 @@ export default new Vuex.Store({
     itemById: state => itemId => state.items.find(item => item.id === itemId)
   },
   mutations: {
+    SET_USER (state, user) {
+      state.user = user
+    },
     ADD_ITEM (state, itemToAdd) {
       state.items.push(itemToAdd)
     },
@@ -46,6 +50,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setUser ({ commit }, user) {
+      commit('SET_USER', user)
+    },
     addItem ({ commit }, itemData) {
       commit('TOGGLE_LOADER', true)
       const id = Date.now().toString()
@@ -77,8 +84,27 @@ export default new Vuex.Store({
         commit('TOGGLE_LOADER', false)
       })
     },
-    initializeStore ({ commit }, data) {
-      commit('INITIALIZE_STORE', data)
+    initializeStore ({ commit }) {
+      let items = []
+      let settings = {}
+      const itemsPromise = Vue.prototype.$db.items.get().then(response => {
+        items = response.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }))
+      })
+      const settingsPromise = Vue.prototype.$db.settings.get().then(response => {
+        settings = response.docs[0].data()
+        settings.id = response.docs[0].id
+      })
+      const promises = [
+        itemsPromise,
+        settingsPromise
+      ]
+
+      Promise.all(promises).then(() => {
+        commit('INITIALIZE_STORE', { items, settings })
+      })
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)
