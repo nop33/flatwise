@@ -11,6 +11,8 @@ export default new Vuex.Store({
     lowestPriceRate: 20,
     flatmates: [],
     settingsId: '',
+    moveOutDate: new Date().toISOString().substr(0, 10),
+    flatmateMovingOut: '',
     items: [] // will be filled from firestore
   },
   getters: {
@@ -28,6 +30,12 @@ export default new Vuex.Store({
     },
     SET_FLATMATES (state, flatmates) {
       state.flatmates = flatmates
+    },
+    SET_FLATMATE_MOVING_OUT (state, flatmate) {
+      state.flatmateMovingOut = flatmate
+    },
+    SET_MOVE_OUT_DATE (state, date) {
+      state.moveOutDate = date
     },
     ADD_ITEM (state, itemToAdd) {
       state.items.push(itemToAdd)
@@ -70,6 +78,12 @@ export default new Vuex.Store({
     },
     setFlatmates ({ commit }, flatmates) {
       commit('SET_FLATMATES', flatmates)
+    },
+    setFlatmateMovingOut ({ commit }, flatmate) {
+      commit('SET_FLATMATE_MOVING_OUT', flatmate)
+    },
+    setMoveOutDate ({ commit }, date) {
+      commit('SET_MOVE_OUT_DATE', date)
     },
     addItem ({ commit }, itemData) {
       commit('TOGGLE_LOADER', true)

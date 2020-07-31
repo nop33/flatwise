@@ -137,12 +137,10 @@ export default {
 
       // form data
       valid: false,
-      moveOutDate: new Date().toISOString().substr(0, 10),
       dateRules: [
         v => !!v || 'Date is required'
         // TODO: Add rule to not allow past dates
-      ],
-      flatmateMovingOut: ''
+      ]
     }
   },
   computed: {
@@ -150,8 +148,26 @@ export default {
       'depreciationRate',
       'lowestPriceRate',
       'items',
-      'flatmates'
+      'flatmates',
+      'flatmateMovingOut',
+      'moveOutDate'
     ]),
+    flatmateMovingOut: {
+      get () {
+        return this.$store.state.flatmateMovingOut
+      },
+      set (value) {
+        this.$store.dispatch('setFlatmateMovingOut', value)
+      }
+    },
+    moveOutDate: {
+      get () {
+        return this.$store.state.moveOutDate
+      },
+      set (value) {
+        this.$store.dispatch('setMoveOutDate', value)
+      }
+    },
     totalReimbursementFor () {
       const reimbursements = {}
 
