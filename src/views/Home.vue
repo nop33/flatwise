@@ -195,7 +195,7 @@ export default {
       for (const keyValuePair of Object.entries(this.totalReimbursementFor)) {
         total += keyValuePair[1]
       }
-      return total
+      return Math.floor(total * 100) / 100
     },
     humanReadableMoveOutDate () {
       const date = new Date(this.moveOutDate)
