@@ -115,8 +115,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import firebase from 'firebase/app'
-import 'firebase/auth'
 
 export default {
   name: 'Home',
@@ -185,14 +183,6 @@ export default {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
       return new Intl.DateTimeFormat('en-GB', options).format(date)
     }
-  },
-  created () {
-    const self = this
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (!user) {
-        self.$router.push('/sign')
-      }
-    })
   },
   methods: {
     deleteItem (item) {

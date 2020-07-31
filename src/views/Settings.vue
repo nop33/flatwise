@@ -94,6 +94,9 @@ export default {
       this.flatmatesSelect = newValue
     }
   },
+  created () {
+    this.flatmatesSelect = this.flatmates
+  },
   methods: {
     save () {
       this.$store.dispatch('updateSettings', {

@@ -7,11 +7,11 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon to="/settings">
+      <v-btn icon to="/settings" v-if="user">
         <v-icon>mdi-cog</v-icon>
       </v-btn>
 
-      <v-btn icon @click="logUserOut">
+      <v-btn icon @click="logUserOut" v-if="user">
         <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
 
@@ -42,12 +42,17 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import { mapState } from 'vuex'
 
 export default {
+  computed: {
+    ...mapState([
+      'user'
+    ])
+  },
   created () {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch('setUser', user)
         this.$store.dispatch('initializeStore')
       }
     })
