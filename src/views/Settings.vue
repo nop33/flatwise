@@ -87,7 +87,23 @@ export default {
       'flatmates',
       'depreciationRate',
       'lowestPriceRate'
-    ])
+    ]),
+    depreciationRate: {
+      get () {
+        return this.$store.state.depreciationRate
+      },
+      set (value) {
+        this.$store.dispatch('setDepreciationRate', value)
+      }
+    },
+    lowestPriceRate: {
+      get () {
+        return this.$store.state.lowestPriceRate
+      },
+      set (value) {
+        this.$store.dispatch('setLowestPriceRate', value)
+      }
+    }
   },
   watch: {
     flatmates (newValue) {

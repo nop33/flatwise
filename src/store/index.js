@@ -20,6 +20,15 @@ export default new Vuex.Store({
     SET_USER (state, user) {
       state.user = user
     },
+    SET_DEPRECIATION_RATE (state, rate) {
+      state.depreciationRate = rate
+    },
+    SET_LOWEST_PRICE_RATE (state, rate) {
+      state.lowestPriceRate = rate
+    },
+    SET_FLATMATES (state, flatmates) {
+      state.flatmates = flatmates
+    },
     ADD_ITEM (state, itemToAdd) {
       state.items.push(itemToAdd)
     },
@@ -52,6 +61,15 @@ export default new Vuex.Store({
   actions: {
     setUser ({ commit }, user) {
       commit('SET_USER', user)
+    },
+    setDepreciationRate ({ commit }, rate) {
+      commit('SET_DEPRECIATION_RATE', rate)
+    },
+    setLowestPriceRate ({ commit }, rate) {
+      commit('SET_LOWEST_PRICE_RATE', rate)
+    },
+    setFlatmates ({ commit }, flatmates) {
+      commit('SET_FLATMATES', flatmates)
     },
     addItem ({ commit }, itemData) {
       commit('TOGGLE_LOADER', true)
