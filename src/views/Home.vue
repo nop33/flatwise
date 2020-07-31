@@ -7,7 +7,7 @@
             class="mx-auto blue lighten-5"
           >
             <v-card-text>
-              {{ flatmate }} gets back {{ totalReimbursementFor[flatmate] }} CHF
+              {{ flatmate }} gets back <strong>{{ totalReimbursementFor[flatmate] }}</strong> CHF
             </v-card-text>
           </v-card>
         </v-col>
@@ -16,7 +16,7 @@
             class="mx-auto blue lighten-5"
           >
             <v-card-text>
-              The new flatmate pays {{ totalForNewFlatmate }} CHF
+              The new flatmate pays <strong>{{ totalForNewFlatmate }}</strong> CHF
             </v-card-text>
           </v-card>
         </v-col>
