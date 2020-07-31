@@ -169,6 +169,9 @@ export default {
           })
         }
       })
+      for (const [key, value] of Object.entries(reimbursements)) {
+        reimbursements[key] = Math.floor(value * 100) / 100
+      }
       return reimbursements
     },
     totalForNewFlatmate () {
