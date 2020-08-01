@@ -4,22 +4,10 @@
       <v-container>
         <h1>Add a new item</h1>
         <v-row>
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="item.name"
-              :rules="nameRules"
-              label="Item name"
-              required
-            ></v-text-field>
+          <v-col md="3">
+            <v-text-field v-model="item.name" :rules="nameRules" label="Item name" required />
           </v-col>
-
-          <v-col
-            cols="12"
-            md="4"
-          >
+          <v-col md="3">
             <v-text-field
               v-model="item.price"
               type="number"
@@ -29,17 +17,8 @@
               required
             ></v-text-field>
           </v-col>
-
-          <v-col
-            cols="12"
-            md="4"
-          >
-            <v-dialog
-              ref="dialog"
-              :return-value.sync="item.date"
-              persistent
-              width="290px"
-            >
+          <v-col md="3">
+            <v-dialog ref="dialog" :return-value.sync="item.date" persistent width="290px">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="item.date"
@@ -52,6 +31,15 @@
               </template>
               <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
             </v-dialog>
+          </v-col>
+          <v-col md="3">
+            <v-text-field
+              v-model="item.depreciationRate"
+              :rules="rateRules"
+              label="Item depreciation rate"
+              required
+              suffix="%"
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -68,19 +56,8 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-btn
-              class="mr-2"
-              color="primary"
-              @click="save"
-            >
-              Save
-            </v-btn>
-            <v-btn
-              color="warning"
-              to="/"
-            >
-              Cancel
-            </v-btn>
+            <v-btn class="mr-2" color="primary" @click="save">Save</v-btn>
+            <v-btn color="warning" to="/">Cancel</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -98,7 +75,8 @@ export default {
         name: '',
         price: '',
         date: '',
-        shareAmongst: []
+        shareAmongst: [],
+        depreciationRate: 0
       },
       nameRules: [
         v => !!v || 'Name is required'
@@ -106,6 +84,10 @@ export default {
       priceRules: [
         v => !!v || 'Price is required',
         v => v > 0 || 'Price cannot be 0 or below'
+      ],
+      rateRules: [
+        v => !!v || 'Rate is required',
+        v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ],
       flatmates: [],
       isUpdating: false
@@ -118,6 +100,9 @@ export default {
       this.item = { ...this.$store.getters.itemById(this.$props.id) }
     } else {
       this.item.shareAmongst = [...this.flatmates]
+    }
+    if (!this.item.depreciationRate) {
+      this.item.depreciationRate = this.$store.state.depreciationRate
     }
   },
   methods: {

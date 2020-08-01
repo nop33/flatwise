@@ -210,8 +210,9 @@ export default {
       }
     },
     calculatePriceOnMoveOutDate (item) {
+      const depreciationRate = item.depreciationRate || this.depreciationRate
       const lowestPrice = Math.floor(item.price * this.lowestPriceRate / 100)
-      const priceOnDate = Math.floor(item.price - (this.calculateNumberOfDaysOwned(item.date) * (this.depreciationRate / 100 / 365) * item.price))
+      const priceOnDate = Math.floor(item.price - (this.calculateNumberOfDaysOwned(item.date) * (depreciationRate / 100 / 365) * item.price))
       return Math.max(priceOnDate, lowestPrice)
     },
     calculateNumberOfDaysOwned (date) {

@@ -46,6 +46,7 @@ export default new Vuex.Store({
       item.price = itemData.price
       item.date = itemData.date
       item.shareAmongst = itemData.shareAmongst
+      item.depreciationRate = itemData.depreciationRate
     },
     DELETE_ITEM (state, itemData) {
       state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)
