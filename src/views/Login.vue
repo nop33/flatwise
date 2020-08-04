@@ -12,16 +12,10 @@ export default {
   mounted () {
     var ui = new firebaseui.auth.AuthUI(firebase.auth())
     var uiConfig = {
-      signInSuccessUrl: '/',
+      signInSuccessUrl: '/register',
       signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
     }
     ui.start('#firebaseui-auth-container', uiConfig)
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.$router.push('/')
-      }
-    })
   }
 }
 </script>

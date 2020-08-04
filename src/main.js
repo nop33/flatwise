@@ -25,7 +25,8 @@ const firestore = firebaseApp.firestore()
 
 Vue.prototype.$db = {
   items: firestore.collection('items'),
-  settings: firestore.collection('settings')
+  settings: firestore.collection('settings'),
+  users: firestore.collection('users')
 }
 
 new Vue({
