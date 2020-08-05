@@ -39,6 +39,11 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
+  },
+  {
+    path: '/createFlat',
+    name: 'Create Flat',
+    component: () => import(/* webpackChunkName: "createFlat" */ '../views/CreateFlat.vue')
   }
 ]
 

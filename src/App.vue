@@ -7,6 +7,10 @@
 
       <v-spacer></v-spacer>
 
+      <v-btn icon to="/createFlat" v-if="user">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+
       <v-btn icon to="/settings" v-if="user">
         <v-icon>mdi-cog</v-icon>
       </v-btn>

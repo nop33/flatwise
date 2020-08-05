@@ -13,7 +13,8 @@ export default new Vuex.Store({
     settingsId: '',
     moveOutDate: new Date().toISOString().substr(0, 10),
     flatmateMovingOut: '',
-    items: [] // will be filled from firestore
+    items: [], // will be filled from firestore
+    flats: []
   },
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId)
@@ -65,6 +66,9 @@ export default new Vuex.Store({
     },
     TOGGLE_LOADER (state, toggle) {
       state.loading = toggle
+    },
+    CREATE_FLAT (state, flatData) {
+      state.flats.push(flatData)
     }
   },
   actions: {
@@ -141,6 +145,12 @@ export default new Vuex.Store({
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)
+    },
+    createFlat ({ commit }, flatData) {
+      flatData.items = []
+      Vue.prototype.$db.flats.add(flatData).then((docRef) => {
+        commit('CREATE_FLAT', { id: docRef.id, ...flatData })
+      })
     }
   },
   modules: {
