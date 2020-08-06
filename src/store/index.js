@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     user: null,
     loading: true,
-    depreciationRate: 20,
-    lowestPriceRate: 20,
+    depreciationRate: 0,
+    lowestPriceRate: 0,
     flatmates: [],
     settingsId: '',
     moveOutDate: new Date().toISOString().substr(0, 10),
@@ -48,6 +48,7 @@ export default new Vuex.Store({
       item.date = itemData.date
       item.shareAmongst = itemData.shareAmongst
       item.depreciationRate = itemData.depreciationRate
+      item.lowestPriceRate = itemData.lowestPriceRate
     },
     DELETE_ITEM (state, itemData) {
       state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)

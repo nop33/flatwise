@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-form v-model="valid">
+    <v-form v-model="isFormValid">
       <v-container>
         <h1>Add a new item</h1>
         <v-row>
-          <v-col md="3">
+          <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="item.name" :rules="nameRules" label="Item name" required />
           </v-col>
-          <v-col md="3">
+          <v-col cols="12" sm="6" md="4">
             <v-text-field
               v-model="item.price"
               type="number"
@@ -17,14 +17,16 @@
               required
             ></v-text-field>
           </v-col>
-          <v-col md="3">
+          <v-col cols="12" sm="6" md="4">
             <v-dialog ref="dialog" :return-value.sync="item.date" persistent width="290px">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="item.date"
                   label="Purchace date"
                   append-icon="mdi-calendar"
+                  :rules="dateRules"
                   readonly
+                  required
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
@@ -32,14 +34,29 @@
               <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
             </v-dialog>
           </v-col>
-          <v-col md="3">
+          <v-col cols="12" sm="6">
             <v-text-field
-              v-model="item.depreciationRate"
+              v-model.number="item.depreciationRate"
               :rules="rateRules"
-              label="Item depreciation rate"
+              type="number"
+              label="Annual depreciation rate"
+              min="0"
+              max="100"
               required
               suffix="%"
             />
+          </v-col>
+          <v-col cols="12" sm="6" v-show="item.depreciationRate < 100">
+            <v-text-field
+              v-model.number="item.lowestPriceRate"
+              :rules="rateRules"
+              type="number"
+              label="Lowest price rate"
+              min="0"
+              max="100"
+              suffix="%"
+              required
+            ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
@@ -56,7 +73,7 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-btn class="mr-2" color="primary" @click="save">Save</v-btn>
+            <v-btn class="mr-2" color="primary" @click="save" :disabled="!isFormValid">Save</v-btn>
             <v-btn color="warning" to="/">Cancel</v-btn>
           </v-col>
         </v-row>
@@ -66,43 +83,69 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   props: ['id'],
   data () {
     return {
-      valid: false,
+      isFormValid: false,
       item: {
         name: '',
         price: '',
         date: '',
         shareAmongst: [],
-        depreciationRate: 0
+        depreciationRate: 0,
+        lowestPriceRate: 0
       },
       nameRules: [
         v => !!v || 'Name is required'
       ],
+      dateRules: [
+        v => !!v || 'Date is required'
+      ],
       priceRules: [
-        v => !!v || 'Price is required',
         v => v > 0 || 'Price cannot be 0 or below'
       ],
       rateRules: [
-        v => !!v || 'Rate is required',
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ],
-      flatmates: [],
       isUpdating: false
     }
   },
+  computed: {
+    ...mapState([
+      'flatmates',
+      'depreciationRate',
+      'lowestPriceRate'
+    ])
+  },
+  watch: {
+    flatmates (newValue) {
+      if (!this.id) {
+        this.item.shareAmongst = [...newValue]
+      }
+    },
+    depreciationRate (newValue) {
+      if (!this.id) {
+        this.item.depreciationRate = newValue
+      }
+    },
+    lowestPriceRate (newValue) {
+      if (!this.id) {
+        this.item.lowestPriceRate = newValue
+      }
+    }
+  },
   created () {
-    this.flatmates = [...this.$store.state.flatmates]
-
     if (this.$props.id) {
       this.item = { ...this.$store.getters.itemById(this.$props.id) }
+      this.item.lowestPriceRate = this.item.lowestPriceRate === undefined ? this.lowestPriceRate : this.item.lowestPriceRate
+      this.item.depreciationRate = this.item.depreciationRate === undefined ? this.depreciationRate : this.item.depreciationRate
     } else {
       this.item.shareAmongst = [...this.flatmates]
-    }
-    if (!this.item.depreciationRate) {
-      this.item.depreciationRate = this.$store.state.depreciationRate
+      this.item.depreciationRate = this.depreciationRate
+      this.item.lowestPriceRate = this.lowestPriceRate
     }
   },
   methods: {
