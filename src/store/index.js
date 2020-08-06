@@ -76,6 +76,11 @@ export default new Vuex.Store({
     setUser ({ commit }, user) {
       commit('SET_USER', user)
     },
+    registerUser ({ commit }, user) {
+      Vue.prototype.$db.users.doc(user.id).set(user).then(() => {
+        commit('SET_USER', user)
+      })
+    },
     setDepreciationRate ({ commit }, rate) {
       commit('SET_DEPRECIATION_RATE', rate)
     },

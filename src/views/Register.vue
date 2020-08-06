@@ -10,31 +10,25 @@ export default {
   created () {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$db.users.doc(firebase.auth().currentUser.uid).get().then(doc => {
+        const currentUserId = firebase.auth().currentUser.uid
+        this.$db.users.doc(currentUserId).get().then(doc => {
           if (!doc.exists) {
-            this.addNewUserToFirestore(user)
+            this.$store.dispatch('registerUser', {
+              displayName: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL,
+              id: user.uid
+            }).then(() => {
+              this.$router.push('/')
+            })
           } else {
             this.$router.push('/')
           }
         }).catch(error => {
-          console.error('Checking if customer exists failed" ' + error)
+          console.error('Checking if user exists failed" ' + error)
         })
       }
     })
-  },
-  methods: {
-    addNewUserToFirestore (user) {
-      console.log(firebase.auth().currentUser.uid)
-      const details = {
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL
-      }
-      console.log(details)
-      this.$db.users.doc(firebase.auth().currentUser.uid).set(details).then(() => {
-        this.$router.push('/')
-      })
-    }
   }
 }
 </script>

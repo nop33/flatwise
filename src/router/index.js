@@ -57,9 +57,13 @@ router.beforeEach((to, from, next) => {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       if (!store.state.user) {
-        store.dispatch('setUser', user)
+        store.dispatch('setUser', {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          id: user.uid
+        })
       }
-      next()
     } else if (to.name !== 'Login') {
       store.dispatch('setUser', null)
       next({ name: 'Login' })
