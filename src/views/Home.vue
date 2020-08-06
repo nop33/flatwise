@@ -66,6 +66,8 @@
         <v-col>
           <v-data-table
             :headers="headers"
+            :sort-by.sync="sortBy"
+            :sort-desc.sync="sortDesc"
             :items="items"
             :items-per-page="20"
             show-expand
@@ -121,6 +123,8 @@ export default {
   data () {
     return {
       // table data
+      sortBy: 'date',
+      sortDesc: true,
       headers: [
         {
           text: 'Item',
