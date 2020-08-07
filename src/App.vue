@@ -57,7 +57,7 @@ export default {
   created () {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch('initializeStore')
+        this.$store.dispatch('initializeStore', user.uid)
       }
     })
   },

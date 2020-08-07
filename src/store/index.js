@@ -58,18 +58,14 @@ export default new Vuex.Store({
       state.lowestPriceRate = settingsData.lowestPriceRate
       state.flatmates = settingsData.flatmates
     },
-    INITIALIZE_STORE (state, { items, settings }) {
-      state.items = items
-      state.depreciationRate = settings.depreciationRate
-      state.lowestPriceRate = settings.lowestPriceRate
-      state.flatmates = settings.flatmates
-      state.settingsId = settings.id
-    },
     TOGGLE_LOADER (state, toggle) {
       state.loading = toggle
     },
     CREATE_FLAT (state, flatData) {
       state.flats.push(flatData)
+    },
+    SET_FLATS (state, flats) {
+      state.flats = flats
     }
   },
   actions: {
@@ -127,27 +123,10 @@ export default new Vuex.Store({
         commit('TOGGLE_LOADER', false)
       })
     },
-    initializeStore ({ commit }) {
-      let items = []
-      let settings = {}
-      const itemsPromise = Vue.prototype.$db.items.get().then(response => {
-        items = response.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id
-        }))
-      })
-      const settingsPromise = Vue.prototype.$db.settings.get().then(response => {
-        settings = response.docs[0].data()
-        settings.id = response.docs[0].id
-      })
-      const promises = [
-        itemsPromise,
-        settingsPromise
-      ]
-
-      Promise.all(promises).then(() => {
-        commit('INITIALIZE_STORE', { items, settings })
-      })
+    async initializeStore ({ state, commit }, userId) {
+      const response = await Vue.prototype.$db.flats.where('flatmatesUids', 'array-contains', userId).get()
+      const flats = response.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      commit('SET_FLATS', flats)
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)
