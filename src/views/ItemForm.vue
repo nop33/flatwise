@@ -63,8 +63,7 @@
           <v-col>
             <v-autocomplete
               v-model="item.shareAmongst"
-              :disabled="isUpdating"
-              :items="flatmates"
+              :items="selectedFlat.flatmates"
               chips
               label="Share amongst"
               multiple
@@ -83,10 +82,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
-  props: ['id'],
+  props: [
+    'id',
+    'flatId'
+  ],
   data () {
     return {
       isFormValid: false,
@@ -109,43 +111,30 @@ export default {
       ],
       rateRules: [
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
-      ],
-      isUpdating: false
+      ]
     }
   },
   computed: {
-    ...mapState([
-      'flatmates',
-      'depreciationRate',
-      'lowestPriceRate'
+    ...mapGetters([
+      'selectedFlat'
     ])
   },
   watch: {
-    flatmates (newValue) {
+    selectedFlat (flat) {
       if (!this.id) {
-        this.item.shareAmongst = [...newValue]
-      }
-    },
-    depreciationRate (newValue) {
-      if (!this.id) {
-        this.item.depreciationRate = newValue
-      }
-    },
-    lowestPriceRate (newValue) {
-      if (!this.id) {
-        this.item.lowestPriceRate = newValue
+        this.item.shareAmongst = [...flat.flatmates]
+        this.item.depreciationRate = flat.depreciationRate
+        this.item.lowestPriceRate = flat.lowestPriceRate
       }
     }
   },
   created () {
-    if (this.$props.id) {
-      this.item = { ...this.$store.getters.itemById(this.$props.id) }
-      this.item.lowestPriceRate = this.item.lowestPriceRate === undefined ? this.lowestPriceRate : this.item.lowestPriceRate
-      this.item.depreciationRate = this.item.depreciationRate === undefined ? this.depreciationRate : this.item.depreciationRate
+    if (this.id) {
+      // implement edit
     } else {
-      this.item.shareAmongst = [...this.flatmates]
-      this.item.depreciationRate = this.depreciationRate
-      this.item.lowestPriceRate = this.lowestPriceRate
+      this.item.shareAmongst = [...this.selectedFlat.flatmates]
+      this.item.depreciationRate = this.selectedFlat.depreciationRate
+      this.item.lowestPriceRate = this.selectedFlat.lowestPriceRate
     }
   },
   methods: {

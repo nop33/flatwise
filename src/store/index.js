@@ -14,12 +14,18 @@ export default new Vuex.Store({
     moveOutDate: new Date().toISOString().substr(0, 10),
     flatmateMovingOut: '',
     items: [], // will be filled from firestore
-    flats: []
+    flats: [],
+    selectedFlatIndex: null
   },
   getters: {
-    itemById: state => itemId => state.items.find(item => item.id === itemId)
+    itemById: state => itemId => state.items.find(item => item.id === itemId),
+    flatById: state => flatId => state.flats.find(flat => flat.id === flatId),
+    selectedFlat: state => state.flats[state.selectedFlatIndex]
   },
   mutations: {
+    SET_SELECTED_FLAT_ID (state, flatIndex) {
+      state.selectedFlatIndex = flatIndex
+    },
     SET_USER (state, user) {
       state.user = user
     },
@@ -38,8 +44,8 @@ export default new Vuex.Store({
     SET_MOVE_OUT_DATE (state, date) {
       state.moveOutDate = date
     },
-    ADD_ITEM (state, itemToAdd) {
-      state.items.push(itemToAdd)
+    ADD_ITEM (state, { itemData, selectedFlat }) {
+      selectedFlat.items.push(itemData)
     },
     UPDATE_ITEM (state, itemData) {
       const item = state.items.find(item => item.id === itemData.id)
@@ -66,9 +72,15 @@ export default new Vuex.Store({
     },
     SET_FLATS (state, flats) {
       state.flats = flats
+    },
+    SET_FLAT_ITEMS (state, { flat, items }) {
+      flat.items = items
     }
   },
   actions: {
+    selectFlat ({ commit }, flatIndex) {
+      commit('SET_SELECTED_FLAT_ID', flatIndex)
+    },
     setUser ({ commit }, user) {
       commit('SET_USER', user)
     },
@@ -92,12 +104,13 @@ export default new Vuex.Store({
     setMoveOutDate ({ commit }, date) {
       commit('SET_MOVE_OUT_DATE', date)
     },
-    addItem ({ commit }, itemData) {
+    addItem ({ getters, commit }, itemData) {
       commit('TOGGLE_LOADER', true)
       const id = Date.now().toString()
-      Vue.prototype.$db.items.doc(`${id}`).set(itemData).then(() => {
+      const selectedFlat = getters.selectedFlat
+      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(`${id}`).set(itemData).then(() => {
         itemData.id = id
-        commit('ADD_ITEM', itemData)
+        commit('ADD_ITEM', { itemData, selectedFlat })
         commit('TOGGLE_LOADER', false)
       })
     },
@@ -122,6 +135,17 @@ export default new Vuex.Store({
         commit('UPDATE_SETTINGS', settingsData)
         commit('TOGGLE_LOADER', false)
       })
+    },
+    async fetchFlatItems ({ commit }, flat) {
+      const items = []
+      const results = await Vue.prototype.$db.flats.doc(flat.id).collection('items').get()
+      results.forEach(doc => {
+        items.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      })
+      commit('SET_FLAT_ITEMS', { flat, items })
     },
     async initializeStore ({ state, commit }, userId) {
       const response = await Vue.prototype.$db.flats.where('flatmatesUids', 'array-contains', userId).get()

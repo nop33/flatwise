@@ -20,9 +20,10 @@ const routes = [
     component: Login
   },
   {
-    path: '/add',
-    name: 'Add',
-    component: () => import(/* webpackChunkName: "add" */ '../views/Add.vue')
+    path: '/flat/:flatId/add',
+    name: 'AddItem',
+    props: true,
+    component: () => import(/* webpackChunkName: "add" */ '../views/ItemForm.vue')
   },
   {
     path: '/register',
@@ -31,9 +32,9 @@ const routes = [
   },
   {
     path: '/edit/:id',
-    name: 'Edit',
+    name: 'EditItem',
     props: true,
-    component: () => import(/* webpackChunkName: "edit" */ '../views/Add.vue')
+    component: () => import(/* webpackChunkName: "edit" */ '../views/ItemForm.vue')
   },
   {
     path: '/settings',
