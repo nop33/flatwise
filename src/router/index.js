@@ -27,7 +27,7 @@ const routes = [
   {
     path: '/flats/add',
     name: 'Add Flat',
-    component: () => import(/* webpackChunkName: "createFlat" */ '../views/CreateFlat.vue')
+    component: () => import(/* webpackChunkName: "createFlat" */ '../views/FlatAdd.vue')
   },
   {
     path: '/flat/:flatId',
@@ -39,13 +39,13 @@ const routes = [
     path: '/flat/:flatId/add',
     name: 'Add Item',
     props: true,
-    component: () => import(/* webpackChunkName: "add" */ '../views/AddItem.vue')
+    component: () => import(/* webpackChunkName: "add" */ '../views/ItemAdd.vue')
   },
   {
     path: '/edit/:id',
     name: 'Edit Item',
     props: true,
-    component: () => import(/* webpackChunkName: "edit" */ '../views/EditItem.vue')
+    component: () => import(/* webpackChunkName: "edit" */ '../views/ItemEdit.vue')
   },
   {
     path: '/settings',
