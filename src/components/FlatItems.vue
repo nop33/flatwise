@@ -26,7 +26,9 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('fetchFlatItems', this.flat)
+    if (!this.flat.items.length) {
+      this.$store.dispatch('fetchFlatItems', this.flat)
+    }
   }
 }
 </script>
