@@ -4,8 +4,14 @@
       <v-btn icon @click="goHome">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-toolbar-title>{{ flat.name }}</v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-spacer />
+      <v-toolbar-title>
+        <div class="d-flex flex-column">
+          <span>{{ flat.name }}</span>
+          <v-btn class="mt-5" color="red">Calculate costs</v-btn>
+        </div>
+      </v-toolbar-title>
+      <v-spacer />
       <v-menu origin="top right">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
