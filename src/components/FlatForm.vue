@@ -1,24 +1,32 @@
 <template>
   <v-form v-model="isFormValid">
     <v-container>
-      <h1>Add a new item</h1>
-      <h2>Flat details</h2>
       <v-row>
-        <v-col md="3">
-          <v-text-field v-model="flat.name" :rules="nameRules" label="Flat name" required />
+        <v-col cols="12">
+          <v-text-field
+            v-model="flat.name"
+            :rules="nameRules"
+            label="Flat
+            name"
+            required
+            prepend-icon="mdi-home-city-outline"
+          />
         </v-col>
-        <v-col md="3">
+        <v-col cols="12">
           <v-combobox
             v-model="flat.flatmates"
             label="Flatmates"
             multiple
             chips
+            prepend-icon="mdi-account-group"
           ></v-combobox>
         </v-col>
       </v-row>
-      <h2>Flat settings</h2>
+    </v-container>
+    <v-sheet color="grey lighten-3 py-1 px-5">Settings</v-sheet>
+    <v-container>
       <v-row>
-        <v-col md="3">
+        <v-col>
           <v-text-field
             v-model="flat.depreciationRate"
             :rules="rateRules"
@@ -27,7 +35,7 @@
             suffix="%"
           />
         </v-col>
-        <v-col md="3">
+        <v-col>
           <v-text-field
             v-model="flat.lowestPriceRate"
             :rules="rateRules"
