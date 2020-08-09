@@ -157,9 +157,13 @@ export default new Vuex.Store({
       commit('TOGGLE_LOADER', toggle)
     },
     createFlat ({ commit }, flatData) {
-      flatData.items = []
-      Vue.prototype.$db.flats.add(flatData).then((docRef) => {
-        commit('CREATE_FLAT', { id: docRef.id, ...flatData })
+      return new Promise((resolve, reject) => {
+        flatData.items = []
+        Vue.prototype.$db.flats.add(flatData).then((docRef) => {
+          const flat = { id: docRef.id, ...flatData }
+          commit('CREATE_FLAT', flat)
+          resolve(docRef.id)
+        })
       })
     }
   },
