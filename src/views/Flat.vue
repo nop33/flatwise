@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar extended flat color="primary" dark>
+    <v-app-bar app flat color="primary" dark prominent hide-on-scroll >
       <v-btn icon @click="goHome">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
@@ -9,7 +9,7 @@
       <v-btn icon>
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
-    </v-toolbar>
+    </v-app-bar>
     <v-main>
       <FlatItems :flat="selectedFlat" />
       <v-btn

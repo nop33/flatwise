@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark>
+    <v-toolbar flat color="primary" dark fixed>
       <v-btn icon @click="goToFlat">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>

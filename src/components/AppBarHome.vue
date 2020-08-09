@@ -27,7 +27,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app flat color="primary" dark fixed>
       <v-app-bar-nav-icon @click.stop="isNavigationDrawerOpen = !isNavigationDrawerOpen" />
       <v-toolbar-title>
         <router-link to="/" class="white--text text-decoration-none">Flatwise</router-link>
