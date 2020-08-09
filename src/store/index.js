@@ -20,7 +20,8 @@ export default new Vuex.Store({
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId),
     flatById: state => flatId => state.flats.find(flat => flat.id === flatId),
-    selectedFlat: state => state.flats[state.selectedFlatIndex]
+    selectedFlat: state => state.flats[state.selectedFlatIndex],
+    flatItemById: state => (flatId, itemId) => state.flats.find(flat => flat.id === flatId).items.find(item => item.id === itemId)
   },
   mutations: {
     SET_SELECTED_FLAT_INDEX (state, flatIndex) {

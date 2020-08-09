@@ -1,7 +1,7 @@
 <template>
   <v-card flat>
     <v-list>
-      <v-list-item-group v-model="selectedItem">
+      <v-list-item-group v-model="selectedItemIndex">
         <v-list-item v-for="item in flat.items" :key="item.id">
           <v-list-item-icon>
             <v-icon>mdi-seat-outline</v-icon>
@@ -22,7 +22,20 @@ export default {
   ],
   data: () => {
     return {
-      selectedItem: null
+      selectedItemIndex: null
+    }
+  },
+  watch: {
+    selectedItemIndex (newValue) {
+      if (newValue) {
+        this.$router.push({
+          name: 'Item',
+          params: {
+            flatId: this.flat.id,
+            itemId: this.flat.items[newValue].id
+          }
+        })
+      }
     }
   },
   created () {

@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <router-view></router-view>
-    <v-main>
-        <!-- <router-view v-if="!loading"></router-view>
+    <!-- <v-main>
+        <router-view v-if="!loading"></router-view>
         <v-container fill-height fluid v-else>
           <v-row
             align="center"
@@ -17,8 +17,8 @@
               ></v-progress-circular>
             </v-col>
           </v-row>
-        </v-container> -->
-    </v-main>
+        </v-container>
+    </v-main> -->
   </v-app>
 </template>
 
