@@ -1,28 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <v-toolbar-title>
-        <router-link to="/" class="white--text text-decoration-none">Flatwise</router-link>
-      </v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon to="/createFlat" v-if="user">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-
-      <v-btn icon to="/settings" v-if="user">
-        <v-icon>mdi-cog</v-icon>
-      </v-btn>
-
-      <v-btn icon @click="logUserOut" v-if="user">
-        <v-icon>mdi-logout-variant</v-icon>
-      </v-btn>
-
-    </v-app-bar>
-
+    <router-view></router-view>
     <v-main>
-        <router-view></router-view>
         <!-- <router-view v-if="!loading"></router-view>
         <v-container fill-height fluid v-else>
           <v-row
@@ -60,15 +39,6 @@ export default {
         this.$store.dispatch('initializeStore', user.uid)
       }
     })
-  },
-  methods: {
-    logUserOut () {
-      firebase.auth().signOut().then(function () {
-        console.log('Signed Out')
-      }, function (error) {
-        console.error('Sign Out Error', error)
-      })
-    }
   }
 }
 </script>
