@@ -1,13 +1,15 @@
 <template>
   <v-card v-if="!selectedFlatIndex" class="mx-auto" max-width="500" flat>
-    <v-list>
+    <v-list two-line>
       <v-list-item-group v-model="selectedFlatIndex">
+        <v-subheader inset>Flats</v-subheader>
         <v-list-item v-for="(flat, i) in flats" :key="i">
           <v-list-item-icon>
             <v-icon>mdi-home-city-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title v-text="flat.name"></v-list-item-title>
+            <v-list-item-subtitle v-text="flat.flatmates.join(', ')"></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
