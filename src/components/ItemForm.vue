@@ -1,77 +1,75 @@
 <template>
-  <div>
-    <v-form v-model="isFormValid">
-      <v-container>
-        <v-row>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field v-model="item.name" :rules="nameRules" label="Item name" required />
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              v-model="item.price"
-              type="number"
-              :rules="priceRules"
-              label="Purchace price"
-              suffix="CHF"
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-dialog ref="dialog" :return-value.sync="item.date" persistent width="290px">
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="item.date"
-                  label="Purchace date"
-                  append-icon="mdi-calendar"
-                  :rules="dateRules"
-                  readonly
-                  required
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
-            </v-dialog>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <v-text-field
-              v-model.number="item.depreciationRate"
-              :rules="rateRules"
-              type="number"
-              label="Annual depreciation rate"
-              min="0"
-              max="100"
-              required
-              suffix="%"
-            />
-          </v-col>
-          <v-col cols="12" sm="6" v-show="item.depreciationRate < 100">
-            <v-text-field
-              v-model.number="item.lowestPriceRate"
-              :rules="rateRules"
-              type="number"
-              label="Lowest price rate"
-              min="0"
-              max="100"
-              suffix="%"
-              required
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-autocomplete
-              v-model="item.shareAmongst"
-              :items="flatmates"
-              chips
-              label="Share amongst"
-              multiple
-            ></v-autocomplete>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-form>
-  </div>
+  <v-form v-model="isFormValid">
+    <v-container>
+      <v-row>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field v-model="item.name" :rules="nameRules" label="Item name" required />
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            v-model="item.price"
+            type="number"
+            :rules="priceRules"
+            label="Purchace price"
+            suffix="CHF"
+            required
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="6" md="4">
+          <v-dialog ref="dialog" :return-value.sync="item.date" persistent width="290px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="item.date"
+                label="Purchace date"
+                append-icon="mdi-calendar"
+                :rules="dateRules"
+                readonly
+                required
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <v-text-field
+            v-model.number="item.depreciationRate"
+            :rules="rateRules"
+            type="number"
+            label="Annual depreciation rate"
+            min="0"
+            max="100"
+            required
+            suffix="%"
+          />
+        </v-col>
+        <v-col cols="12" sm="6" v-show="item.depreciationRate < 100">
+          <v-text-field
+            v-model.number="item.lowestPriceRate"
+            :rules="rateRules"
+            type="number"
+            label="Lowest price rate"
+            min="0"
+            max="100"
+            suffix="%"
+            required
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-autocomplete
+            v-model="item.shareAmongst"
+            :items="flatmates"
+            chips
+            label="Share amongst"
+            multiple
+          ></v-autocomplete>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-form>
 </template>
 
 <script>
