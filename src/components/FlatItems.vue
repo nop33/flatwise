@@ -1,6 +1,5 @@
 <template>
-  <v-card>
-    <v-card-title>{{ flat.name }}</v-card-title>
+  <v-card flat>
     <v-list>
       <v-list-item-group v-model="selectedItem">
         <v-list-item v-for="item in flat.items" :key="item.id">
@@ -13,9 +12,6 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
-    <v-btn fab color="red white--text" bottom right fixed :to="{ name: 'AddItem', params: { flatId: flat.id } }">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
   </v-card>
 </template>
 

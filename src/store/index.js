@@ -23,7 +23,7 @@ export default new Vuex.Store({
     selectedFlat: state => state.flats[state.selectedFlatIndex]
   },
   mutations: {
-    SET_SELECTED_FLAT_ID (state, flatIndex) {
+    SET_SELECTED_FLAT_INDEX (state, flatIndex) {
       state.selectedFlatIndex = flatIndex
     },
     SET_USER (state, user) {
@@ -79,7 +79,7 @@ export default new Vuex.Store({
   },
   actions: {
     selectFlat ({ commit }, flatIndex) {
-      commit('SET_SELECTED_FLAT_ID', flatIndex)
+      commit('SET_SELECTED_FLAT_INDEX', flatIndex)
     },
     setUser ({ commit }, user) {
       commit('SET_USER', user)

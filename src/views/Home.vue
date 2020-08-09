@@ -25,6 +25,13 @@ export default {
     ...mapGetters([
       'selectedFlat'
     ])
+  },
+  watch: {
+    selectedFlat (newValue) {
+      if (newValue) {
+        this.$router.push({ name: 'Flat', params: { flatId: newValue.id } })
+      }
+    }
   }
 }
 </script>

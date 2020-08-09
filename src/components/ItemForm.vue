@@ -2,7 +2,6 @@
   <div>
     <v-form v-model="isFormValid">
       <v-container>
-        <h1>Add a new item</h1>
         <v-row>
           <v-col cols="12" sm="6" md="4">
             <v-text-field v-model="item.name" :rules="nameRules" label="Item name" required />
@@ -63,17 +62,11 @@
           <v-col>
             <v-autocomplete
               v-model="item.shareAmongst"
-              :items="selectedFlat.flatmates"
+              :items="flatmates"
               chips
               label="Share amongst"
               multiple
             ></v-autocomplete>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-btn class="mr-2" color="primary" @click="save" :disabled="!isFormValid">Save</v-btn>
-            <v-btn color="warning" to="/">Cancel</v-btn>
           </v-col>
         </v-row>
       </v-container>
@@ -82,24 +75,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   props: [
-    'id',
-    'flatId'
+    'item',
+    'flatmates'
   ],
   data () {
     return {
       isFormValid: false,
-      item: {
-        name: '',
-        price: '',
-        date: '',
-        shareAmongst: [],
-        depreciationRate: 0,
-        lowestPriceRate: 0
-      },
       nameRules: [
         v => !!v || 'Name is required'
       ],
@@ -112,37 +95,6 @@ export default {
       rateRules: [
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ]
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'selectedFlat'
-    ])
-  },
-  watch: {
-    selectedFlat (flat) {
-      if (!this.id) {
-        this.item.shareAmongst = [...flat.flatmates]
-        this.item.depreciationRate = flat.depreciationRate
-        this.item.lowestPriceRate = flat.lowestPriceRate
-      }
-    }
-  },
-  created () {
-    if (this.id) {
-      // implement edit
-    } else {
-      this.item.shareAmongst = [...this.selectedFlat.flatmates]
-      this.item.depreciationRate = this.selectedFlat.depreciationRate
-      this.item.lowestPriceRate = this.selectedFlat.lowestPriceRate
-    }
-  },
-  methods: {
-    save () {
-      const action = Object.prototype.hasOwnProperty.call(this.item, 'id') ? 'updateItem' : 'addItem'
-      this.$store.dispatch(action, this.item).then(() => {
-        this.$router.push('/')
-      })
     }
   }
 }

@@ -20,31 +20,37 @@ const routes = [
     component: Login
   },
   {
-    path: '/flat/:flatId/add',
-    name: 'AddItem',
-    props: true,
-    component: () => import(/* webpackChunkName: "add" */ '../views/ItemForm.vue')
-  },
-  {
     path: '/register',
     name: 'Register',
     component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
   },
   {
-    path: '/edit/:id',
-    name: 'EditItem',
+    path: '/flats/add',
+    name: 'Add Flat',
+    component: () => import(/* webpackChunkName: "createFlat" */ '../views/CreateFlat.vue')
+  },
+  {
+    path: '/flat/:flatId',
+    name: 'Flat',
     props: true,
-    component: () => import(/* webpackChunkName: "edit" */ '../views/ItemForm.vue')
+    component: () => import(/* webpackChunkName: "add" */ '../views/Flat.vue')
+  },
+  {
+    path: '/flat/:flatId/add',
+    name: 'Add Item',
+    props: true,
+    component: () => import(/* webpackChunkName: "add" */ '../views/AddItem.vue')
+  },
+  {
+    path: '/edit/:id',
+    name: 'Edit Item',
+    props: true,
+    component: () => import(/* webpackChunkName: "edit" */ '../views/EditItem.vue')
   },
   {
     path: '/settings',
     name: 'Settings',
     component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
-  },
-  {
-    path: '/createFlat',
-    name: 'Create Flat',
-    component: () => import(/* webpackChunkName: "createFlat" */ '../views/CreateFlat.vue')
   }
 ]
 
