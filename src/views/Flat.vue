@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 import FlatItems from '@/components/FlatItems.vue'
 
 export default {
@@ -51,25 +49,16 @@ export default {
     FlatItems
   },
   props: [
-    'flatId'
+    'flatId',
+    'getFlat'
   ],
   data: () => {
     return {
       flat: {}
     }
   },
-  computed: {
-    ...mapGetters([
-      'selectedFlat',
-      'flatById'
-    ])
-  },
   created () {
-    if (!this.selectedFlat) {
-      this.flat = this.flatById(this.flatId)
-    } else {
-      this.flat = this.selectedFlat
-    }
+    this.flat = this.getFlat(this.flatId)
   },
   methods: {
     goHome () {

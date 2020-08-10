@@ -33,7 +33,7 @@ export default {
   },
   watch: {
     selectedFlatIndex (flatIndex) {
-      this.$store.dispatch('selectFlat', flatIndex)
+      this.$store.dispatch('selectFlat', this.flats[flatIndex])
     },
     flats (newValue) {
       if (newValue.length === 1) {

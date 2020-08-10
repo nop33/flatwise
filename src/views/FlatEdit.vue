@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-
 import FlatForm from '@/components/FlatForm.vue'
 
 export default {
@@ -24,28 +22,16 @@ export default {
     FlatForm
   },
   props: [
-    'flatId'
+    'flatId',
+    'getFlat'
   ],
   data: () => {
     return {
       flat: {}
     }
   },
-  computed: {
-    ...mapState([
-      'user'
-    ]),
-    ...mapGetters([
-      'selectedFlat',
-      'flatById'
-    ])
-  },
   created () {
-    if (!this.selectedFlat) {
-      this.flat = this.flatById(this.flatId)
-    } else {
-      this.flat = this.selectedFlat
-    }
+    this.flat = this.getFlat(this.flatId)
   },
   methods: {
     goToFlat () {

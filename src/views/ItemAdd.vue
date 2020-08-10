@@ -9,14 +9,12 @@
       <v-btn text large @click="save">Save</v-btn>
     </v-toolbar>
     <v-main>
-      <ItemForm :item="item" :flatmates="selectedFlat.flatmates" />
+      <ItemForm :item="item" :flatmates="flat.flatmates" />
     </v-main>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 import ItemForm from '@/components/ItemForm.vue'
 
 export default {
@@ -24,10 +22,13 @@ export default {
     ItemForm
   },
   props: [
-    'flatId'
+    'flatId',
+    'getFlat',
+    'getFlatItems'
   ],
   data: () => {
     return {
+      flat: {},
       item: {
         name: '',
         price: '',
@@ -38,15 +39,12 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters([
-      'selectedFlat'
-    ])
-  },
   created () {
-    this.item.shareAmongst = [...this.selectedFlat.flatmates]
-    this.item.depreciationRate = this.selectedFlat.depreciationRate
-    this.item.lowestPriceRate = this.selectedFlat.lowestPriceRate
+    this.flat = this.getFlat(this.flatId)
+    this.item.shareAmongst = [...this.flat.flatmates]
+    this.item.depreciationRate = this.flat.depreciationRate
+    this.item.lowestPriceRate = this.flat.lowestPriceRate
+    this.getFlatItems(this.flatId)
   },
   methods: {
     goToFlat () {

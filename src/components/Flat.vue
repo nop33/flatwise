@@ -127,7 +127,6 @@ export default {
     if (!this.flat) {
       // get it from firestore
     }
-    console.log(this.flat)
   },
   data () {
     return {

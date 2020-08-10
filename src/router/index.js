@@ -32,25 +32,25 @@ const routes = [
   {
     path: '/flat/:flatId',
     name: 'Flat',
-    props: true,
+    props: route => ({ ...route.params, getFlat: getFlat }),
     component: () => import(/* webpackChunkName: "flat" */ '../views/Flat.vue')
   },
   {
     path: '/flat/:flatId/edit',
     name: 'Edit Flat',
-    props: true,
+    props: route => ({ ...route.params, getFlat: getFlat }),
     component: () => import(/* webpackChunkName: "editFlat" */ '../views/FlatEdit.vue')
   },
   {
     path: '/flat/:flatId/item/:itemId',
     name: 'Item',
-    props: true,
+    props: route => ({ ...route.params, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "item" */ '../views/Item.vue')
   },
   {
     path: '/flat/:flatId/add',
     name: 'Add Item',
-    props: true,
+    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "add" */ '../views/ItemAdd.vue')
   },
   {
@@ -97,5 +97,25 @@ router.beforeEach((to, from, next) => {
   //   }
   // });
 })
+
+function getFlat (flatId) {
+  let flat = {}
+  if (!store.selectedFlat) {
+    flat = store.getters.flatById(flatId)
+    store.dispatch('selectFlat', flat)
+  } else {
+    flat = store.selectedFlat
+  }
+  return flat
+}
+
+function getFlatItems (flatId) {
+  return new Promise((resolve) => {
+    const flat = getFlat(flatId)
+    store.dispatch('fetchFlatItems', flat).then(() => {
+      resolve()
+    })
+  })
+}
 
 export default router

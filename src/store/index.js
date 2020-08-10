@@ -16,17 +16,16 @@ export default new Vuex.Store({
     flatmateMovingOut: '',
     items: [], // will be filled from firestore
     flats: [],
-    selectedFlatIndex: null
+    selectedFlat: null
   },
   getters: {
     itemById: state => itemId => state.items.find(item => item.id === itemId),
     flatById: state => flatId => state.flats.find(flat => flat.id === flatId),
-    selectedFlat: state => state.flats[state.selectedFlatIndex],
     flatItemById: state => (flatId, itemId) => state.flats.find(flat => flat.id === flatId).items.find(item => item.id === itemId)
   },
   mutations: {
-    SET_SELECTED_FLAT_INDEX (state, flatIndex) {
-      state.selectedFlatIndex = flatIndex
+    SET_SELECTED_FLAT (state, flat) {
+      state.selectedFlat = flat
     },
     SET_USER (state, user) {
       state.user = user
@@ -87,8 +86,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    selectFlat ({ commit }, flatIndex) {
-      commit('SET_SELECTED_FLAT_INDEX', flatIndex)
+    selectFlat ({ commit }, flat) {
+      commit('SET_SELECTED_FLAT', flat)
     },
     setUser ({ commit }, user) {
       commit('SET_USER', user)
@@ -113,10 +112,10 @@ export default new Vuex.Store({
     setMoveOutDate ({ commit }, date) {
       commit('SET_MOVE_OUT_DATE', date)
     },
-    addItem ({ getters, commit }, itemData) {
+    addItem ({ state, commit }, itemData) {
       commit('TOGGLE_LOADER', true)
       const id = Date.now().toString()
-      const selectedFlat = getters.selectedFlat
+      const selectedFlat = state.selectedFlat
       Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(`${id}`).set(itemData).then(() => {
         itemData.id = id
         commit('ADD_ITEM', { itemData, selectedFlat })
@@ -165,7 +164,7 @@ export default new Vuex.Store({
       commit('TOGGLE_LOADER', toggle)
     },
     createFlat ({ commit }, flatData) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         flatData.items = []
         Vue.prototype.$db.flats.add(flatData).then((docRef) => {
           const flat = { id: docRef.id, ...flatData }

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import FlatsList from '@/components/FlatsList.vue'
 import AppBarHome from '@/components/AppBarHome.vue'
@@ -23,9 +23,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'flats'
-    ]),
-    ...mapGetters([
+      'flats',
       'selectedFlat'
     ])
   },

@@ -5,7 +5,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>
-        <div class="">{{ item.name }}</div>
+        <div>{{ item.name }}</div>
         <div class="mt-2">{{ item.price }} CHF</div>
         <div class="text-caption mt-1">Bought on {{ item.date }}</div>
       </v-toolbar-title>
@@ -37,11 +37,12 @@ import { mapGetters } from 'vuex'
 export default {
   props: [
     'flatId',
-    'itemId'
+    'itemId',
+    'getFlatItems'
   ],
   data: () => {
     return {
-      item: null
+      item: {}
     }
   },
   computed: {
@@ -50,7 +51,14 @@ export default {
     ])
   },
   created () {
-    this.item = this.flatItemById(this.flatId, this.itemId)
+    const item = this.flatItemById(this.flatId, this.itemId)
+    if (!item) {
+      this.getFlatItems(this.flatId).then(() => {
+        this.item = this.flatItemById(this.flatId, this.itemId)
+      })
+    } else {
+      this.item = item
+    }
   },
   methods: {
     edit () {
