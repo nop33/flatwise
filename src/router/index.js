@@ -36,6 +36,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "flat" */ '../views/Flat.vue')
   },
   {
+    path: '/flat/:flatId/edit',
+    name: 'Edit Flat',
+    props: true,
+    component: () => import(/* webpackChunkName: "editFlat" */ '../views/FlatEdit.vue')
+  },
+  {
     path: '/flat/:flatId/item/:itemId',
     name: 'Item',
     props: true,

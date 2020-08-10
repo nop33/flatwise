@@ -19,6 +19,9 @@
             multiple
             chips
             prepend-icon="mdi-account-group"
+            :disabled="isInEditMode"
+            :hint="hint"
+            :persistent-hint="isInEditMode"
           ></v-combobox>
         </v-col>
       </v-row>
@@ -52,8 +55,17 @@
 <script>
 export default {
   props: [
-    'flat'
+    'flat',
+    'edit'
   ],
+  computed: {
+    isInEditMode () {
+      return this.edit !== undefined
+    },
+    hint () {
+      return this.isInEditMode ? 'You can only add or remove flatmates from the previous screen' : ''
+    }
+  },
   data: () => {
     return {
       isFormValid: false,

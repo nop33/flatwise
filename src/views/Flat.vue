@@ -19,7 +19,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item>
+          <v-list-item link :to="{ name: 'Edit Flat', params: { flatId } }">
             <v-list-item-title>Edit flat settings</v-list-item-title>
           </v-list-item>
         </v-list>

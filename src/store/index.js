@@ -72,6 +72,12 @@ export default new Vuex.Store({
     CREATE_FLAT (state, flatData) {
       state.flats.push(flatData)
     },
+    UPDATE_FLAT (state, flatData) {
+      const flat = state.flats.find(flat => flat.id === flatData.id)
+      flat.name = flatData.name
+      flat.depreciationRate = flatData.depreciationRate
+      flat.lowestPriceRate = flatData.lowestPriceRate
+    },
     SET_FLATS (state, flats) {
       state.flats = flats
       state.isStoreInitialized = true
@@ -152,7 +158,7 @@ export default new Vuex.Store({
     },
     async initializeStore ({ state, commit }, userId) {
       const response = await Vue.prototype.$db.flats.where('flatmatesUids', 'array-contains', userId).get()
-      const flats = response.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      const flats = response.docs.map(doc => ({ id: doc.id, ...doc.data(), items: [] }))
       commit('SET_FLATS', flats)
     },
     toggleLoader ({ commit }, toggle) {
@@ -166,6 +172,15 @@ export default new Vuex.Store({
           commit('CREATE_FLAT', flat)
           resolve(docRef.id)
         })
+      })
+    },
+    updateFlat ({ commit }, flatData) {
+      Vue.prototype.$db.flats.doc(flatData.id).update({
+        name: flatData.name,
+        depreciationRate: flatData.depreciationRate,
+        lowestPriceRate: flatData.lowestPriceRate
+      }).then(() => {
+        commit('UPDATE_FLAT', flatData)
       })
     }
   },
