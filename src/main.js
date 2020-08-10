@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import VueFirestore from 'vue-firestore'
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import 'firebase/firestore'
 
 Vue.config.productionTip = false
@@ -34,5 +35,13 @@ new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App)
+  render: h => h(App),
+  created () {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log('initializing...')
+        store.dispatch('initializeStore', user.uid)
+      }
+    })
+  }
 }).$mount('#app')
