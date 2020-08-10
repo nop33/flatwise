@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="flat">
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll >
       <v-btn icon @click="goHome">
         <v-icon>mdi-arrow-left</v-icon>
