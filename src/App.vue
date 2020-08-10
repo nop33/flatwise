@@ -1,24 +1,7 @@
 <template>
   <v-app>
-    <router-view></router-view>
-    <!-- <v-main>
-        <router-view v-if="!loading"></router-view>
-        <v-container fill-height fluid v-else>
-          <v-row
-            align="center"
-            justify="center"
-          >
-            <v-col>
-              <v-progress-circular
-                :size="50"
-                color="primary"
-                indeterminate
-                align="center"
-              ></v-progress-circular>
-            </v-col>
-          </v-row>
-        </v-container>
-    </v-main> -->
+    <router-view v-if="isStoreInitialized"></router-view>
+    <Loader v-else />
   </v-app>
 </template>
 
@@ -27,10 +10,16 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import { mapState } from 'vuex'
 
+import Loader from '@/views/Loader.vue'
+
 export default {
+  components: {
+    Loader
+  },
   computed: {
     ...mapState([
-      'user'
+      'user',
+      'isStoreInitialized'
     ])
   },
   created () {

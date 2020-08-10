@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    isStoreInitialized: false,
     user: null,
     loading: true,
     depreciationRate: 0,
@@ -73,6 +74,7 @@ export default new Vuex.Store({
     },
     SET_FLATS (state, flats) {
       state.flats = flats
+      state.isStoreInitialized = true
     },
     SET_FLAT_ITEMS (state, { flat, items }) {
       flat.items = items
