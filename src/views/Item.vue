@@ -9,7 +9,7 @@
         <div class="mt-2">{{ item.price }} CHF</div>
         <div class="text-caption mt-1">Bought on {{ item.date }}</div>
       </v-toolbar-title>
-      <v-btn color="red" dark absolute bottom right fab @click="edit">
+      <v-btn color="red" dark absolute bottom right fab :to="{ name: 'Edit Item', params: { flatId, itemId } }">
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
     </v-app-bar>
@@ -61,9 +61,6 @@ export default {
     }
   },
   methods: {
-    edit () {
-      // todo
-    },
     goToFlat () {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
     }

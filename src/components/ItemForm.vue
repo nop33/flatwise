@@ -61,7 +61,7 @@
         <v-col>
           <v-autocomplete
             v-model="item.shareAmongst"
-            :items="flatmates"
+            :items="item.shareAmongst || flatmates"
             chips
             label="Share amongst"
             multiple
