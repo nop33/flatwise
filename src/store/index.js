@@ -58,7 +58,8 @@ export default new Vuex.Store({
       item.lowestPriceRate = itemData.lowestPriceRate
     },
     DELETE_ITEM (state, itemData) {
-      state.items.splice(state.items.indexOf(state.items.find(item => item.id === itemData.id)), 1)
+      const items = state.selectedFlat.items
+      items.splice(items.indexOf(items.find(item => item.id === itemData.id)), 1)
     },
     UPDATE_SETTINGS (state, settingsData) {
       state.depreciationRate = settingsData.depreciationRate
@@ -128,11 +129,10 @@ export default new Vuex.Store({
         commit('UPDATE_ITEM', itemData)
       })
     },
-    deleteItem ({ commit }, itemData) {
-      commit('TOGGLE_LOADER', true)
-      Vue.prototype.$db.items.doc(itemData.id).delete().then(() => {
+    deleteItem ({ state, commit }, itemData) {
+      const selectedFlat = state.selectedFlat
+      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).delete().then(() => {
         commit('DELETE_ITEM', itemData)
-        commit('TOGGLE_LOADER', false)
       })
     },
     updateSettings ({ state, commit }, settingsData) {

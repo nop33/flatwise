@@ -27,6 +27,9 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <div class="d-flex justify-center ma-5">
+        <v-btn color="warning" @click="deleteItem">Delete item</v-btn>
+      </div>
     </v-main>
   </div>
 </template>
@@ -63,6 +66,11 @@ export default {
   methods: {
     goToFlat () {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
+    },
+    deleteItem () {
+      if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
+        this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
+      }
     }
   }
 }
