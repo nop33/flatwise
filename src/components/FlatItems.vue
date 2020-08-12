@@ -31,7 +31,7 @@ export default {
   },
   watch: {
     selectedItemIndex (newValue) {
-      if (newValue) {
+      if (newValue >= 0) {
         this.$router.push({
           name: 'Item',
           params: {
