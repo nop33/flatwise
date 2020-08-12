@@ -7,8 +7,8 @@
       <v-spacer />
       <v-toolbar-title>
         <div class="d-flex flex-column">
-          <span>{{ flat.name }}</span>
-          <v-btn class="mt-5" color="red">Calculate costs</v-btn>
+          <span class="text-center">{{ flat.name }}</span>
+          <v-btn class="mt-5" color="red">Calculate total value</v-btn>
         </div>
       </v-toolbar-title>
       <v-spacer />
