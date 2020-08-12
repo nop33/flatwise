@@ -5,9 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isStoreInitialized: false,
     user: null,
-    loading: true,
+    loading: false,
     depreciationRate: 0,
     lowestPriceRate: 0,
     flatmates: [],
@@ -114,13 +113,11 @@ export default new Vuex.Store({
       commit('SET_MOVE_OUT_DATE', date)
     },
     addItem ({ state, commit }, itemData) {
-      commit('TOGGLE_LOADER', true)
       const id = Date.now().toString()
       const selectedFlat = state.selectedFlat
       Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(id).set(itemData).then(() => {
         itemData.id = id
         commit('ADD_ITEM', { itemData, selectedFlat })
-        commit('TOGGLE_LOADER', false)
       })
     },
     updateItem ({ state, commit }, itemData) {
@@ -136,10 +133,8 @@ export default new Vuex.Store({
       })
     },
     updateSettings ({ state, commit }, settingsData) {
-      commit('TOGGLE_LOADER', true)
       Vue.prototype.$db.settings.doc(state.settingsId).set(settingsData).then(() => {
         commit('UPDATE_SETTINGS', settingsData)
-        commit('TOGGLE_LOADER', false)
       })
     },
     async fetchFlatItems ({ commit }, flat) {
@@ -153,10 +148,12 @@ export default new Vuex.Store({
       })
       commit('SET_FLAT_ITEMS', { flat, items })
     },
-    async initializeStore ({ state, commit }, userId) {
+    async initializeStore ({ commit }, userId) {
+      commit('TOGGLE_LOADER', true)
       const response = await Vue.prototype.$db.flats.where('flatmatesUids', 'array-contains', userId).get()
       const flats = response.docs.map(doc => ({ id: doc.id, ...doc.data(), items: [] }))
       commit('SET_FLATS', flats)
+      commit('TOGGLE_LOADER', false)
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)

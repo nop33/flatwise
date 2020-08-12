@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <router-view v-if="isStoreInitialized"></router-view>
+    <router-view v-if="!loading"></router-view>
     <Loader v-else />
   </v-app>
 </template>
@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'isStoreInitialized'
+      'loading'
     ])
   }
 }
