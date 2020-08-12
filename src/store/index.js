@@ -49,7 +49,7 @@ export default new Vuex.Store({
       selectedFlat.items.push(itemData)
     },
     UPDATE_ITEM (state, itemData) {
-      const item = state.items.find(item => item.id === itemData.id)
+      const item = state.selectedFlat.items.find(item => item.id === itemData.id)
       item.name = itemData.name
       item.price = itemData.price
       item.date = itemData.date
@@ -116,18 +116,16 @@ export default new Vuex.Store({
       commit('TOGGLE_LOADER', true)
       const id = Date.now().toString()
       const selectedFlat = state.selectedFlat
-      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(`${id}`).set(itemData).then(() => {
+      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(id).set(itemData).then(() => {
         itemData.id = id
         commit('ADD_ITEM', { itemData, selectedFlat })
         commit('TOGGLE_LOADER', false)
       })
     },
-    updateItem ({ commit }, itemData) {
-      commit('TOGGLE_LOADER', true)
-      const { id, ...data } = itemData
-      Vue.prototype.$db.items.doc(id).set(data).then(() => {
+    updateItem ({ state, commit }, itemData) {
+      const selectedFlat = state.selectedFlat
+      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).update(itemData).then(() => {
         commit('UPDATE_ITEM', itemData)
-        commit('TOGGLE_LOADER', false)
       })
     },
     deleteItem ({ commit }, itemData) {

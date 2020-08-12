@@ -53,7 +53,7 @@ export default {
       this.$router.push({ name: 'Item', params: { flatId: this.flatId, itemId: this.itemId } })
     },
     save () {
-      // todo
+      this.$store.dispatch('updateItem', this.item).then(this.goToItem)
     }
   }
 }
