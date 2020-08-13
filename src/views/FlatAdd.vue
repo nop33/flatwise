@@ -27,8 +27,7 @@ export default {
     return {
       flat: {
         name: '',
-        flatmates: [],
-        flatmatesUids: [],
+        flatmatesEmails: [],
         items: [],
         depreciationRate: 20,
         lowestPriceRate: 20
@@ -41,8 +40,7 @@ export default {
     ])
   },
   created () {
-    this.flat.flatmates.push(this.user.displayName)
-    this.flat.flatmatesUids.push(this.user.id)
+    this.flat.flatmatesEmails.push(this.user.email)
   },
   methods: {
     goHome () {

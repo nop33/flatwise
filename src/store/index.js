@@ -76,6 +76,7 @@ export default new Vuex.Store({
       flat.name = flatData.name
       flat.depreciationRate = flatData.depreciationRate
       flat.lowestPriceRate = flatData.lowestPriceRate
+      flat.flatmatesNames = flatData.flatmatesNames
     },
     SET_FLATS (state, flats) {
       state.flats = flats
@@ -92,10 +93,9 @@ export default new Vuex.Store({
     setUser ({ commit }, user) {
       commit('SET_USER', user)
     },
-    registerUser ({ commit }, user) {
-      Vue.prototype.$db.users.doc(user.id).set(user).then(() => {
-        commit('SET_USER', user)
-      })
+    async registerUser ({ commit }, user) {
+      await Vue.prototype.$db.users.doc(user.id).set(user)
+      commit('SET_USER', user)
     },
     setDepreciationRate ({ commit }, rate) {
       commit('SET_DEPRECIATION_RATE', rate)
@@ -148,19 +148,36 @@ export default new Vuex.Store({
       })
       commit('SET_FLAT_ITEMS', { flat, items })
     },
-    async initializeStore ({ commit }, userId) {
+    async initializeStore ({ commit }, user) {
       commit('TOGGLE_LOADER', true)
-      const response = await Vue.prototype.$db.flats.where('flatmatesUids', 'array-contains', userId).get()
-      const flats = response.docs.map(doc => ({ id: doc.id, ...doc.data(), items: [] }))
+      const response = await Vue.prototype.$db.flats.where('flatmatesEmails', 'array-contains', user.email).get()
+      const flats = response.docs.map(flat => {
+        const flatData = flat.data()
+        if (flatData.flatmatesNames.includes(user.email)) {
+          flatData.flatmatesNames.splice(flatData.flatmatesNames.indexOf(user.email), 1, user.displayName)
+          Vue.prototype.$db.flats.doc(flat.id).update({ flatmatesNames: flatData.flatmatesNames })
+        }
+
+        const returnValue = {
+          id: flat.id,
+          ...flat.data()
+        }
+        returnValue.flatmatesNames = flatData.flatmatesNames
+        return returnValue
+      })
       commit('SET_FLATS', flats)
       commit('TOGGLE_LOADER', false)
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)
     },
-    createFlat ({ commit }, flatData) {
+    createFlat ({ state, commit }, flatData) {
       return new Promise((resolve) => {
         flatData.items = []
+        flatData.flatmatesNames = [
+          state.user.displayName,
+          ...flatData.flatmatesEmails.filter(email => email !== state.user.email)
+        ]
         Vue.prototype.$db.flats.add(flatData).then((docRef) => {
           const flat = { id: docRef.id, ...flatData }
           commit('CREATE_FLAT', flat)

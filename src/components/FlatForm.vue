@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12">
           <v-combobox
-            v-model="flat.flatmates"
+            v-model="flat.flatmatesEmails"
             label="Flatmates"
             multiple
             chips

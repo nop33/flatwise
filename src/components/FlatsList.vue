@@ -9,7 +9,7 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title v-text="flat.name"></v-list-item-title>
-            <v-list-item-subtitle class="mt-1" v-text="flat.flatmates.join(', ')"></v-list-item-subtitle>
+            <v-list-item-subtitle class="mt-1" v-text="flat.flatmatesNames.join(', ')"></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
