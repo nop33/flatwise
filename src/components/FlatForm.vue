@@ -58,14 +58,6 @@ export default {
     'flat',
     'edit'
   ],
-  computed: {
-    isInEditMode () {
-      return this.edit !== undefined
-    },
-    hint () {
-      return this.isInEditMode ? 'You can only add or remove flatmates from the previous screen' : ''
-    }
-  },
   data: () => {
     return {
       isFormValid: false,
@@ -80,6 +72,14 @@ export default {
         v => !!v || 'Rate is required',
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ]
+    }
+  },
+  computed: {
+    isInEditMode () {
+      return this.edit !== undefined
+    },
+    hint () {
+      return this.isInEditMode ? 'You can only add or remove flatmates from the previous screen' : ''
     }
   }
 }
