@@ -83,25 +83,22 @@ export default new Vuex.Store({
     setMoveOutDate ({ commit }, date) {
       commit('SET_MOVE_OUT_DATE', date)
     },
-    addItem ({ state, commit }, itemData) {
+    async addItem ({ state, commit }, itemData) {
       const id = Date.now().toString()
       const selectedFlat = state.selectedFlat
-      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(id).set(itemData).then(() => {
-        itemData.id = id
-        commit('ADD_ITEM', { itemData, selectedFlat })
-      })
+      await Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(id).set(itemData)
+      itemData.id = id
+      commit('ADD_ITEM', { itemData, selectedFlat })
     },
-    updateItem ({ state, commit }, itemData) {
+    async updateItem ({ state, commit }, itemData) {
       const selectedFlat = state.selectedFlat
-      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).update(itemData).then(() => {
-        commit('UPDATE_ITEM', itemData)
-      })
+      await Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
+      commit('UPDATE_ITEM', itemData)
     },
-    deleteItem ({ state, commit }, itemData) {
+    async deleteItem ({ state, commit }, itemData) {
       const selectedFlat = state.selectedFlat
-      Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).delete().then(() => {
-        commit('DELETE_ITEM', itemData)
-      })
+      await Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).delete()
+      commit('DELETE_ITEM', itemData)
     },
     async fetchFlatItems ({ commit }, flat) {
       const items = []
@@ -151,14 +148,13 @@ export default new Vuex.Store({
         })
       })
     },
-    updateFlat ({ commit }, flatData) {
-      Vue.prototype.$db.flats.doc(flatData.id).update({
+    async updateFlat ({ commit }, flatData) {
+      await Vue.prototype.$db.flats.doc(flatData.id).update({
         name: flatData.name,
         depreciationRate: flatData.depreciationRate,
         lowestPriceRate: flatData.lowestPriceRate
-      }).then(() => {
-        commit('UPDATE_FLAT', flatData)
       })
+      commit('UPDATE_FLAT', flatData)
     }
   },
   modules: {
