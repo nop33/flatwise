@@ -37,7 +37,7 @@ new Vue({
   created () {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        store.dispatch('initializeStore', user)
+        store.dispatch('initializeStore')
       }
     })
   }

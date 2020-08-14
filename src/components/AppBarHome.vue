@@ -4,11 +4,11 @@
       <v-list nav>
         <v-list-item v-if="user">
           <v-list-item-avatar>
-            <v-img v-if="user.photoURL" :src="user.photoURL" referrerpolicy="no-referrer" />
+            <v-img v-if="user.photo" :src="user.photo" referrerpolicy="no-referrer" />
             <v-icon v-else class="text-h2 primary--text">mdi-account-circle</v-icon>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title class="title">{{ user.displayName }}</v-list-item-title>
+            <v-list-item-title class="title">{{ user.name }}</v-list-item-title>
             <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>

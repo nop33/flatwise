@@ -14,10 +14,10 @@ export default {
         this.$db.users.doc(currentUserId).get().then(doc => {
           if (!doc.exists) {
             this.$store.dispatch('registerUser', {
-              displayName: user.displayName,
+              id: user.uid,
+              name: user.displayName,
               email: user.email,
-              photoURL: user.photoURL,
-              id: user.uid
+              photo: user.photoURL
             }).then(() => {
               this.$router.push('/')
             })

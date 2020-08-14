@@ -64,6 +64,7 @@ export default new Vuex.Store({
     },
     SET_FLAT_ITEMS (state, { flat, items }) {
       flat.items = items
+      console.log('flat items set in store', flat.items)
     }
   },
   actions: {
@@ -101,49 +102,88 @@ export default new Vuex.Store({
       commit('DELETE_ITEM', itemData)
     },
     async fetchFlatItems ({ commit }, flat) {
-      const items = []
-      const results = await Vue.prototype.$db.flats.doc(flat.id).collection('items').get()
-      results.forEach(doc => {
-        items.push({
-          id: doc.id,
-          ...doc.data()
-        })
-      })
+      const response = await Vue.prototype.$db.flats.doc(flat.id).collection('items').get()
+      const items = response.docs.map(doc => ({ id: doc.id, ...doc.data() }))
       commit('SET_FLAT_ITEMS', { flat, items })
     },
-    async initializeStore ({ commit }, user) {
+    async initializeStore ({ state, commit }) {
+      console.log('initializing store...')
+      console.log('state.user: ', state.user)
       commit('TOGGLE_LOADER', true)
-      const response = await Vue.prototype.$db.flats.where('flatmatesEmails', 'array-contains', user.email).get()
+
+      console.log('checking if "' + state.user.email + '" is initalizied')
+      // Initialize user in flats (s)he have been added to but not initliazed yet
+      let response = await Vue.prototype.$db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
+      for (let index = 0; index < response.docs.length; index++) {
+        const flat = response.docs[index]
+        const flatData = flat.data()
+
+        console.log('initializing "' + state.user.email + '" in flat "' + flatData.name + '"...')
+        console.log('current data', flatData)
+        flatData.emailsOfUninitializedUsers.splice(flatData.emailsOfUninitializedUsers.indexOf(state.user.email), 1)
+        await Vue.prototype.$db.flats.doc(flat.id).update({
+          // Add current user to flatmates
+          flatmates: [state.user, ...flatData.flatmates],
+          // remove his/her email from uninitialized users
+          emailsOfUninitializedUsers: flatData.emailsOfUninitializedUsers,
+          // give him/her access to flat
+          idsOfUsersWithAccess: [state.user.id, ...flatData.idsOfUsersWithAccess]
+        })
+      }
+
+      console.log('getting all flats that "' + state.user.email + '" has access to')
+      response = await Vue.prototype.$db.flats.where('idsOfUsersWithAccess', 'array-contains', state.user.id).get()
       const flats = response.docs.map(flat => {
         const flatData = flat.data()
-        if (flatData.flatmatesNames.includes(user.email)) {
-          flatData.flatmatesNames.splice(flatData.flatmatesNames.indexOf(user.email), 1, user.displayName)
-          Vue.prototype.$db.flats.doc(flat.id).update({ flatmatesNames: flatData.flatmatesNames })
-        }
-
-        const returnValue = {
+        return {
           id: flat.id,
-          ...flat.data()
+          name: flatData.name,
+          depreciationRate: flatData.depreciationRate,
+          lowestPriceRate: flatData.lowestPriceRate,
+          flatmates: flatData.flatmates,
+          emailsOfUninitializedUsers: flatData.emailsOfUninitializedUsers,
+          items: []
         }
-        returnValue.flatmatesNames = flatData.flatmatesNames
-        return returnValue
       })
+      console.log('flats to adding to store:', flats)
       commit('SET_FLATS', flats)
       commit('TOGGLE_LOADER', false)
     },
     toggleLoader ({ commit }, toggle) {
       commit('TOGGLE_LOADER', toggle)
     },
-    createFlat ({ state, commit }, flatData) {
+    createFlat ({ state, commit }, formFlat) {
       return new Promise((resolve) => {
-        flatData.items = []
-        flatData.flatmatesNames = [
-          state.user.displayName,
-          ...flatData.flatmatesEmails.filter(email => email !== state.user.email)
-        ]
-        Vue.prototype.$db.flats.add(flatData).then((docRef) => {
-          const flat = { id: docRef.id, ...flatData }
-          commit('CREATE_FLAT', flat)
+        const databaseFlat = {
+          name: formFlat.name,
+          depreciationRate: formFlat.depreciationRate,
+          lowestPriceRate: formFlat.lowestPriceRate,
+          flatmates: [],
+          emailsOfUninitializedUsers: [],
+          idsOfUsersWithAccess: [state.user.id]
+        }
+        if (formFlat.flatmatesEmails.includes(state.user.email)) {
+          databaseFlat.flatmates.push({
+            email: state.user.email,
+            id: state.user.id,
+            name: state.user.name,
+            photo: state.user.photo
+          })
+        }
+        databaseFlat.emailsOfUninitializedUsers = formFlat.flatmatesEmails.filter(email => email !== state.user.email)
+        console.log('adding new flat to firestore:', databaseFlat)
+        Vue.prototype.$db.flats.add(databaseFlat).then((docRef) => {
+          const storeFlat = {
+            id: docRef.id,
+            name: databaseFlat.name,
+            depreciationRate: databaseFlat.depreciationRate,
+            lowestPriceRate: databaseFlat.lowestPriceRate,
+            flatmates: databaseFlat.flatmates,
+            emailsOfUninitializedUsers: databaseFlat.emailsOfUninitializedUsers,
+            items: []
+          }
+          console.log('adding new flat to store:', storeFlat)
+          commit('CREATE_FLAT', storeFlat)
           resolve(docRef.id)
         })
       })

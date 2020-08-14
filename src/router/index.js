@@ -72,10 +72,10 @@ router.beforeEach((to, from, next) => {
     if (user) {
       if (!store.state.user) {
         store.dispatch('setUser', {
-          displayName: user.displayName,
+          id: user.uid,
+          name: user.displayName,
           email: user.email,
-          photoURL: user.photoURL,
-          id: user.uid
+          photo: user.photoURL
         })
       }
     } else if (to.name !== 'Login') {
