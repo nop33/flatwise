@@ -7,18 +7,12 @@ export default new Vuex.Store({
   state: {
     user: null,
     loading: false,
-    depreciationRate: 0,
-    lowestPriceRate: 0,
-    flatmates: [],
-    settingsId: '',
     moveOutDate: new Date().toISOString().substr(0, 10),
     flatmateMovingOut: '',
-    items: [], // will be filled from firestore
     flats: [],
     selectedFlat: null
   },
   getters: {
-    itemById: state => itemId => state.items.find(item => item.id === itemId),
     flatById: state => flatId => state.flats.find(flat => flat.id === flatId),
     flatItemById: state => (flatId, itemId) => state.flats.find(flat => flat.id === flatId).items.find(item => item.id === itemId)
   },
@@ -28,15 +22,6 @@ export default new Vuex.Store({
     },
     SET_USER (state, user) {
       state.user = user
-    },
-    SET_DEPRECIATION_RATE (state, rate) {
-      state.depreciationRate = rate
-    },
-    SET_LOWEST_PRICE_RATE (state, rate) {
-      state.lowestPriceRate = rate
-    },
-    SET_FLATMATES (state, flatmates) {
-      state.flatmates = flatmates
     },
     SET_FLATMATE_MOVING_OUT (state, flatmate) {
       state.flatmateMovingOut = flatmate
@@ -59,11 +44,6 @@ export default new Vuex.Store({
     DELETE_ITEM (state, itemData) {
       const items = state.selectedFlat.items
       items.splice(items.indexOf(items.find(item => item.id === itemData.id)), 1)
-    },
-    UPDATE_SETTINGS (state, settingsData) {
-      state.depreciationRate = settingsData.depreciationRate
-      state.lowestPriceRate = settingsData.lowestPriceRate
-      state.flatmates = settingsData.flatmates
     },
     TOGGLE_LOADER (state, toggle) {
       state.loading = toggle
@@ -97,15 +77,6 @@ export default new Vuex.Store({
       await Vue.prototype.$db.users.doc(user.id).set(user)
       commit('SET_USER', user)
     },
-    setDepreciationRate ({ commit }, rate) {
-      commit('SET_DEPRECIATION_RATE', rate)
-    },
-    setLowestPriceRate ({ commit }, rate) {
-      commit('SET_LOWEST_PRICE_RATE', rate)
-    },
-    setFlatmates ({ commit }, flatmates) {
-      commit('SET_FLATMATES', flatmates)
-    },
     setFlatmateMovingOut ({ commit }, flatmate) {
       commit('SET_FLATMATE_MOVING_OUT', flatmate)
     },
@@ -130,11 +101,6 @@ export default new Vuex.Store({
       const selectedFlat = state.selectedFlat
       Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).delete().then(() => {
         commit('DELETE_ITEM', itemData)
-      })
-    },
-    updateSettings ({ state, commit }, settingsData) {
-      Vue.prototype.$db.settings.doc(state.settingsId).set(settingsData).then(() => {
-        commit('UPDATE_SETTINGS', settingsData)
       })
     },
     async fetchFlatItems ({ commit }, flat) {

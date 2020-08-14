@@ -58,11 +58,6 @@ const routes = [
     name: 'Add Item',
     props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "addItem" */ '../views/ItemAdd.vue')
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    component: () => import(/* webpackChunkName: "settings" */ '../views/Settings.vue')
   }
 ]
 

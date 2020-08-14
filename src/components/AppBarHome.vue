@@ -33,19 +33,6 @@
       <v-toolbar-title>
         <router-link to="/" class="white--text text-decoration-none">Flatwise</router-link>
       </v-toolbar-title>
-
-      <!-- <v-btn icon to="/createFlat" v-if="user">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-
-      <v-btn icon to="/settings" v-if="user">
-        <v-icon>mdi-cog</v-icon>
-      </v-btn>
-
-      <v-btn icon @click="logUserOut" v-if="user">
-        <v-icon>mdi-logout-variant</v-icon>
-      </v-btn> -->
-
     </v-app-bar>
   </div>
 </template>
