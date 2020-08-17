@@ -32,7 +32,7 @@ const routes = [
   {
     path: '/flat/:flatId',
     name: 'Flat',
-    props: route => ({ ...route.params, getFlat: getFlat }),
+    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "flat" */ '../views/Flat.vue')
   },
   {
@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/flat/:flatId/item/:itemId',
     name: 'Item',
-    props: route => ({ ...route.params, getFlatItems: getFlatItems }),
+    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "item" */ '../views/Item.vue')
   },
   {

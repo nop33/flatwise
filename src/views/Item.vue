@@ -13,17 +13,17 @@
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-main>
+    <v-main v-if="item.idsOfFlatmatesThatShareThis">
       <v-list>
         <v-subheader>Shared amongst</v-subheader>
-        <v-list-item v-for="flatmate in item.shareAmongst" :key="flatmate">
+        <v-list-item v-for="flatmateName in getFlatmateNames(item)" :key="flatmateName">
           <v-list-item-avatar>
             <v-avatar color="primary">
-              <span class="white--text">XY</span>
+              <span class="white--text">{{ flatmateName.substring(0, 2).toUpperCase() }}</span>
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>{{ flatmate }}</v-list-item-title>
+            <v-list-item-title>{{ flatmateName }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -36,15 +36,18 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { namesFromIds } from '@/utils/utils'
 
 export default {
   props: [
     'flatId',
     'itemId',
+    'getFlat',
     'getFlatItems'
   ],
   data: () => {
     return {
+      flat: {},
       item: {}
     }
   },
@@ -54,11 +57,14 @@ export default {
     ])
   },
   created () {
+    this.flat = this.getFlat(this.flatId)
     const item = this.flatItemById(this.flatId, this.itemId)
-    if (!item) {
+    if (item === null) {
       this.getFlatItems(this.flatId).then(() => {
         this.item = this.flatItemById(this.flatId, this.itemId)
       })
+    } else if (item === undefined) {
+      alert('This item does not exist...')
     } else {
       this.item = item
     }
@@ -71,6 +77,9 @@ export default {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
         this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
       }
+    },
+    getFlatmateNames (item) {
+      return namesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
     }
   }
 }

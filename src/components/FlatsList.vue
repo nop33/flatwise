@@ -9,7 +9,7 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title v-text="flat.name"></v-list-item-title>
-            <v-list-item-subtitle class="mt-1" v-text="flatmatesNames(flat)"></v-list-item-subtitle>
+            <v-list-item-subtitle class="mt-1" v-text="formatFlatmateNames(flat)"></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -19,6 +19,8 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import { flatmateNames } from '@/utils/utils'
 
 export default {
   data: () => {
@@ -42,11 +44,8 @@ export default {
     }
   },
   methods: {
-    flatmatesNames (flat) {
-      return [
-        ...flat.flatmates.map(flatmate => flatmate.name),
-        ...flat.emailsOfUninitializedUsers
-      ].sort().join(', ')
+    formatFlatmateNames (flat) {
+      return flatmateNames(flat).join(', ')
     }
   }
 }

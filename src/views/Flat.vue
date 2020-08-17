@@ -50,7 +50,8 @@ export default {
   },
   props: [
     'flatId',
-    'getFlat'
+    'getFlat',
+    'getFlatItems'
   ],
   data: () => {
     return {
@@ -59,6 +60,9 @@ export default {
   },
   created () {
     this.flat = this.getFlat(this.flatId)
+    if (!this.flat.items) {
+      this.getFlatItems(this.flat.id)
+    }
   },
   methods: {
     goHome () {

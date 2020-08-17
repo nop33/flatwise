@@ -9,7 +9,7 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title v-text="item.name"></v-list-item-title>
-            <v-list-item-subtitle v-text="item.shareAmongst.join(', ')"></v-list-item-subtitle>
+            <v-list-item-subtitle v-text="formatNames(item)"></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
         <v-divider v-if="index + 1 < flat.items.length" :key="index"></v-divider>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import { namesFromIds } from '@/utils/utils'
+
 export default {
   props: [
     'flat'
@@ -42,9 +44,9 @@ export default {
       }
     }
   },
-  created () {
-    if (!this.flat.items.length) {
-      this.$store.dispatch('fetchFlatItems', this.flat)
+  methods: {
+    formatNames (item) {
+      return namesFromIds(this.flat, item.idsOfFlatmatesThatShareThis).join(', ')
     }
   }
 }

@@ -9,12 +9,14 @@
       <v-btn text large @click="save">Save</v-btn>
     </v-toolbar>
     <v-main>
-      <ItemForm :item="item" :flatmates="flat.flatmates" />
+      <ItemForm :item="item" :allFlatmates="allFlatmates" />
     </v-main>
   </div>
 </template>
 
 <script>
+import { flatmates, flatmateIds } from '@/utils/utils'
+
 import ItemForm from '@/components/ItemForm.vue'
 
 export default {
@@ -29,11 +31,12 @@ export default {
   data: () => {
     return {
       flat: {},
+      allFlatmates: [],
       item: {
         name: '',
         price: '',
         date: '',
-        shareAmongst: [],
+        idsOfFlatmatesThatShareThis: [],
         depreciationRate: 0,
         lowestPriceRate: 0
       }
@@ -41,7 +44,8 @@ export default {
   },
   created () {
     this.flat = this.getFlat(this.flatId)
-    this.item.shareAmongst = [...this.flat.flatmates]
+    this.allFlatmates = flatmates(this.flat)
+    this.item.idsOfFlatmatesThatShareThis = flatmateIds(this.flat)
     this.item.depreciationRate = this.flat.depreciationRate
     this.item.lowestPriceRate = this.flat.lowestPriceRate
     this.getFlatItems(this.flatId)

@@ -60,8 +60,10 @@
       <v-row>
         <v-col>
           <v-autocomplete
-            v-model="item.shareAmongst"
-            :items="item.shareAmongst || flatmates"
+            v-model="item.idsOfFlatmatesThatShareThis"
+            :items="allFlatmates"
+            item-text="name"
+            item-value="id"
             chips
             label="Share amongst"
             multiple
@@ -76,7 +78,7 @@
 export default {
   props: [
     'item',
-    'flatmates'
+    'allFlatmates'
   ],
   data () {
     return {
