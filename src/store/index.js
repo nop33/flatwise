@@ -129,6 +129,18 @@ export default new Vuex.Store({
           // give him/her access to flat
           idsOfUsersWithAccess: [state.user.id, ...flatData.idsOfUsersWithAccess]
         })
+
+        // Update all items
+        const flatItemsCollection = Vue.prototype.$db.flats.doc(flat.id).collection('items')
+        const itemsResponse = await flatItemsCollection.where('idsOfFlatmatesThatShareThis', 'array-contains', state.user.email).get()
+        for (let index = 0; index < itemsResponse.docs.length; index++) {
+          const item = itemsResponse.docs[index]
+          const itemData = item.data()
+          itemData.idsOfFlatmatesThatShareThis.splice(itemData.idsOfFlatmatesThatShareThis.indexOf(state.user.email), 1, state.user.id)
+          await flatItemsCollection.doc(item.id).update({
+            idsOfFlatmatesThatShareThis: itemData.idsOfFlatmatesThatShareThis
+          })
+        }
       }
 
       response = await Vue.prototype.$db.flats.where('idsOfUsersWithAccess', 'array-contains', state.user.id).get()
