@@ -50,7 +50,7 @@ const routes = [
   {
     path: '/flat/:flatId/item/:itemId/edit',
     name: 'Edit Item',
-    props: route => ({ ...route.params, getFlatItems: getFlatItems }),
+    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "editItem" */ '../views/ItemEdit.vue')
   },
   {

@@ -9,13 +9,13 @@
       <v-btn text large @click="save">Save</v-btn>
     </v-toolbar>
     <v-main>
-      <ItemForm :item="item" />
+      <ItemForm :item="item" :allFlatmates="allFlatmates" />
     </v-main>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { flatmates } from '@/utils/utils'
 
 import ItemForm from '@/components/ItemForm.vue'
 
@@ -26,27 +26,23 @@ export default {
   props: [
     'flatId',
     'itemId',
+    'getFlat',
     'getFlatItems'
   ],
   data: () => {
     return {
-      item: {}
+      flat: {},
+      item: {},
+      allFlatmates: []
     }
   },
-  computed: {
-    ...mapGetters([
-      'flatItemById'
-    ])
-  },
-  created () {
-    const item = this.flatItemById(this.flatId, this.itemId)
-    if (!item) {
-      this.getFlatItems(this.flatId).then(() => {
-        this.item = this.flatItemById(this.flatId, this.itemId)
-      })
-    } else {
-      this.item = item
+  async created () {
+    this.flat = this.getFlat(this.flatId)
+    this.allFlatmates = flatmates(this.flat)
+    if (!this.flat.items) {
+      await this.getFlatItems(this.flatId)
     }
+    this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
     goToItem () {

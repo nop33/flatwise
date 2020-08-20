@@ -14,7 +14,7 @@
         </v-col>
         <v-col cols="12">
           <v-combobox
-            v-model="flat.flatmatesEmails"
+            v-model="flatmatesModel"
             label="Flatmates"
             multiple
             chips
@@ -56,7 +56,8 @@
 export default {
   props: [
     'flat',
-    'edit'
+    'edit',
+    'flatmatesNames'
   ],
   data: () => {
     return {
@@ -80,6 +81,9 @@ export default {
     },
     hint () {
       return this.isInEditMode ? 'You can only add or remove flatmates from the previous screen' : ''
+    },
+    flatmatesModel () {
+      return this.isInEditMode ? this.flatmatesNames : this.flat.flatmatesEmails
     }
   }
 }

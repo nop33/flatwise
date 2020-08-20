@@ -9,12 +9,14 @@
       <v-btn text large @click="save">Save</v-btn>
     </v-toolbar>
     <v-main>
-      <FlatForm :flat="flat" edit />
+    <FlatForm :flat="flat" :flatmatesNames="flatmatesNames" edit />
     </v-main>
   </div>
 </template>
 
 <script>
+import { flatmateNames } from '@/utils/utils'
+
 import FlatForm from '@/components/FlatForm.vue'
 
 export default {
@@ -27,11 +29,13 @@ export default {
   ],
   data: () => {
     return {
-      flat: {}
+      flat: {},
+      flatmates: []
     }
   },
   created () {
     this.flat = this.getFlat(this.flatId)
+    this.flatmatesNames = flatmateNames(this.flat)
   },
   methods: {
     goToFlat () {

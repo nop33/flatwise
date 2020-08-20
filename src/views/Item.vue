@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { namesFromIds } from '@/utils/utils'
 
 export default {
@@ -51,23 +50,12 @@ export default {
       item: {}
     }
   },
-  computed: {
-    ...mapGetters([
-      'flatItemById'
-    ])
-  },
-  created () {
+  async created () {
     this.flat = this.getFlat(this.flatId)
-    const item = this.flatItemById(this.flatId, this.itemId)
-    if (item === null) {
-      this.getFlatItems(this.flatId).then(() => {
-        this.item = this.flatItemById(this.flatId, this.itemId)
-      })
-    } else if (item === undefined) {
-      alert('This item does not exist...')
-    } else {
-      this.item = item
+    if (!this.flat.items) {
+      await this.getFlatItems(this.flatId)
     }
+    this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
     goToFlat () {
