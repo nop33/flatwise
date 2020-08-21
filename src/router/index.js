@@ -58,6 +58,12 @@ const routes = [
     name: 'Add Item',
     props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
     component: () => import(/* webpackChunkName: "addItem" */ '../views/ItemAdd.vue')
+  },
+  {
+    path: '/flat/:flatId/balances',
+    name: 'Balances',
+    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
+    component: () => import(/* webpackChunkName: "balances" */ '../views/Balances.vue')
   }
 ]
 
