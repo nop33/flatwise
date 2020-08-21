@@ -16,14 +16,13 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-dialog ref="dialog" :return-value.sync="item.date" persistent width="290px">
+          <v-dialog ref="dialog" :return-value.sync="item.date" width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="item.date"
                 label="Purchace date"
                 append-icon="mdi-calendar"
                 :rules="dateRules"
-                readonly
                 required
                 v-bind="attrs"
                 v-on="on"
@@ -95,6 +94,13 @@ export default {
       rateRules: [
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
       ]
+    }
+  },
+  watch: {
+    'item.depreciationRate' (newValue) {
+      if (newValue === 100) {
+        this.item.lowestPriceRate = 0
+      }
     }
   }
 }
