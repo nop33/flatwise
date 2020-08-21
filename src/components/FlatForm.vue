@@ -14,14 +14,22 @@
         </v-col>
         <v-col cols="12">
           <v-combobox
-            v-model="flatmatesModel"
+            v-if="isInEditMode"
+            v-model="flatmatesNames"
             label="Flatmates"
             multiple
             chips
             prepend-icon="mdi-account-group"
-            :disabled="isInEditMode"
+            disabled
             :hint="hint"
-            :persistent-hint="isInEditMode"
+            persistent-hint
+          ></v-combobox>
+          <v-combobox v-else
+            v-model="flat.flatmatesEmails"
+            label="Flatmates"
+            multiple
+            chips
+            prepend-icon="mdi-account-group"
           ></v-combobox>
         </v-col>
       </v-row>
@@ -81,9 +89,6 @@ export default {
     },
     hint () {
       return this.isInEditMode ? 'You can only add or remove flatmates from the previous screen' : ''
-    },
-    flatmatesModel () {
-      return this.isInEditMode ? this.flatmatesNames : this.flat.flatmatesEmails
     }
   }
 }
