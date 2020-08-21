@@ -1,6 +1,6 @@
 <template>
-  <v-card flat>
-    <v-list two-line>
+  <v-card flat class="mb-16">
+    <v-list>
       <v-list-item-group v-model="selectedItemIndex">
         <template v-for="(item, index) in sortedItems">
         <v-list-item :key="item.id">
@@ -8,8 +8,20 @@
             <v-icon>mdi-seat-outline</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title v-text="item.name"></v-list-item-title>
-            <v-list-item-subtitle v-text="formatNames(item)"></v-list-item-subtitle>
+            <div class="d-flex justify-space-between align-center">
+              <span>{{ item.name }}</span>
+              <div class="flex-shrink-0 ml-3">
+                <v-avatar
+                v-for="flatmateName in formatNames(item)"
+                :key="flatmateName"
+                size="24"
+                color="primary"
+                class="text-caption ml-1"
+              >
+                <span class="white--text">{{ flatmateName.substring(0, 2).toUpperCase() }}</span>
+              </v-avatar>
+              </div>
+            </div>
           </v-list-item-content>
         </v-list-item>
         <v-divider v-if="index + 1 < flat.items.length" :key="index"></v-divider>
@@ -51,7 +63,7 @@ export default {
   },
   methods: {
     formatNames (item) {
-      return namesFromIds(this.flat, item.idsOfFlatmatesThatShareThis).join(', ')
+      return namesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
     }
   }
 }
