@@ -2,7 +2,7 @@
   <v-card flat>
     <v-list two-line>
       <v-list-item-group v-model="selectedItemIndex">
-        <template v-for="(item, index) in flat.items">
+        <template v-for="(item, index) in sortedItems">
         <v-list-item :key="item.id">
           <v-list-item-icon>
             <v-icon>mdi-seat-outline</v-icon>
@@ -31,6 +31,11 @@ export default {
       selectedItemIndex: null
     }
   },
+  computed: {
+    sortedItems () {
+      return this.flat.items ? [...this.flat.items].sort((a, b) => (a.data > b.date) ? 1 : -1) : []
+    }
+  },
   watch: {
     selectedItemIndex (newValue) {
       if (newValue >= 0) {
@@ -38,7 +43,7 @@ export default {
           name: 'Item',
           params: {
             flatId: this.flat.id,
-            itemId: this.flat.items[newValue].id
+            itemId: this.sortedItems[newValue].id
           }
         })
       }
