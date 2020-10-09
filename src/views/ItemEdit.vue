@@ -9,7 +9,7 @@
       <v-btn text large @click="save">Save</v-btn>
     </v-toolbar>
     <v-main>
-      <ItemForm :item="item" :allFlatmates="allFlatmates" />
+      <ItemForm v-model="item" :allFlatmates="allFlatmates" />
     </v-main>
   </div>
 </template>

@@ -189,11 +189,11 @@ export default {
 
       this.items.forEach(item => {
         const depreciatedPrice = this.calculatePriceOnMoveOutDate(item)
-        if (item.shareAmongst.includes(this.flatmateMovingOut)) {
-          reimbursements[this.flatmateMovingOut] += depreciatedPrice / item.shareAmongst.length
+        if (item.idsOfFlatmatesThatShareThis.includes(this.flatmateMovingOut)) {
+          reimbursements[this.flatmateMovingOut] += depreciatedPrice / item.idsOfFlatmatesThatShareThis.length
         } else {
-          item.shareAmongst.forEach(flatmateRemaining => {
-            reimbursements[flatmateRemaining] += (depreciatedPrice / item.shareAmongst.length) - (depreciatedPrice / (item.shareAmongst.length + 1))
+          item.idsOfFlatmatesThatShareThis.forEach(flatmateRemaining => {
+            reimbursements[flatmateRemaining] += (depreciatedPrice / item.idsOfFlatmatesThatShareThis.length) - (depreciatedPrice / (item.idsOfFlatmatesThatShareThis.length + 1))
           })
         }
       })
