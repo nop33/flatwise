@@ -43,7 +43,7 @@ export default new Vuex.Store({
       item.name = itemData.name
       item.price = itemData.price
       item.date = itemData.date
-      item.shareAmongst = itemData.shareAmongst
+      item.idsOfFlatmatesThatShareThis = itemData.idsOfFlatmatesThatShareThis
       item.depreciationRate = itemData.depreciationRate
       item.lowestPriceRate = itemData.lowestPriceRate
     },

@@ -3,11 +3,18 @@
     <v-container>
       <v-row>
         <v-col cols="12" sm="6" md="4">
-          <v-text-field v-model="item.name" :rules="nameRules" label="Item name" required />
+          <v-text-field
+            :value="value.name"
+            @input="nameChanged($event)"
+            :rules="nameRules"
+            label="Item name"
+            required
+          />
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-text-field
-            v-model="item.price"
+            :value="value.price"
+            @input="priceChanged($event)"
             type="number"
             :rules="priceRules"
             label="Purchace price"
@@ -16,10 +23,11 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="6" md="4">
-          <v-dialog ref="dialog" :return-value.sync="item.date" width="290px">
+          <v-dialog ref="dialog" :return-value.sync="value.date" width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                v-model="item.date"
+                :value="value.date"
+                @input="dateChanged($event)"
                 label="Purchace date"
                 append-icon="mdi-calendar"
                 :rules="dateRules"
@@ -28,12 +36,17 @@
                 v-on="on"
               ></v-text-field>
             </template>
-            <v-date-picker v-model="item.date" scrollable @input="$refs.dialog.save(item.date)"></v-date-picker>
+            <v-date-picker
+              :value="value.date"
+              @input="dateChanged($event)"
+              scrollable
+            ></v-date-picker>
           </v-dialog>
         </v-col>
         <v-col cols="12" sm="6">
           <v-text-field
-            v-model.number="item.depreciationRate"
+            :value="value.depreciationRate"
+            @input="depreciationRateChanged($event)"
             :rules="rateRules"
             type="number"
             label="Annual depreciation rate"
@@ -43,9 +56,10 @@
             suffix="%"
           />
         </v-col>
-        <v-col cols="12" sm="6" v-show="item.depreciationRate < 100">
+        <v-col cols="12" sm="6" v-show="value.depreciationRate < 100">
           <v-text-field
-            v-model.number="item.lowestPriceRate"
+            :value="value.lowestPriceRate"
+            @input="lowestPriceRateChanged($event)"
             :rules="rateRules"
             type="number"
             label="Lowest price rate"
@@ -59,7 +73,8 @@
       <v-row>
         <v-col>
           <v-autocomplete
-            v-model="item.idsOfFlatmatesThatShareThis"
+            :value="value.idsOfFlatmatesThatShareThis"
+            @input="idsOfFlatmatesThatShareThisChanged($event)"
             :items="allFlatmates"
             item-text="name"
             item-value="id"
@@ -76,11 +91,12 @@
 <script>
 export default {
   props: [
-    'item',
+    'value',
     'allFlatmates'
   ],
   data () {
     return {
+      item: {},
       isFormValid: false,
       nameRules: [
         v => !!v || 'Name is required'
@@ -97,10 +113,45 @@ export default {
     }
   },
   watch: {
-    'item.depreciationRate' (newValue) {
-      if (newValue === 100) {
-        this.item.lowestPriceRate = 0
+    value (newValue) {
+      if (Object.keys(this.item).length === 0 && this.item.constructor === Object) {
+        this.item = newValue
       }
+    },
+    'value.depreciationRate' (newValue) {
+      if (newValue === 100) {
+        this.lowestPriceRateChanged(0)
+      }
+    }
+  },
+  created () {
+    this.item = { ...this.value }
+  },
+  methods: {
+    nameChanged ($event) {
+      this.item.name = $event
+      this.$emit('input', this.item)
+    },
+    priceChanged ($event) {
+      this.item.price = parseFloat($event)
+      this.$emit('input', this.item)
+    },
+    dateChanged ($event) {
+      this.$refs.dialog.save($event)
+      this.item.date = $event
+      this.$emit('input', this.item)
+    },
+    depreciationRateChanged ($event) {
+      this.item.depreciationRate = parseFloat($event)
+      this.$emit('input', this.item)
+    },
+    lowestPriceRateChanged ($event) {
+      this.item.lowestPriceRate = parseFloat($event)
+      this.$emit('input', this.item)
+    },
+    idsOfFlatmatesThatShareThisChanged ($event) {
+      this.item.idsOfFlatmatesThatShareThis = $event
+      this.$emit('input', this.item)
     }
   }
 }
