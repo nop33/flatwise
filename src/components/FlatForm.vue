@@ -4,10 +4,10 @@
       <v-row>
         <v-col cols="12">
           <v-text-field
-            v-model="flat.name"
+            :value="value.name"
+            @input="nameChanged($event)"
             :rules="nameRules"
-            label="Flat
-            name"
+            label="Flat name"
             required
             prepend-icon="mdi-home-city-outline"
           />
@@ -25,7 +25,8 @@
             persistent-hint
           ></v-combobox>
           <v-combobox v-else
-            v-model="flat.flatmatesEmails"
+            :value="value.flatmatesEmails"
+            @input="flatmatesEmailsChanged($event)"
             label="Flatmates"
             multiple
             chips
@@ -39,7 +40,8 @@
       <v-row>
         <v-col>
           <v-text-field
-            v-model="flat.depreciationRate"
+            :value="value.depreciationRate"
+            @input="depreciationRateChanged($event)"
             :rules="rateRules"
             label="Default item depreciation rate"
             required
@@ -48,7 +50,8 @@
         </v-col>
         <v-col>
           <v-text-field
-            v-model="flat.lowestPriceRate"
+            :value="value.lowestPriceRate"
+            @input="lowestPriceRateChanged($event)"
             :rules="rateRules"
             label="Default item lowest price rate"
             required
@@ -61,14 +64,17 @@
 </template>
 
 <script>
+import { flatmateNamesOrEmails } from '@/utils/utils'
+
 export default {
   props: [
-    'flat',
-    'edit',
-    'flatmatesNames'
+    'value',
+    'edit'
   ],
   data: () => {
     return {
+      flat: {},
+      flatmatesNames: [],
       isFormValid: false,
       nameRules: [
         v => !!v || 'Name is required'
@@ -88,7 +94,37 @@ export default {
       return this.edit !== undefined
     },
     hint () {
-      return this.isInEditMode ? 'You can only add or remove flatmates from the previous screen' : ''
+      return this.isInEditMode ? 'You can yet modify users, sorry :/ It\'ll come in the future!' : ''
+    }
+  },
+  watch: {
+    flat (newValue) {
+      if (Object.keys(this.flat).length === 0 && this.item.constructor === Object) {
+        this.flat = newValue
+        this.flatmatesNames = flatmateNamesOrEmails(this.flat)
+      }
+    }
+  },
+  created () {
+    this.flat = { ...this.value }
+    this.flatmatesNames = flatmateNamesOrEmails(this.flat)
+  },
+  methods: {
+    nameChanged ($event) {
+      this.flat.name = $event
+      this.$emit('input', this.flat)
+    },
+    depreciationRateChanged ($event) {
+      this.flat.depreciationRate = $event
+      this.$emit('input', this.flat)
+    },
+    lowestPriceRateChanged ($event) {
+      this.flat.lowestPriceRate = $event
+      this.$emit('input', this.flat)
+    },
+    flatmatesEmailsChanged ($event) {
+      this.flat.flatmatesEmails = $event
+      this.$emit('input', this.flat)
     }
   }
 }

@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { flatmateIds } from '@/utils/utils'
+import { flatmateIdsOrEmails } from '@/utils/utils'
 
 export default {
   props: [
@@ -128,7 +128,7 @@ export default {
       this.totalValue = 0
       if (this.flat && this.flat.items) {
         const flatmatesBalances = {}
-        flatmateIds(this.flat).forEach(id => {
+        flatmateIdsOrEmails(this.flat).forEach(id => {
           flatmatesBalances[id] = 0
         })
 
