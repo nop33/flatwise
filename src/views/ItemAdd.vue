@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { flatmates, flatmateIds } from '@/utils/utils'
+import { flatmates, flatmateIdsOrEmails } from '@/utils/utils'
 
 import ItemForm from '@/components/ItemForm.vue'
 
@@ -45,7 +45,7 @@ export default {
   created () {
     this.flat = this.getFlat(this.flatId)
     this.allFlatmates = flatmates(this.flat)
-    this.item.idsOfFlatmatesThatShareThis = flatmateIds(this.flat)
+    this.item.idsOfFlatmatesThatShareThis = flatmateIdsOrEmails(this.flat)
     this.item.depreciationRate = this.flat.depreciationRate
     this.item.lowestPriceRate = this.flat.lowestPriceRate
     this.getFlatItems(this.flatId)
