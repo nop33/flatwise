@@ -52,12 +52,13 @@
             <v-list-item :key="index">
               <v-list-item-avatar>
                 <v-avatar color="primary">
-                  <span class="white--text">{{ balance.flatmateName.substring(0, 2).toUpperCase() }}</span>
+                  <img v-if="balance.flatmate.photo" :src="balance.flatmate.photo" alt="Avatar"/>
+                  <span v-else class="white--text">{{ balance.flatmate.name.substring(0, 2).toUpperCase() }}</span>
                 </v-avatar>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  {{ balance.flatmateName }} share is
+                  {{ balance.flatmate.name }} share is
                   <span class="warning--text">
                     {{ balance.share | round }}
                   </span>
@@ -73,7 +74,7 @@
 </template>
 
 <script>
-import { flatmateIdsOrEmails, calculateDaysBetween } from '@/utils/utils'
+import { flatmateIdsOrEmails, calculateDaysBetween, flatmates } from '@/utils/utils'
 
 export default {
   props: [
@@ -143,13 +144,12 @@ export default {
           })
         })
 
-        for (const [flatmateId, share] of Object.entries(flatmatesBalances)) {
-          const flatmate = this.flat.flatmates.find(flatmate => flatmate.id === flatmateId)
+        flatmates(this.flat).forEach(flatmate => {
           balances.push({
-            flatmateName: flatmate ? flatmate.name : flatmateId,
-            share
+            flatmate,
+            share: flatmatesBalances[flatmate.id]
           })
-        }
+        })
       }
 
       this.balances = balances
