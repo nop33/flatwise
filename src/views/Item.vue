@@ -16,14 +16,15 @@
     <v-main v-if="item.idsOfFlatmatesThatShareThis">
       <v-list>
         <v-subheader>Shared amongst</v-subheader>
-        <v-list-item v-for="flatmateName in getFlatmateNames(item)" :key="flatmateName">
+        <v-list-item v-for="flatmate in getFlatmatesThatShareThis(item)" :key="flatmate.id">
           <v-list-item-avatar>
             <v-avatar color="primary">
-              <span class="white--text">{{ flatmateName.substring(0, 2).toUpperCase() }}</span>
+              <img v-if="flatmate.photo" :src="flatmate.photo" alt="Avatar"/>
+              <span v-else-if="flatmate.name" class="white--text">{{ flatmate.name.substring(0, 2).toUpperCase() }}</span>
             </v-avatar>
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>{{ flatmateName }}</v-list-item-title>
+            <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import { namesFromIds } from '@/utils/utils'
+import { getFlatmatesFromIds } from '@/utils/utils'
 
 export default {
   props: [
@@ -66,8 +67,8 @@ export default {
         this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
       }
     },
-    getFlatmateNames (item) {
-      return namesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
+    getFlatmatesThatShareThis (item) {
+      return getFlatmatesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
     }
   }
 }
