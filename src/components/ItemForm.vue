@@ -79,7 +79,7 @@
             item-text="name"
             item-value="id"
             chips
-            label="Share amongst"
+            label="Shared amongst"
             multiple
           ></v-autocomplete>
         </v-col>
