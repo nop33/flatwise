@@ -12,14 +12,15 @@
               <span>{{ item.name }}</span>
               <div class="flex-shrink-0 ml-3">
                 <v-avatar
-                v-for="flatmateName in formatNames(item)"
-                :key="flatmateName"
-                size="24"
-                color="primary"
-                class="text-caption ml-1"
-              >
-                <span class="white--text">{{ flatmateName.substring(0, 2).toUpperCase() }}</span>
-              </v-avatar>
+                  v-for="flatmate in getFlatmatesThatShareThis(item)"
+                  :key="flatmate.id"
+                  size="24"
+                  color="primary"
+                  class="text-caption ml-1"
+                >
+                  <img v-if="flatmate.photo" alt="Avatar" :src="flatmate.photo">
+                  <span v-else class="white--text">{{ flatmate.name.substring(0, 2).toUpperCase() }}</span>
+                </v-avatar>
               </div>
             </div>
           </v-list-item-content>
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { namesFromIds } from '@/utils/utils'
+import { getFlatmatesFromIds } from '@/utils/utils'
 
 export default {
   props: [
@@ -62,8 +63,8 @@ export default {
     }
   },
   methods: {
-    formatNames (item) {
-      return namesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
+    getFlatmatesThatShareThis (item) {
+      return getFlatmatesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
     }
   }
 }
