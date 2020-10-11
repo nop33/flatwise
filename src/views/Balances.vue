@@ -37,7 +37,7 @@
         <v-container>
           <v-row>
             <v-col>
-              As of {{ humanReadableDate }}, the total worth of all items (after applying the depreciation rate of each)
+              As of {{ balanceOnDate | humanReadable }}, the total worth of all items (after applying the depreciation rate of each)
               is <span class="warning--text">{{ totalValue | round }}</span> CHF
             </v-col>
           </v-row>
@@ -92,13 +92,6 @@ export default {
       flat: {},
       balances: [],
       totalValue: 0
-    }
-  },
-  computed: {
-    humanReadableDate () {
-      const date = new Date(this.balanceOnDate)
-      const options = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Intl.DateTimeFormat('en-GB', options).format(date)
     }
   },
   watch: {

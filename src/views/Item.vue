@@ -7,7 +7,7 @@
       <v-toolbar-title>
         <div class="text-truncate">{{ item.name }}</div>
         <div class="mt-2">{{ item.price }} CHF</div>
-        <div class="text-caption mt-1">Bought on {{ item.date }}</div>
+        <div class="text-caption mt-1">Bought on {{ item.date | humanReadable }}</div>
       </v-toolbar-title>
       <v-btn color="red" dark absolute bottom right fab :to="{ name: 'Edit Item', params: { flatId, itemId } }">
         <v-icon>mdi-pencil-outline</v-icon>

@@ -35,6 +35,13 @@ Vue.filter('round', function (value) {
   return Math.floor(value * 100) / 100
 })
 
+Vue.filter('humanReadable', function (value) {
+  if (!value) return ''
+  const date = new Date(value)
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  return new Intl.DateTimeFormat('en-GB', options).format(date)
+})
+
 new Vue({
   router,
   store,
