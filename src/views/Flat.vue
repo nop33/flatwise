@@ -7,7 +7,7 @@
       <v-spacer />
       <v-toolbar-title>
         <div class="d-flex flex-column">
-          <span class="text-center">{{ flat.name }}</span>
+          <span class="text-center text-truncate">{{ flat.name }}</span>
           <v-btn :to="{name: 'Balances'}" class="mt-5" color="red">Balances</v-btn>
         </div>
       </v-toolbar-title>

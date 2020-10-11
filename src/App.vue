@@ -26,4 +26,9 @@ export default {
 .v-avatar img {
   object-fit: cover;
 }
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

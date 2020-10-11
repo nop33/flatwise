@@ -5,7 +5,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>
-        <div>{{ item.name }}</div>
+        <div class="text-truncate">{{ item.name }}</div>
         <div class="mt-2">{{ item.price }} CHF</div>
         <div class="text-caption mt-1">Bought on {{ item.date }}</div>
       </v-toolbar-title>
