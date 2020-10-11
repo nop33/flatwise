@@ -28,6 +28,8 @@ export default {
       flat: {
         name: '',
         flatmatesEmails: [],
+        flatmates: [],
+        emailsOfUninitializedUsers: [],
         items: [],
         depreciationRate: 20,
         lowestPriceRate: 20
