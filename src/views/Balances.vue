@@ -38,7 +38,7 @@
           <v-row>
             <v-col>
               As of {{ humanReadableDate }}, the total worth of all items is
-              <span class="warning--text">{{ roundNumber(totalValue) }}</span>
+              <span class="warning--text">{{ totalValue | round }}</span>
               CHF
             </v-col>
           </v-row>
@@ -60,7 +60,7 @@
                 <v-list-item-title>
                   {{ balance.flatmateName }} share is
                   <span class="warning--text">
-                    {{ roundNumber(balance.share) }}
+                    {{ balance.share | round }}
                   </span>
                   CHF
                 </v-list-item-title>
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { flatmateIdsOrEmails } from '@/utils/utils'
+import { flatmateIdsOrEmails, calculateDaysBetween } from '@/utils/utils'
 
 export default {
   props: [
@@ -120,9 +120,6 @@ export default {
     calculateNumberOfDaysOwned (date) {
       return Math.floor(calculateDaysBetween(date, this.balanceOnDate))
     },
-    roundNumber (number) {
-      return Math.floor(number * 100) / 100
-    },
     calculateBalances () {
       const balances = []
       this.totalValue = 0
@@ -159,17 +156,6 @@ export default {
       this.balances = balances
     }
   }
-}
-
-function treatAsUTC (date) {
-  var result = new Date(date)
-  result.setMinutes(result.getMinutes() - result.getTimezoneOffset())
-  return result
-}
-
-function calculateDaysBetween (startDate, endDate) {
-  var millisecondsPerDay = 24 * 60 * 60 * 1000
-  return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay
 }
 </script>
 

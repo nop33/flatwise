@@ -15,7 +15,7 @@
     </v-app-bar>
     <v-main v-if="item.idsOfFlatmatesThatShareThis">
       <v-list>
-        <v-subheader>Shared amongst</v-subheader>
+        <v-subheader class="font-weight-medium">Shared amongst</v-subheader>
         <v-list-item v-for="flatmate in getFlatmatesThatShareThis(item)" :key="flatmate.id">
           <v-list-item-avatar>
             <v-avatar color="primary">
@@ -28,6 +28,29 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+      <v-divider/>
+
+      <v-card flat>
+
+        <v-card-subtitle class="font-weight-medium">Price details</v-card-subtitle>
+        <v-card-text>
+          <div>Loses its value by <strong>{{ item.depreciationRate }}%</strong> each year</div>
+          <div class="mt-2">
+            It was bought
+            <strong>{{ numberOfDaysOwned }}</strong>
+            days ago, so it has lost its value by
+            <strong>{{ 100 - currentValuePercentage | round }}%</strong>
+            so far and its current value is
+            <strong>{{ currentValue | round }} CHF</strong>
+          </div>
+          <v-progress-linear class="mt-2" :value="currentValuePercentage" rounded></v-progress-linear>
+        </v-card-text>
+
+      </v-card>
+
+      <v-divider/>
+
       <div class="d-flex justify-center ma-5">
         <v-btn color="warning" @click="deleteItem">Delete item</v-btn>
       </div>
@@ -36,7 +59,11 @@
 </template>
 
 <script>
-import { getFlatmatesFromIds } from '@/utils/utils'
+import {
+  getFlatmatesFromIds,
+  calculateDaysBetween,
+  calculateItemValueOnDate
+} from '@/utils/utils'
 
 export default {
   props: [
@@ -48,7 +75,8 @@ export default {
   data: () => {
     return {
       flat: {},
-      item: {}
+      item: {},
+      today: new Date().toJSON().slice(0, 10)
     }
   },
   async created () {
@@ -57,6 +85,17 @@ export default {
       await this.getFlatItems(this.flatId)
     }
     this.item = this.flat.items.find(item => item.id === this.itemId)
+  },
+  computed: {
+    numberOfDaysOwned () {
+      return Math.floor(calculateDaysBetween(this.item.date, this.today))
+    },
+    currentValue () {
+      return calculateItemValueOnDate(this.item, this.today)
+    },
+    currentValuePercentage () {
+      return (this.currentValue / this.item.price) * 100
+    }
   },
   methods: {
     goToFlat () {

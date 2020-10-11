@@ -29,6 +29,12 @@ Vue.prototype.$db = {
   flats: firestore.collection('flats')
 }
 
+Vue.filter('round', function (value) {
+  if (!value) return ''
+  value = parseFloat(value)
+  return Math.floor(value * 100) / 100
+})
+
 new Vue({
   router,
   store,
