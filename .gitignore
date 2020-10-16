@@ -24,3 +24,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase Admin SDK private keys and backup files
+/keys
+/backups

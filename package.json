@@ -7,17 +7,20 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "backup": "node backup.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
     "firebase": "^7.15.2",
     "firebaseui": "^4.6.1",
+    "firestore-export-import": "^0.8.0",
     "vue": "^2.6.11",
     "vue-firestore": "^0.3.30",
     "vue-router": "^3.2.0",
     "vuetify": "^2.2.11",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.7",
