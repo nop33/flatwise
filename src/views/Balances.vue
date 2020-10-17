@@ -38,7 +38,7 @@
           <v-row>
             <v-col>
               As of {{ balanceOnDate | humanReadable }}, the total worth of all items (after applying the depreciation rate of each)
-              is <span class="warning--text">{{ totalValue | round }}</span> CHF
+              is <strong class="secondary--text">{{ totalValue | round }}</strong> CHF
             </v-col>
           </v-row>
         </v-container>
@@ -53,15 +53,15 @@
               <v-list-item-avatar>
                 <v-avatar color="primary">
                   <img v-if="balance.flatmate.photo" :src="balance.flatmate.photo" alt="Avatar"/>
-                  <span v-else class="white--text">{{ balance.flatmate.name.substring(0, 2).toUpperCase() }}</span>
+                  <strong v-else class="white--text">{{ balance.flatmate.name.substring(0, 2).toUpperCase() }}</strong>
                 </v-avatar>
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
                   {{ balance.flatmate.name }} share is
-                  <span class="warning--text">
+                  <strong class="secondary--text">
                     {{ balance.share | round }}
-                  </span>
+                  </strong>
                   CHF
                 </v-list-item-title>
               </v-list-item-content>
