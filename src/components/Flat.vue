@@ -104,7 +104,7 @@
     </v-container>
     <v-btn
       fab
-      color="red white--text"
+      color="secondary white--text"
       bottom
       right
       fixed

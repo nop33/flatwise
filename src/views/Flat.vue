@@ -8,7 +8,7 @@
       <v-toolbar-title>
         <div class="d-flex flex-column">
           <span class="text-center text-truncate">{{ flat.name }}</span>
-          <v-btn :to="{name: 'Balances'}" class="mt-5" color="red">Balances</v-btn>
+          <v-btn :to="{name: 'Balances'}" class="mt-5" color="secondary">Balances</v-btn>
         </div>
       </v-toolbar-title>
       <v-spacer />
@@ -29,7 +29,7 @@
       <FlatItems :flat="flat" />
       <v-btn
         fab
-        color="red white--text"
+        color="secondary white--text"
         bottom
         right
         fixed
