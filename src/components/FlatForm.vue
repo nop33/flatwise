@@ -12,27 +12,6 @@
             prepend-icon="mdi-home-city-outline"
           />
         </v-col>
-        <v-col cols="12">
-          <v-combobox
-            v-if="isInEditMode"
-            v-model="flatmatesNames"
-            label="Flatmates"
-            multiple
-            chips
-            prepend-icon="mdi-account-group"
-            disabled
-            :hint="hint"
-            persistent-hint
-          ></v-combobox>
-          <v-combobox v-else
-            :value="value.flatmatesEmails"
-            @input="flatmatesEmailsChanged($event)"
-            label="Flatmates"
-            multiple
-            chips
-            prepend-icon="mdi-account-group"
-          ></v-combobox>
-        </v-col>
       </v-row>
     </v-container>
     <v-sheet color="grey lighten-3 py-1 px-5">Settings</v-sheet>
@@ -60,11 +39,36 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-sheet color="grey lighten-3 py-1 px-5">Your move in date</v-sheet>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-dialog ref="dialog" :return-value.sync="value.initialMoveInDate" width="290px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                :value="value.initialMoveInDate"
+                @input="initialMoveInDateChanged($event)"
+                label="Your move in date"
+                append-icon="mdi-calendar"
+                :rules="dateRules"
+                required
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              :value="value.initialMoveInDate"
+              @input="initialMoveInDateChanged($event)"
+              scrollable
+            ></v-date-picker>
+          </v-dialog>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-form>
 </template>
 
 <script>
-import { flatmateNamesOrEmails } from '@/utils/utils'
 
 export default {
   props: [
@@ -74,7 +78,6 @@ export default {
   data: () => {
     return {
       flat: {},
-      flatmatesNames: [],
       isFormValid: false,
       nameRules: [
         v => !!v || 'Name is required'
@@ -86,6 +89,9 @@ export default {
       rateRules: [
         v => !!v || 'Rate is required',
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
+      ],
+      dateRules: [
+        v => !!v || 'Date is required'
       ]
     }
   },
@@ -101,13 +107,11 @@ export default {
     flat (newValue) {
       if (Object.keys(this.flat).length === 0 && this.item.constructor === Object) {
         this.flat = newValue
-        this.flatmatesNames = flatmateNamesOrEmails(this.flat)
       }
     }
   },
   created () {
     this.flat = { ...this.value }
-    this.flatmatesNames = flatmateNamesOrEmails(this.flat)
   },
   methods: {
     nameChanged ($event) {
@@ -122,8 +126,9 @@ export default {
       this.flat.lowestPriceRate = $event
       this.$emit('input', this.flat)
     },
-    flatmatesEmailsChanged ($event) {
-      this.flat.flatmatesEmails = $event
+    initialMoveInDateChanged ($event) {
+      this.$refs.dialog.save($event)
+      this.flat.initialMoveInDate = $event
       this.$emit('input', this.flat)
     }
   }
