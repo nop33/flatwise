@@ -11,6 +11,8 @@ export default {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         const currentUserId = firebase.auth().currentUser.uid
+        console.log('user', user)
+        console.log('currentUser', firebase.auth().currentUser)
         this.$db.users.doc(currentUserId).get().then(doc => {
           if (!doc.exists) {
             this.$store.dispatch('registerUser', {

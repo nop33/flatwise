@@ -7,6 +7,7 @@ import VueFirestore from 'vue-firestore'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { createUserObject } from './store/models.js'
 
 Vue.config.productionTip = false
 
@@ -49,7 +50,18 @@ new Vue({
   render: h => h(App),
   created () {
     firebase.auth().onAuthStateChanged(user => {
+      console.log('main, user', user)
       if (user) {
+        console.log(!store.state.user)
+        if (!store.state.user) {
+          const storeUser = createUserObject(
+            user.uid,
+            user.displayName,
+            user.email,
+            user.photoURL
+          )
+          store.dispatch('setUser', storeUser)
+        }
         store.dispatch('initializeStore')
       }
     })
