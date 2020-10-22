@@ -27,12 +27,10 @@ export default {
     return {
       flat: {
         name: '',
-        flatmatesEmails: [],
-        flatmates: [],
-        emailsOfUninitializedUsers: [],
         items: [],
         depreciationRate: 20,
-        lowestPriceRate: 20
+        lowestPriceRate: 20,
+        initialMoveInDate: null
       }
     }
   },
@@ -40,9 +38,6 @@ export default {
     ...mapState([
       'user'
     ])
-  },
-  created () {
-    this.flat.flatmatesEmails.push(this.user.email)
   },
   methods: {
     goHome () {

@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import firebase from 'firebase/app'
+
 import { createFlatObject } from './models.js'
 
 Vue.use(Vuex)
@@ -188,31 +190,36 @@ export default new Vuex.Store({
           name: formFlat.name,
           depreciationRate: formFlat.depreciationRate,
           lowestPriceRate: formFlat.lowestPriceRate,
-          flatmates: [],
           emailsOfUninitializedUsers: [],
-          idsOfUsersWithAccess: [state.user.id]
+          uidsOfUsersWithAccess: [state.user.id]
         }
-        if (formFlat.flatmatesEmails.includes(state.user.email)) {
-          databaseFlat.flatmates.push({
-            email: state.user.email,
-            id: state.user.id,
+        // Update Firebase with new flat doc
+        Vue.prototype.$db.flats.add(databaseFlat).then((flatRef) => {
+          // Update Firebase by creating flatmate doc in flat doc
+          const initialFlatmateData = {
+            userRef: state.user.id,
             name: state.user.name,
-            photo: state.user.photo
-          })
-        }
-        databaseFlat.emailsOfUninitializedUsers = formFlat.flatmatesEmails.filter(email => email !== state.user.email)
-        Vue.prototype.$db.flats.add(databaseFlat).then((docRef) => {
-          const storeFlat = {
-            id: docRef.id,
-            name: databaseFlat.name,
-            depreciationRate: databaseFlat.depreciationRate,
-            lowestPriceRate: databaseFlat.lowestPriceRate,
-            flatmates: databaseFlat.flatmates,
-            emailsOfUninitializedUsers: databaseFlat.emailsOfUninitializedUsers,
-            items: []
+            email: state.user.email,
+            photo: state.user.photo,
+            startDate: firebase.firestore.Timestamp.fromDate(new Date(formFlat.initialMoveInDate)),
+            endDate: null
           }
-          commit('CREATE_FLAT', storeFlat)
-          resolve(docRef.id)
+          Vue.prototype.$db.flats.doc(flatRef.id).collection('flatmates').add(initialFlatmateData).then((flatmateRef) => {
+            const storeFlat = {
+              id: flatRef.id,
+              name: databaseFlat.name,
+              depreciationRate: databaseFlat.depreciationRate,
+              lowestPriceRate: databaseFlat.lowestPriceRate,
+              flatmates: [{
+                id: flatmateRef.id,
+                ...initialFlatmateData
+              }],
+              emailsOfUninitializedUsers: databaseFlat.emailsOfUninitializedUsers,
+              items: []
+            }
+            commit('CREATE_FLAT', storeFlat)
+            resolve(flatRef.id)
+          })
         })
       })
     },
