@@ -76,20 +76,22 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
-      if (!store.state.user) {
-        store.dispatch('setUser', {
-          id: user.uid,
-          name: user.displayName,
-          email: user.email,
-          photo: user.photoURL
-        })
-      }
+      // TODO: Clean this up
+      // if (!store.state.user) {
+      //   store.dispatch('setUser', {
+      //     id: user.uid,
+      //     name: user.displayName,
+      //     email: user.email,
+      //     photo: user.photoURL
+      //   })
+      // }
     } else if (to.name !== 'Login') {
       store.dispatch('setUser', null)
       next({ name: 'Login' })
     }
     next()
   })
+  // TODO: Clean this up
   // router.beforeEach((to, from, next) => {
   //   if (to.name !== 'login' && !isAuthenticated) {
   //     next({ name: 'login' });
@@ -99,6 +101,7 @@ router.beforeEach((to, from, next) => {
   // });
 })
 
+// TODO: Move this somewhere else
 function getFlat (flatId) {
   let flat = {}
   if (!store.selectedFlat) {
@@ -110,6 +113,7 @@ function getFlat (flatId) {
   return flat
 }
 
+// TODO: Move this somewhere else
 function getFlatItems (flatId) {
   return new Promise((resolve) => {
     const flat = getFlat(flatId)

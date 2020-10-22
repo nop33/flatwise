@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import { createFlatObject } from './models.js'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -114,48 +116,66 @@ export default new Vuex.Store({
     async initializeStore ({ state, commit }) {
       commit('TOGGLE_LOADER', true)
 
-      // Initialize user in flats (s)he have been added to but not initliazed yet
-      let response = await Vue.prototype.$db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
-      for (let index = 0; index < response.docs.length; index++) {
-        const flat = response.docs[index]
+      // Initialize user in flats (s)he have been added to but not initialized yet
+      // let response = await Vue.prototype.$db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
+      // for (let index = 0; index < response.docs.length; index++) {
+      //   const flat = response.docs[index]
+      //   const flatData = flat.data()
+      //   const flatDoc = Vue.prototype.$db.flats.doc(flat.id)
+
+      //   flatData.emailsOfUninitializedUsers.splice(flatData.emailsOfUninitializedUsers.indexOf(state.user.email), 1)
+      //   await flatDoc.update({
+      //     // Add current user to flatmates
+      //     // flatmates: [state.user, ...flatData.flatmates],
+      //     // remove his/her email from uninitialized users
+      //     emailsOfUninitializedUsers: flatData.emailsOfUninitializedUsers,
+      //     // give him/her access to flat
+      //     uidsOfUsersWithAccess: [state.user.id, ...flatData.uidsOfUsersWithAccess]
+      //   })
+
+      //   // Update flatmate document with reference to user document
+      //   const flatmatesResponse = await flatDoc.collection('flatmates').where('email', '==', state.user.email).get()
+      //   for (let i = 0; i < flatmatesResponse.docs.length; i++) {
+      //     const flatmate = flatmatesResponse.docs[i]
+      //     const flatmateDoc = flatDoc.collection('flatmates').doc(flatmate.id)
+
+      //     await flatmateDoc.update({
+      //       userRef: state.user.id
+      //     })
+      //   }
+
+      //   // TODO: Clean this up
+      //   // Update all items
+      //   // const flatItemsCollection = Vue.prototype.$db.flats.doc(flat.id).collection('items')
+      //   // const itemsResponse = await flatItemsCollection.where('idsOfFlatmatesThatShareThis', 'array-contains', state.user.email).get()
+      //   // for (let index = 0; index < itemsResponse.docs.length; index++) {
+      //   //   const item = itemsResponse.docs[index]
+      //   //   const itemData = item.data()
+      //   //   itemData.idsOfFlatmatesThatShareThis.splice(itemData.idsOfFlatmatesThatShareThis.indexOf(state.user.email), 1, state.user.id)
+      //   //   await flatItemsCollection.doc(item.id).update({
+      //   //     idsOfFlatmatesThatShareThis: itemData.idsOfFlatmatesThatShareThis
+      //   //   })
+      //   // }
+      // }
+
+      const flats = []
+      const response = await Vue.prototype.$db.flats.where('uidsOfUsersWithAccess', 'array-contains', state.user.id).get()
+      for (let i = 0; i < response.docs.length; i++) {
+        const flat = response.docs[i]
         const flatData = flat.data()
-
-        flatData.emailsOfUninitializedUsers.splice(flatData.emailsOfUninitializedUsers.indexOf(state.user.email), 1)
-        await Vue.prototype.$db.flats.doc(flat.id).update({
-          // Add current user to flatmates
-          flatmates: [state.user, ...flatData.flatmates],
-          // remove his/her email from uninitialized users
-          emailsOfUninitializedUsers: flatData.emailsOfUninitializedUsers,
-          // give him/her access to flat
-          idsOfUsersWithAccess: [state.user.id, ...flatData.idsOfUsersWithAccess]
-        })
-
-        // Update all items
-        const flatItemsCollection = Vue.prototype.$db.flats.doc(flat.id).collection('items')
-        const itemsResponse = await flatItemsCollection.where('idsOfFlatmatesThatShareThis', 'array-contains', state.user.email).get()
-        for (let index = 0; index < itemsResponse.docs.length; index++) {
-          const item = itemsResponse.docs[index]
-          const itemData = item.data()
-          itemData.idsOfFlatmatesThatShareThis.splice(itemData.idsOfFlatmatesThatShareThis.indexOf(state.user.email), 1, state.user.id)
-          await flatItemsCollection.doc(item.id).update({
-            idsOfFlatmatesThatShareThis: itemData.idsOfFlatmatesThatShareThis
-          })
-        }
+        // get flatmates details and store it in each flat
+        const flatmatesResponse = await Vue.prototype.$db.flats.doc(flat.id).collection('flatmates').get()
+        const flatmates = flatmatesResponse.docs.map(flatmate => flatmate.data())
+        flats.push(createFlatObject(
+          flat.id,
+          flatData.name,
+          flatData.depreciationRate,
+          flatData.lowestPriceRate,
+          flatData.emailsOfUninitializedUsers,
+          flatmates,
+          null
+        ))
       }
-
-      response = await Vue.prototype.$db.flats.where('idsOfUsersWithAccess', 'array-contains', state.user.id).get()
-      const flats = response.docs.map(flat => {
-        const flatData = flat.data()
-        return {
-          id: flat.id,
-          name: flatData.name,
-          depreciationRate: flatData.depreciationRate,
-          lowestPriceRate: flatData.lowestPriceRate,
-          flatmates: flatData.flatmates,
-          emailsOfUninitializedUsers: flatData.emailsOfUninitializedUsers,
-          items: null
-        }
-      })
       commit('SET_FLATS', flats)
       commit('TOGGLE_LOADER', false)
     },
