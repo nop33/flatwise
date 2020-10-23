@@ -32,37 +32,37 @@ const routes = [
   {
     path: '/flat/:flatId',
     name: 'Flat',
-    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
+    props: true,
     component: () => import(/* webpackChunkName: "flat" */ '../views/Flat.vue')
   },
   {
     path: '/flat/:flatId/edit',
     name: 'Edit Flat',
-    props: route => ({ ...route.params, getFlat: getFlat }),
+    props: true,
     component: () => import(/* webpackChunkName: "editFlat" */ '../views/FlatEdit.vue')
   },
   {
     path: '/flat/:flatId/item/:itemId',
     name: 'Item',
-    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
+    props: true,
     component: () => import(/* webpackChunkName: "item" */ '../views/Item.vue')
   },
   {
     path: '/flat/:flatId/item/:itemId/edit',
     name: 'Edit Item',
-    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
+    props: true,
     component: () => import(/* webpackChunkName: "editItem" */ '../views/ItemEdit.vue')
   },
   {
     path: '/flat/:flatId/items/add',
     name: 'Add Item',
-    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
+    props: true,
     component: () => import(/* webpackChunkName: "addItem" */ '../views/ItemAdd.vue')
   },
   {
     path: '/flat/:flatId/balances',
     name: 'Balances',
-    props: route => ({ ...route.params, getFlat: getFlat, getFlatItems: getFlatItems }),
+    props: true,
     component: () => import(/* webpackChunkName: "balances" */ '../views/Balances.vue')
   }
 ]
@@ -100,27 +100,5 @@ router.beforeEach((to, from, next) => {
   //   }
   // });
 })
-
-// TODO: Move this somewhere else
-function getFlat (flatId) {
-  let flat = {}
-  if (!store.selectedFlat) {
-    flat = store.getters.flatById(flatId)
-    store.dispatch('selectFlat', flat)
-  } else {
-    flat = store.selectedFlat
-  }
-  return flat
-}
-
-// TODO: Move this somewhere else
-function getFlatItems (flatId) {
-  return new Promise((resolve) => {
-    const flat = getFlat(flatId)
-    store.dispatch('fetchFlatItems', flat).then(() => {
-      resolve()
-    })
-  })
-}
 
 export default router

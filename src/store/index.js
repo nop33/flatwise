@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import firebase from 'firebase/app'
-
 import { createFlatObject } from './models.js'
 
 Vue.use(Vuex)
@@ -94,11 +92,10 @@ export default new Vuex.Store({
       commit('SET_MOVE_OUT_DATE', date)
     },
     async addItem ({ state, commit }, itemData) {
-      const id = Date.now().toString()
       const selectedFlat = state.selectedFlat
-      await Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(id).set(itemData)
-      itemData.id = id
-      commit('ADD_ITEM', { itemData, selectedFlat })
+      await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').add(itemData).then(itemRef => {
+        commit('ADD_ITEM', { itemData: { id: itemRef.id, ...itemData }, selectedFlat })
+      })
     },
     async updateItem ({ state, commit }, itemData) {
       const selectedFlat = state.selectedFlat
@@ -167,7 +164,7 @@ export default new Vuex.Store({
         const flatData = flat.data()
         // get flatmates details and store it in each flat
         const flatmatesResponse = await Vue.prototype.$db.flats.doc(flat.id).collection('flatmates').get()
-        const flatmates = flatmatesResponse.docs.map(flatmate => flatmate.data())
+        const flatmates = flatmatesResponse.docs.map(flatmateRef => ({ id: flatmateRef.id, ...flatmateRef.data() }))
         flats.push(createFlatObject(
           flat.id,
           flatData.name,
@@ -202,7 +199,7 @@ export default new Vuex.Store({
             name: state.user.name,
             email: state.user.email,
             photo: state.user.photo,
-            startDate: firebase.firestore.Timestamp.fromDate(new Date(formFlat.initialMoveInDate)),
+            startDate: formFlat.initialMoveInDate,
             endDate: null
           }
           Vue.prototype.$db.flats.doc(flatRef.id).collection('flatmates').add(initialFlatmateData).then((flatmateRef) => {

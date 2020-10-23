@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { getFlatFromStateById } from '@/utils/getters'
+
 import FlatForm from '@/components/FlatForm.vue'
 
 export default {
@@ -22,8 +24,7 @@ export default {
     FlatForm
   },
   props: [
-    'flatId',
-    'getFlat'
+    'flatId'
   ],
   data: () => {
     return {
@@ -31,7 +32,7 @@ export default {
     }
   },
   created () {
-    this.flat = this.getFlat(this.flatId)
+    this.flat = getFlatFromStateById(this.flatId)
   },
   methods: {
     goToFlat () {

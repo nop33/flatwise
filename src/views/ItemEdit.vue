@@ -15,8 +15,6 @@
 </template>
 
 <script>
-import { flatmates } from '@/utils/utils'
-
 import ItemForm from '@/components/ItemForm.vue'
 
 export default {
@@ -38,7 +36,7 @@ export default {
   },
   async created () {
     this.flat = this.getFlat(this.flatId)
-    this.allFlatmates = flatmates(this.flat)
+    this.allFlatmates = this.flat.flatmates
     if (!this.flat.items) {
       await this.getFlatItems(this.flatId)
     }
