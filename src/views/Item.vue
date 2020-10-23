@@ -60,17 +60,16 @@
 
 <script>
 import {
-  getFlatmatesFromIds,
   calculateDaysBetween,
   calculateItemValueOnDate
 } from '@/utils/utils'
 
+import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
+
 export default {
   props: [
     'flatId',
-    'itemId',
-    'getFlat',
-    'getFlatItems'
+    'itemId'
   ],
   data: () => {
     return {
@@ -80,9 +79,9 @@ export default {
     }
   },
   async created () {
-    this.flat = this.getFlat(this.flatId)
+    this.flat = getFlatFromStateById(this.flatId)
     if (!this.flat.items) {
-      await this.getFlatItems(this.flatId)
+      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
     }
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
@@ -107,7 +106,7 @@ export default {
       }
     },
     getFlatmatesThatShareThis (item) {
-      return getFlatmatesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
+      return this.flat.flatmates.filter(flatmate => item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
     }
   }
 }

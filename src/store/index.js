@@ -98,13 +98,11 @@ export default new Vuex.Store({
       })
     },
     async updateItem ({ state, commit }, itemData) {
-      const selectedFlat = state.selectedFlat
-      await Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
+      await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
       commit('UPDATE_ITEM', itemData)
     },
     async deleteItem ({ state, commit }, itemData) {
-      const selectedFlat = state.selectedFlat
-      await Vue.prototype.$db.flats.doc(selectedFlat.id).collection('items').doc(itemData.id).delete()
+      await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).delete()
       commit('DELETE_ITEM', itemData)
     },
     async fetchFlatItems ({ commit }, flat) {

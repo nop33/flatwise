@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
+
 import ItemForm from '@/components/ItemForm.vue'
 
 export default {
@@ -23,9 +25,7 @@ export default {
   },
   props: [
     'flatId',
-    'itemId',
-    'getFlat',
-    'getFlatItems'
+    'itemId'
   ],
   data: () => {
     return {
@@ -35,10 +35,10 @@ export default {
     }
   },
   async created () {
-    this.flat = this.getFlat(this.flatId)
+    this.flat = getFlatFromStateById(this.flatId)
     this.allFlatmates = this.flat.flatmates
     if (!this.flat.items) {
-      await this.getFlatItems(this.flatId)
+      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
     }
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
