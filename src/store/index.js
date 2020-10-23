@@ -92,9 +92,11 @@ export default new Vuex.Store({
       commit('SET_MOVE_OUT_DATE', date)
     },
     async addItem ({ state, commit }, itemData) {
+      commit('TOGGLE_LOADER', true)
       const selectedFlat = state.selectedFlat
       await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').add(itemData).then(itemRef => {
         commit('ADD_ITEM', { itemData: { id: itemRef.id, ...itemData }, selectedFlat })
+        commit('TOGGLE_LOADER', false)
       })
     },
     async updateItem ({ state, commit }, itemData) {
