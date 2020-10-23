@@ -1,29 +1,19 @@
 <template>
   <div v-if="flat">
-    <v-app-bar app flat color="primary" dark prominent hide-on-scroll >
+    <v-app-bar app flat color="primary" dark prominent hide-on-scroll>
       <v-btn icon @click="goHome">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-spacer />
-      <v-toolbar-title>
-        <div class="d-flex flex-column">
-          <span class="text-center text-truncate">{{ flat.name }}</span>
-          <v-btn :to="{name: 'Balances'}" class="mt-5" color="secondary">Balances</v-btn>
+
+      <div class="absolute-content d-flex flex-column justify-space-between my-3">
+        <div class="mx-10 text-truncate text-center text-h6">
+          {{ flat.name }}
         </div>
-      </v-toolbar-title>
-      <v-spacer />
-      <v-menu origin="top right">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item link :to="{ name: 'Edit Flat', params: { flatId } }">
-            <v-list-item-title>Edit flat settings</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+        <div class="d-flex justify-space-around">
+          <v-btn :to="{name: 'Balances'}" color="secondary">Balances</v-btn>
+          <v-btn :to="{ name: 'Edit Flat', params: { flatId } }" color="primary">Settings</v-btn>
+        </div>
+      </div>
     </v-app-bar>
     <v-main>
       <FlatItems :flat="flat" />
@@ -72,3 +62,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.absolute-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  padding: inherit;
+  z-index: -1;
+}
+</style>
