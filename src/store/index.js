@@ -185,6 +185,7 @@ export default new Vuex.Store({
       commit('TOGGLE_LOADER', toggle)
     },
     createFlat ({ state, commit }, formFlat) {
+      commit('TOGGLE_LOADER', true)
       return new Promise((resolve) => {
         const databaseFlat = {
           name: formFlat.name,
@@ -218,18 +219,21 @@ export default new Vuex.Store({
               items: []
             }
             commit('CREATE_FLAT', storeFlat)
+            commit('TOGGLE_LOADER', false)
             resolve(flatRef.id)
           })
         })
       })
     },
     async updateFlat ({ commit }, flatData) {
+      commit('TOGGLE_LOADER', true)
       await Vue.prototype.$db.flats.doc(flatData.id).update({
         name: flatData.name,
         depreciationRate: flatData.depreciationRate,
         lowestPriceRate: flatData.lowestPriceRate
       })
       commit('UPDATE_FLAT', flatData)
+      commit('TOGGLE_LOADER', false)
     }
   },
   modules: {
