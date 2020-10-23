@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
+
 import FlatItems from '@/components/FlatItems.vue'
 
 export default {
@@ -49,9 +51,7 @@ export default {
     FlatItems
   },
   props: [
-    'flatId',
-    'getFlat',
-    'getFlatItems'
+    'flatId'
   ],
   data: () => {
     return {
@@ -59,9 +59,9 @@ export default {
     }
   },
   created () {
-    this.flat = this.getFlat(this.flatId)
+    this.flat = getFlatFromStateById(this.flatId)
     if (!this.flat.items) {
-      this.getFlatItems(this.flat.id)
+      fetchFlatItemsAndStoreInFlatWithId(this.flat.id)
     }
   },
   methods: {

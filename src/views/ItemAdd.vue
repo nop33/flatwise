@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { flatmates, flatmateIdsOrEmails } from '@/utils/utils'
+import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import ItemForm from '@/components/ItemForm.vue'
 
@@ -24,9 +24,7 @@ export default {
     ItemForm
   },
   props: [
-    'flatId',
-    'getFlat',
-    'getFlatItems'
+    'flatId'
   ],
   data: () => {
     return {
@@ -43,12 +41,12 @@ export default {
     }
   },
   created () {
-    this.flat = this.getFlat(this.flatId)
-    this.allFlatmates = flatmates(this.flat)
-    this.item.idsOfFlatmatesThatShareThis = flatmateIdsOrEmails(this.flat)
+    this.flat = getFlatFromStateById(this.flatId)
+    this.allFlatmates = this.flat.flatmates
+    this.item.idsOfFlatmatesThatShareThis = this.flat.flatmates.map(flatmate => flatmate.id)
     this.item.depreciationRate = this.flat.depreciationRate
     this.item.lowestPriceRate = this.flat.lowestPriceRate
-    this.getFlatItems(this.flatId)
+    fetchFlatItemsAndStoreInFlatWithId(this.flatId)
   },
   methods: {
     goToFlat () {

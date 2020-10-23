@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { flatmateIdsOrEmails, calculateDaysBetween, flatmates } from '@/utils/utils'
+import { calculateDaysBetween } from '@/utils/utils'
 
 export default {
   props: [
@@ -118,7 +118,7 @@ export default {
       this.totalValue = 0
       if (this.flat && this.flat.items) {
         const flatmatesBalances = {}
-        flatmateIdsOrEmails(this.flat).forEach(id => {
+        this.flat.flatmates.map(flatmate => flatmate.id).forEach(id => {
           flatmatesBalances[id] = 0
         })
 
@@ -137,7 +137,7 @@ export default {
           })
         })
 
-        flatmates(this.flat).forEach(flatmate => {
+        this.flat.flatmates.forEach(flatmate => {
           balances.push({
             flatmate,
             share: flatmatesBalances[flatmate.id]
