@@ -14,7 +14,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-sheet color="grey lighten-3 py-1 px-5">Settings</v-sheet>
+    <v-sheet color="grey lighten-3 py-1 px-5">Default settings</v-sheet>
     <v-container>
       <v-row>
         <v-col>
@@ -22,7 +22,8 @@
             :value="value.depreciationRate"
             @input="depreciationRateChanged($event)"
             :rules="rateRules"
-            label="Default item depreciation rate"
+            label="Annual depreciation rate"
+            hint="The rate by which the items of this flat lose their value, per year"
             required
             suffix="%"
           />
@@ -32,39 +33,42 @@
             :value="value.lowestPriceRate"
             @input="lowestPriceRateChanged($event)"
             :rules="rateRules"
-            label="Default item lowest price rate"
+            label="Lowest price rate"
+            hint="The value of the items of this flat should not fall lower than this rate"
             required
             suffix="%"
           />
         </v-col>
       </v-row>
     </v-container>
-    <v-sheet color="grey lighten-3 py-1 px-5">Your move in date</v-sheet>
-    <v-container>
-      <v-row>
-        <v-col>
-          <v-dialog ref="dialog" :return-value.sync="value.initialMoveInDate" width="290px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
+    <div v-if="!isInEditMode">
+      <v-sheet color="grey lighten-3 py-1 px-5">Your move in date</v-sheet>
+      <v-container>
+        <v-row>
+          <v-col>
+            <v-dialog ref="dialog" :return-value.sync="value.initialMoveInDate" width="290px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  :value="value.initialMoveInDate"
+                  @input="initialMoveInDateChanged($event)"
+                  label="Your move in date"
+                  append-icon="mdi-calendar"
+                  :rules="dateRules"
+                  required
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
                 :value="value.initialMoveInDate"
                 @input="initialMoveInDateChanged($event)"
-                label="Your move in date"
-                append-icon="mdi-calendar"
-                :rules="dateRules"
-                required
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              :value="value.initialMoveInDate"
-              @input="initialMoveInDateChanged($event)"
-              scrollable
-            ></v-date-picker>
-          </v-dialog>
-        </v-col>
-      </v-row>
-    </v-container>
+                scrollable
+              ></v-date-picker>
+            </v-dialog>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </v-form>
 </template>
 
