@@ -2,7 +2,7 @@
   <v-form v-model="isFormValid">
     <v-container>
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="12" sm="12" md="4">
           <v-text-field
             :value="value.name"
             @input="nameChanged($event)"
@@ -11,7 +11,7 @@
             required
           />
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="6" sm="6" md="4">
           <v-text-field
             :value="value.price"
             @input="priceChanged($event)"
@@ -22,7 +22,7 @@
             required
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" md="4">
+        <v-col cols="6" sm="6" md="4">
           <v-dialog ref="dialog" :return-value.sync="value.date" width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
@@ -43,7 +43,30 @@
             ></v-date-picker>
           </v-dialog>
         </v-col>
-        <v-col cols="12" sm="6">
+        <v-col>
+          <v-autocomplete
+            :value="value.idsOfFlatmatesThatShareThis"
+            @input="idsOfFlatmatesThatShareThisChanged($event)"
+            :items="allFlatmates"
+            item-text="name"
+            item-value="id"
+            chips
+            label="Shared amongst"
+            multiple
+          >
+            <template v-slot:selection="data">
+              <v-chip v-bind="data.attrs">
+                <v-avatar left>
+                  <v-img :src="data.item.photo"></v-img>
+                </v-avatar>
+                {{ data.item.name }}
+              </v-chip>
+            </template>
+          </v-autocomplete>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="6" sm="6">
           <v-text-field
             :value="value.depreciationRate"
             @input="depreciationRateChanged($event)"
@@ -56,7 +79,7 @@
             suffix="%"
           />
         </v-col>
-        <v-col cols="12" sm="6" v-show="value.depreciationRate < 100">
+        <v-col cols="6" sm="6" v-show="value.depreciationRate < 100">
           <v-text-field
             :value="value.lowestPriceRate"
             @input="lowestPriceRateChanged($event)"
@@ -68,20 +91,6 @@
             suffix="%"
             required
           ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-autocomplete
-            :value="value.idsOfFlatmatesThatShareThis"
-            @input="idsOfFlatmatesThatShareThisChanged($event)"
-            :items="allFlatmates"
-            item-text="name"
-            item-value="id"
-            chips
-            label="Shared amongst"
-            multiple
-          ></v-autocomplete>
         </v-col>
       </v-row>
     </v-container>
