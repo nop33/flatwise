@@ -14,7 +14,37 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-sheet color="grey lighten-3 py-1 px-5">Default settings</v-sheet>
+    <div v-if="isInEditMode">
+      <v-sheet color="grey lighten-3 py-1 px-5 text-caption">Flatmates</v-sheet>
+      <!-- TODO: Create component together with the one from views/Item.vue (maybe?) -->
+      <v-list>
+        <v-list-item-group
+          v-model="selectedFlatmateItem"
+          color="primary"
+        >
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-icon class="primary--text">mdi-account-plus-outline</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title class="primary--text">Add new flatmate</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-for="flatmate in flat.flatmates" :key="flatmate.id">
+            <v-list-item-avatar>
+              <v-avatar color="primary">
+                <img v-if="flatmate.photo" :src="flatmate.photo" alt="Avatar"/>
+                <span v-else-if="flatmate.name" class="white--text">{{ flatmate.name.substring(0, 2).toUpperCase() }}</span>
+              </v-avatar>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </div>
+    <v-sheet color="grey lighten-3 py-1 px-5 text-caption">Default settings</v-sheet>
     <v-container>
       <v-row>
         <v-col>
@@ -42,7 +72,7 @@
       </v-row>
     </v-container>
     <div v-if="!isInEditMode">
-      <v-sheet color="grey lighten-3 py-1 px-5">Your move in date</v-sheet>
+      <v-sheet color="grey lighten-3 py-1 px-5 text-caption">Your move in date</v-sheet>
       <v-container>
         <v-row>
           <v-col>
@@ -96,7 +126,8 @@ export default {
       ],
       dateRules: [
         v => !!v || 'Date is required'
-      ]
+      ],
+      selectedFlatmateItem: null
     }
   },
   computed: {
