@@ -75,12 +75,11 @@
 
 <script>
 import { calculateDaysBetween } from '@/utils/utils'
+import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 export default {
   props: [
-    'flatId',
-    'getFlat',
-    'getFlatItems'
+    'flatId'
   ],
   data: () => {
     return {
@@ -100,9 +99,9 @@ export default {
     }
   },
   async created () {
-    this.flat = this.getFlat(this.flatId)
+    this.flat = getFlatFromStateById(this.flatId)
     if (!this.flat.items) {
-      await this.getFlatItems(this.flatId)
+      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
     }
     this.calculateBalances()
   },
