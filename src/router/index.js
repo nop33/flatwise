@@ -64,6 +64,12 @@ const routes = [
     name: 'Balances',
     props: true,
     component: () => import(/* webpackChunkName: "balances" */ '../views/Balances.vue')
+  },
+  {
+    path: '/flat/:flatId/addFlatmate',
+    name: 'Add Flatmate',
+    props: true,
+    component: () => import(/* webpackChunkName: "flatmateAdd" */ '../views/FlatmateAdd.vue')
   }
 ]
 

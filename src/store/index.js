@@ -231,6 +231,9 @@ export default new Vuex.Store({
       })
       commit('UPDATE_FLAT', flatData)
       commit('TOGGLE_LOADER', false)
+    },
+    async addFlatmate ({ commit }, flatmateData) {
+      console.log(flatmateData)
     }
   },
   modules: {
