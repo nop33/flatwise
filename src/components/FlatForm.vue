@@ -22,7 +22,7 @@
           v-model="selectedFlatmateItem"
           color="primary"
         >
-          <v-list-item>
+          <v-list-item @click="goToFlatmateAdd">
             <v-list-item-avatar>
               <v-icon class="primary--text">mdi-account-plus-outline</v-icon>
             </v-list-item-avatar>
@@ -165,6 +165,9 @@ export default {
       this.$refs.dialog.save($event)
       this.flat.initialMoveInDate = $event
       this.$emit('input', this.flat)
+    },
+    goToFlatmateAdd () {
+      this.$router.push({ name: 'Add Flatmate', params: { flatId: this.flat.id } })
     }
   }
 }
