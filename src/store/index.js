@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import firebase from 'firebase/app'
+
 import { createFlatObject } from './models.js'
 
 Vue.use(Vuex)
@@ -72,6 +74,10 @@ export default new Vuex.Store({
     },
     SET_FLAT_ITEMS (state, { flat, items }) {
       flat.items = items
+    },
+    ADD_FLATMATE (state, { flatId, flatmateData }) {
+      const flat = state.flats.find(flat => flat.id === flatId)
+      flat.flatmates.push(flatmateData)
     }
   },
   actions: {
@@ -232,8 +238,15 @@ export default new Vuex.Store({
       commit('UPDATE_FLAT', flatData)
       commit('TOGGLE_LOADER', false)
     },
-    async addFlatmate ({ commit }, flatmateData) {
-      console.log(flatmateData)
+    async addFlatmate ({ commit }, { flatmateData, flatId }) {
+      commit('TOGGLE_LOADER', true)
+      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').add(flatmateData).then(flatmateRef => {
+        commit('ADD_FLATMATE', { flatId, flatmateData: { ...flatmateData, id: flatmateRef.id } })
+      })
+      await Vue.prototype.$db.flats.doc(flatId).update({
+        emailsOfUninitializedUsers: firebase.firestore.FieldValue.arrayUnion(flatmateData.email)
+      })
+      commit('TOGGLE_LOADER', false)
     }
   },
   modules: {
