@@ -32,7 +32,7 @@ export default {
       flatmate: {
         name: '',
         email: '',
-        moveInDate: ''
+        startDate: ''
       }
     }
   },
@@ -44,7 +44,7 @@ export default {
       this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
     },
     save () {
-      this.$store.dispatch('addFlatmate', this.flatmate).then(() => {
+      this.$store.dispatch('addFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
         this.goToFlatSettings()
       })
     }

@@ -40,6 +40,9 @@
             <v-list-item-content>
               <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
             </v-list-item-content>
+            <v-list-item-icon v-if="!flatmate.userRef">
+              <v-icon>mdi-account-clock-outline</v-icon>
+            </v-list-item-icon>
           </v-list-item>
         </v-list-item-group>
       </v-list>

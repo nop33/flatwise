@@ -22,10 +22,10 @@
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="12" md="4">
-          <v-dialog ref="dialog" :return-value.sync="value.moveInDate" width="290px">
+          <v-dialog ref="dialog" :return-value.sync="value.startDate" width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-                :value="value.moveInDate"
+                :value="value.startDate"
                 @input="dateChanged($event)"
                 label="Move in date"
                 append-icon="mdi-calendar"
@@ -36,7 +36,7 @@
               ></v-text-field>
             </template>
             <v-date-picker
-              :value="value.moveInDate"
+              :value="value.startDate"
               @input="dateChanged($event)"
               scrollable
             ></v-date-picker>
@@ -84,12 +84,12 @@ export default {
       this.$emit('input', this.flatmate)
     },
     emailChanged ($event) {
-      this.flatmate.email = $event
+      this.flatmate.email = $event.trim()
       this.$emit('input', this.flatmate)
     },
     dateChanged ($event) {
       this.$refs.dialog.save($event)
-      this.flatmate.moveInDate = $event
+      this.flatmate.startDate = $event
       this.$emit('input', this.flatmate)
     }
   }
