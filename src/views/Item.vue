@@ -18,10 +18,7 @@
         <v-subheader class="font-weight-medium">Shared amongst</v-subheader>
         <v-list-item v-for="flatmate in getFlatmatesThatShareThis(item)" :key="flatmate.id">
           <v-list-item-avatar>
-            <v-avatar color="primary">
-              <img v-if="flatmate.photo" :src="flatmate.photo" alt="Avatar"/>
-              <span v-else-if="flatmate.name" class="white--text">{{ flatmate.name.substring(0, 2).toUpperCase() }}</span>
-            </v-avatar>
+            <Avatar :user="flatmate" />
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
@@ -59,14 +56,16 @@
 </template>
 
 <script>
-import {
-  calculateDaysBetween,
-  calculateItemValueOnDate
-} from '@/utils/utils'
+import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
 
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
+import Avatar from '@/components/Avatar.vue'
+
 export default {
+  components: {
+    Avatar
+  },
   props: [
     'flatId',
     'itemId'

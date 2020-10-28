@@ -23,10 +23,6 @@ export default {
 </script>
 
 <style lang="scss">
-.v-avatar img {
-  object-fit: cover;
-}
-
 .text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;

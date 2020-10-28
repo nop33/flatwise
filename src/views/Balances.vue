@@ -51,10 +51,7 @@
           <template v-for="(balance, index) in balances">
             <v-list-item :key="index">
               <v-list-item-avatar>
-                <v-avatar color="primary">
-                  <img v-if="balance.flatmate.photo" :src="balance.flatmate.photo" alt="Avatar"/>
-                  <strong v-else class="white--text">{{ balance.flatmate.name.substring(0, 2).toUpperCase() }}</strong>
-                </v-avatar>
+                <Avatar :user="balance.flatmate" />
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
@@ -77,7 +74,12 @@
 import { calculateDaysBetween } from '@/utils/utils'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
+import Avatar from '@/components/Avatar.vue'
+
 export default {
+  components: {
+    Avatar
+  },
   props: [
     'flatId'
   ],
