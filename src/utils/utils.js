@@ -1,12 +1,3 @@
-// If a user has not yet been initialized, we don't know their name
-// so their email gets appended in the list of emails
-function flatmateNamesOrEmails (flat) {
-  return [
-    ...flat.flatmates.map(flatmate => flatmate.name),
-    ...flat.emailsOfUninitializedUsers
-  ].sort()
-}
-
 function getFlatmatesFromIds (flat, ids) {
   return ids.map(id => (flat.flatmates.find(flatmate => flatmate.id === id) || { email: id, name: id, id }))
 }
@@ -33,7 +24,6 @@ function calculateItemValueOnDate (item, date) {
 }
 
 export {
-  flatmateNamesOrEmails,
   getFlatmatesFromIds,
   calculateDaysBetween,
   calculateItemValueOnDate

@@ -20,8 +20,6 @@
 <script>
 import { mapState } from 'vuex'
 
-import { flatmateNamesOrEmails } from '@/utils/utils'
-
 export default {
   data: () => {
     return {
@@ -45,7 +43,7 @@ export default {
   },
   methods: {
     formatFlatmateNames (flat) {
-      return flatmateNamesOrEmails(flat).join(', ')
+      return flat.flatmates.map(flatmate => flatmate.name).join(', ')
     }
   }
 }
