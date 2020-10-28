@@ -14,36 +14,6 @@
         </v-col>
       </v-row>
     </v-container>
-    <div v-if="isInEditMode">
-      <v-sheet color="grey lighten-3 py-1 px-5 text-caption">Flatmates</v-sheet>
-      <!-- TODO: Create component together with the one from views/Item.vue (maybe?) -->
-      <v-list>
-        <v-list-item-group
-          v-model="selectedFlatmateIndex"
-          color="primary"
-        >
-          <v-list-item @click="goToFlatmateAdd">
-            <v-list-item-avatar>
-              <v-icon class="primary--text">mdi-account-plus-outline</v-icon>
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title class="primary--text">Add new flatmate</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item v-for="flatmate in flat.flatmates" :key="flatmate.id">
-            <v-list-item-avatar>
-              <Avatar :user="flatmate" />
-            </v-list-item-avatar>
-            <v-list-item-content>
-              <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-icon v-if="!flatmate.userRef">
-              <v-icon>mdi-account-clock-outline</v-icon>
-            </v-list-item-icon>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </div>
     <v-sheet color="grey lighten-3 py-1 px-5 text-caption">Default settings</v-sheet>
     <v-container>
       <v-row>
@@ -103,12 +73,7 @@
 </template>
 
 <script>
-import Avatar from '@/components/Avatar.vue'
-
 export default {
-  components: {
-    Avatar
-  },
   props: [
     'value',
     'edit'
@@ -130,8 +95,7 @@ export default {
       ],
       dateRules: [
         v => !!v || 'Date is required'
-      ],
-      selectedFlatmateIndex: null
+      ]
     }
   },
   computed: {
@@ -147,15 +111,6 @@ export default {
       if (Object.keys(this.flat).length === 0 && this.item.constructor === Object) {
         this.flat = newValue
       }
-    },
-    selectedFlatmateIndex (flatmateIndex) {
-      this.$router.push({
-        name: 'Edit Flatmate',
-        params: {
-          flatId: this.flat.id,
-          flatmateId: this.flat.flatmates[flatmateIndex - 1].id
-        }
-      })
     }
   },
   created () {
@@ -178,9 +133,6 @@ export default {
       this.$refs.dialog.save($event)
       this.flat.initialMoveInDate = $event
       this.$emit('input', this.flat)
-    },
-    goToFlatmateAdd () {
-      this.$router.push({ name: 'Add Flatmate', params: { flatId: this.flat.id } })
     }
   }
 }

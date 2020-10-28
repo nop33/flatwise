@@ -10,6 +10,7 @@
     </v-toolbar>
     <v-main>
     <FlatForm v-model="flat" edit />
+    <FlatmateGroupList :flat="flat" />
     </v-main>
   </div>
 </template>
@@ -18,10 +19,12 @@
 import { getFlatFromStateById } from '@/utils/getters'
 
 import FlatForm from '@/components/FlatForm.vue'
+import FlatmateGroupList from '@/components/FlatmateGroupList.vue'
 
 export default {
   components: {
-    FlatForm
+    FlatForm,
+    FlatmateGroupList
   },
   props: [
     'flatId'
