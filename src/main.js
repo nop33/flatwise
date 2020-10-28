@@ -50,9 +50,7 @@ new Vue({
   render: h => h(App),
   created () {
     firebase.auth().onAuthStateChanged(user => {
-      console.log('main, user', user)
       if (user) {
-        console.log(!store.state.user)
         if (!store.state.user) {
           const storeUser = createUserObject(
             user.uid,

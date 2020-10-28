@@ -19,7 +19,7 @@
       <!-- TODO: Create component together with the one from views/Item.vue (maybe?) -->
       <v-list>
         <v-list-item-group
-          v-model="selectedFlatmateItem"
+          v-model="selectedFlatmateIndex"
           color="primary"
         >
           <v-list-item @click="goToFlatmateAdd">
@@ -131,7 +131,7 @@ export default {
       dateRules: [
         v => !!v || 'Date is required'
       ],
-      selectedFlatmateItem: null
+      selectedFlatmateIndex: null
     }
   },
   computed: {
@@ -147,6 +147,15 @@ export default {
       if (Object.keys(this.flat).length === 0 && this.item.constructor === Object) {
         this.flat = newValue
       }
+    },
+    selectedFlatmateIndex (flatmateIndex) {
+      this.$router.push({
+        name: 'Edit Flatmate',
+        params: {
+          flatId: this.flat.id,
+          flatmateId: this.flat.flatmates[flatmateIndex - 1].id
+        }
+      })
     }
   },
   created () {
