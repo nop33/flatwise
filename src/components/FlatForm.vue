@@ -32,10 +32,7 @@
           </v-list-item>
           <v-list-item v-for="flatmate in flat.flatmates" :key="flatmate.id">
             <v-list-item-avatar>
-              <v-avatar color="primary">
-                <img v-if="flatmate.photo" :src="flatmate.photo" alt="Avatar"/>
-                <span v-else-if="flatmate.name" class="white--text">{{ flatmate.name.substring(0, 2).toUpperCase() }}</span>
-              </v-avatar>
+              <Avatar :user="flatmate" />
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
@@ -106,8 +103,12 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar.vue'
 
 export default {
+  components: {
+    Avatar
+  },
   props: [
     'value',
     'edit'

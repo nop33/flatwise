@@ -11,16 +11,13 @@
             <div class="d-flex justify-space-between align-center">
               <span>{{ item.name }}</span>
               <div class="flex-shrink-0 ml-3">
-                <v-avatar
+                <Avatar
                   v-for="flatmate in getFlatmatesThatShareThis(item)"
                   :key="flatmate.id"
                   size="24"
-                  color="primary"
                   class="text-caption ml-1"
-                >
-                  <img v-if="flatmate.photo" alt="Avatar" :src="flatmate.photo">
-                  <span v-else class="white--text">{{ flatmate.name.substring(0, 2).toUpperCase() }}</span>
-                </v-avatar>
+                  :user="flatmate"
+                />
               </div>
             </div>
           </v-list-item-content>
@@ -35,7 +32,12 @@
 <script>
 import { getFlatmatesFromIds } from '@/utils/utils'
 
+import Avatar from '@/components/Avatar.vue'
+
 export default {
+  components: {
+    Avatar
+  },
   props: [
     'flat'
   ],
