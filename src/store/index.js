@@ -78,6 +78,13 @@ export default new Vuex.Store({
     ADD_FLATMATE (state, { flatId, flatmateData }) {
       const flat = state.flats.find(flat => flat.id === flatId)
       flat.flatmates.push(flatmateData)
+    },
+    UPDATE_FLATMATE (state, { flatId, flatmateData }) {
+      const flat = state.flats.find(flat => flat.id === flatId)
+      const flatmate = flat.flatmates.find(flatmate => flatmate.id === flatmateData.id)
+      flatmate.name = flatmateData.name
+      flatmate.startDate = flatmateData.startDate
+      flatmate.endDate = flatmateData.endDate
     }
   },
   actions: {
@@ -245,6 +252,13 @@ export default new Vuex.Store({
       })
       await Vue.prototype.$db.flats.doc(flatId).update({
         emailsOfUninitializedUsers: firebase.firestore.FieldValue.arrayUnion(flatmateData.email)
+      })
+      commit('TOGGLE_LOADER', false)
+    },
+    async updateFlatmate ({ commit }, { flatmateData, flatId }) {
+      commit('TOGGLE_LOADER', true)
+      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').doc(flatmateData.id).update(flatmateData).then(() => {
+        commit('UPDATE_FLATMATE', { flatId, flatmateData })
       })
       commit('TOGGLE_LOADER', false)
     }

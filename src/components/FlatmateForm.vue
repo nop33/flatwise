@@ -2,33 +2,42 @@
   <v-form v-model="isFormValid">
     <v-container>
       <v-row>
-        <v-col cols="12" sm="12" md="4">
-          <v-text-field
-            :value="value.name"
-            @input="nameChanged($event)"
-            :rules="nameRules"
-            label="Name"
-            required
-          />
+        <v-col cols="12" sm="12" md="6">
+          <div class="d-flex">
+            <Avatar v-if="isInEditMode" :user="flatmate" class="mr-5" />
+            <v-text-field
+              :value="value.name"
+              @input="nameChanged($event)"
+              :rules="nameRules"
+              label="Name"
+              required
+            />
+          </div>
         </v-col>
-        <v-col cols="12" sm="12" md="4">
+        <v-col cols="12" sm="12" md="6">
           <v-text-field
             :value="value.email"
             @input="emailChanged($event)"
             type="email"
             :rules="emailRules"
             label="Email"
+            prepend-icon="mdi-email-outline"
             required
+            :disabled="isInEditMode"
+            :hint="disabledEmailHint"
+            persistent-hint
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="12" md="4">
-          <v-dialog ref="dialog" :return-value.sync="value.startDate" width="290px">
+      </v-row>
+      <v-row>
+        <v-col md="6">
+          <v-dialog ref="startDateDialog" :return-value.sync="value.startDate" width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 :value="value.startDate"
-                @input="dateChanged($event)"
+                @input="startDateChanged($event)"
                 label="Move in date"
-                append-icon="mdi-calendar"
+                prepend-icon="mdi-calendar"
                 :rules="dateRules"
                 required
                 v-bind="attrs"
@@ -37,7 +46,29 @@
             </template>
             <v-date-picker
               :value="value.startDate"
-              @input="dateChanged($event)"
+              @input="startDateChanged($event)"
+              scrollable
+            ></v-date-picker>
+          </v-dialog>
+        </v-col>
+        <v-col md="6">
+          <v-dialog ref="endDateDialog" :return-value.sync="value.endDate" width="290px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                :value="value.endDate"
+                @input="endDateChanged($event)"
+                label="Move out date"
+                prepend-icon="mdi-calendar"
+                v-bind="attrs"
+                v-on="on"
+                :disabled="!value.endDate"
+                :hint="endDateHint"
+                persistent-hint
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              :value="value.endDate"
+              @input="endDateChanged($event)"
               scrollable
             ></v-date-picker>
           </v-dialog>
@@ -48,9 +79,15 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar.vue'
+
 export default {
+  components: {
+    Avatar
+  },
   props: [
-    'value'
+    'value',
+    'edit'
   ],
   data () {
     return {
@@ -66,6 +103,17 @@ export default {
         v => !!v || 'Email is required',
         v => /.+@.+/.test(v) || 'Email must be valid'
       ]
+    }
+  },
+  computed: {
+    isInEditMode () {
+      return this.edit !== undefined
+    },
+    disabledEmailHint () {
+      return this.isInEditMode ? 'I\'m still working on this feature, sry!' : ''
+    },
+    endDateHint () {
+      return this.value.endDate ? '' : 'Remove flatmate to add move out date'
     }
   },
   watch: {
@@ -87,9 +135,14 @@ export default {
       this.flatmate.email = $event.trim()
       this.$emit('input', this.flatmate)
     },
-    dateChanged ($event) {
-      this.$refs.dialog.save($event)
+    startDateChanged ($event) {
+      this.$refs.startDateDialog.save($event)
       this.flatmate.startDate = $event
+      this.$emit('input', this.flatmate)
+    },
+    endDateChanged ($event) {
+      this.$refs.endDateDialog.save($event)
+      this.flatmate.endDate = $event
       this.$emit('input', this.flatmate)
     }
   }
