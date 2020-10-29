@@ -11,6 +11,10 @@
     <v-main>
     <FlatForm v-model="flat" edit />
     <FlatmateGroupList :flat="flat" />
+    <v-divider />
+    <div class="d-flex justify-center ma-5">
+      <v-btn color="warning" text @click="deleteFlat">Delete flat</v-btn>
+    </div>
     </v-main>
   </div>
 </template>
@@ -45,6 +49,10 @@ export default {
       this.$store.dispatch('updateFlat', this.flat).then(() => {
         this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
       })
+    },
+    deleteFlat () {
+      // TODO
+      alert('This feature is coming soon, sry!')
     }
   }
 }
