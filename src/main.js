@@ -31,7 +31,7 @@ Vue.prototype.$db = {
 }
 
 Vue.filter('round', function (value) {
-  if (!value) return ''
+  if (value !== 0 && !value) return ''
   value = parseFloat(value)
   return Math.floor(value * 100) / 100
 })

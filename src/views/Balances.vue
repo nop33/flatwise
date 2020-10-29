@@ -124,7 +124,7 @@ export default {
         })
 
         this.totalValue = 0
-        this.flat.items.forEach(item => {
+        this.flat.items.filter(item => item.date <= this.balanceOnDate).forEach(item => {
           const daysSincePurchase = this.calculateNumberOfDaysOwned(item.date)
           const dailyDepreciationRate = item.depreciationRate / 100 / 365
           const depreciation = daysSincePurchase * dailyDepreciationRate * item.price
