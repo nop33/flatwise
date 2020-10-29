@@ -51,7 +51,7 @@
             ></v-date-picker>
           </v-dialog>
         </v-col>
-        <v-col md="6">
+        <v-col md="6" v-if="isInEditMode">
           <v-dialog ref="endDateDialog" :return-value.sync="value.endDate" width="290px">
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
