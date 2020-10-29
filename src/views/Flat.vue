@@ -5,7 +5,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <div class="absolute-content d-flex flex-column justify-space-between my-3">
+      <div class="absolute-toolbar-content d-flex flex-column justify-space-between my-3">
         <div class="mx-10 text-truncate text-center text-h6">
           {{ flat.name }}
         </div>
@@ -71,15 +71,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.absolute-content {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  padding: inherit;
-  z-index: -1;
-}
-</style>

@@ -12,7 +12,7 @@
       <FlatmateForm v-model="flatmate" edit />
       <v-divider />
       <div class="d-flex justify-center ma-5">
-        <v-btn color="warning" @click="removeFlatmate">Remove flatmate</v-btn>
+        <v-btn color="warning" :to="{ name: 'Remove Flatmate', params: { flatId, flatmateId } }">Remove flatmate</v-btn>
       </div>
       <v-snackbar v-model="snackbar.enabled" :multi-line="snackbar.multiLine" timeout="-1">
         <div class="d-flex">

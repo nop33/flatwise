@@ -76,6 +76,12 @@ const routes = [
     name: 'Edit Flatmate',
     props: true,
     component: () => import(/* webpackChunkName: "flatmateEdit" */ '../views/FlatmateEdit.vue')
+  },
+  {
+    path: '/flat/:flatId/flatmate/:flatmateId/remove',
+    name: 'Remove Flatmate',
+    props: true,
+    component: () => import(/* webpackChunkName: "flatmateRemove" */ '../views/FlatmateRemove.vue')
   }
 ]
 
