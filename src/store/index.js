@@ -129,51 +129,35 @@ export default new Vuex.Store({
       commit('TOGGLE_LOADER', true)
 
       // Initialize user in flats (s)he have been added to but not initialized yet
-      // let response = await Vue.prototype.$db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
-      // for (let index = 0; index < response.docs.length; index++) {
-      //   const flat = response.docs[index]
-      //   const flatData = flat.data()
-      //   const flatDoc = Vue.prototype.$db.flats.doc(flat.id)
+      let flatQueryResponse = await Vue.prototype.$db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
+      for (let index = 0; index < flatQueryResponse.docs.length; index++) {
+        const flat = flatQueryResponse.docs[index]
+        // const flatData =   flat.data()
+        const flatDoc = Vue.prototype.$db.flats.doc(flat.id)
 
-      //   flatData.emailsOfUninitializedUsers.splice(flatData.emailsOfUninitializedUsers.indexOf(state.user.email), 1)
-      //   await flatDoc.update({
-      //     // Add current user to flatmates
-      //     // flatmates: [state.user, ...flatData.flatmates],
-      //     // remove his/her email from uninitialized users
-      //     emailsOfUninitializedUsers: flatData.emailsOfUninitializedUsers,
-      //     // give him/her access to flat
-      //     uidsOfUsersWithAccess: [state.user.id, ...flatData.uidsOfUsersWithAccess]
-      //   })
+        await flatDoc.update({
+          uidsOfUsersWithAccess: firebase.firestore.FieldValue.arrayUnion(state.user.id),
+          emailsOfUninitializedUsers: firebase.firestore.FieldValue.arrayRemove(state.user.email)
+        })
 
-      //   // Update flatmate document with reference to user document
-      //   const flatmatesResponse = await flatDoc.collection('flatmates').where('email', '==', state.user.email).get()
-      //   for (let i = 0; i < flatmatesResponse.docs.length; i++) {
-      //     const flatmate = flatmatesResponse.docs[i]
-      //     const flatmateDoc = flatDoc.collection('flatmates').doc(flatmate.id)
+        // Update flatmate document with reference to user document and with name the logged in user chose
+        const flatmatesQueryResponse = await flatDoc.collection('flatmates').where('email', '==', state.user.email).get()
+        for (let i = 0; i < flatmatesQueryResponse.docs.length; i++) {
+          const flatmateRef = flatmatesQueryResponse.docs[i]
+          const flatmateDoc = flatDoc.collection('flatmates').doc(flatmateRef.id)
 
-      //     await flatmateDoc.update({
-      //       userRef: state.user.id
-      //     })
-      //   }
-
-      //   // TODO: Clean this up
-      //   // Update all items
-      //   // const flatItemsCollection = Vue.prototype.$db.flats.doc(flat.id).collection('items')
-      //   // const itemsResponse = await flatItemsCollection.where('idsOfFlatmatesThatShareThis', 'array-contains', state.user.email).get()
-      //   // for (let index = 0; index < itemsResponse.docs.length; index++) {
-      //   //   const item = itemsResponse.docs[index]
-      //   //   const itemData = item.data()
-      //   //   itemData.idsOfFlatmatesThatShareThis.splice(itemData.idsOfFlatmatesThatShareThis.indexOf(state.user.email), 1, state.user.id)
-      //   //   await flatItemsCollection.doc(item.id).update({
-      //   //     idsOfFlatmatesThatShareThis: itemData.idsOfFlatmatesThatShareThis
-      //   //   })
-      //   // }
-      // }
+          await flatmateDoc.update({
+            name: state.user.name,
+            photo: state.user.photo,
+            userRef: state.user.id
+          })
+        }
+      }
 
       const flats = []
-      const response = await Vue.prototype.$db.flats.where('uidsOfUsersWithAccess', 'array-contains', state.user.id).get()
-      for (let i = 0; i < response.docs.length; i++) {
-        const flat = response.docs[i]
+      flatQueryResponse = await Vue.prototype.$db.flats.where('uidsOfUsersWithAccess', 'array-contains', state.user.id).get()
+      for (let i = 0; i < flatQueryResponse.docs.length; i++) {
+        const flat = flatQueryResponse.docs[i]
         const flatData = flat.data()
         // get flatmates details and store it in each flat
         const flatmatesResponse = await Vue.prototype.$db.flats.doc(flat.id).collection('flatmates').get()
