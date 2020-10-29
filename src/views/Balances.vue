@@ -10,6 +10,7 @@
       <v-container>
         <v-row>
           <v-col>
+            <!-- TODO: Make new component to share with FlatmateRemove.vue -->
             <v-dialog ref="dialog" :return-value.sync="balanceOnDate" width="290px">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -31,54 +32,33 @@
         </v-row>
       </v-container>
 
-      <v-divider/>
+      <v-divider />
 
-      <v-sheet color="grey lighten-3">
-        <v-container>
-          <v-row>
-            <v-col>
-              As of {{ balanceOnDate | humanReadable }}, the total worth of all items (after applying the depreciation rate of each)
-              is <strong class="secondary--text">{{ totalValue | round }}</strong> CHF
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-sheet>
+      <Sheet>
+        As of {{ balanceOnDate | humanReadable }}, the total worth of all items (after applying the depreciation rate of each)
+        is <strong class="secondary--text">{{ totalValue | round }}</strong> CHF
+      </Sheet>
 
-      <v-divider/>
+      <v-divider />
 
-      <v-list class="balances-list">
-        <v-list-item-group v-model="selectedFlatmateIndex">
-          <template v-for="(balance, index) in balances">
-            <v-list-item :key="index">
-              <v-list-item-avatar>
-                <Avatar :user="balance.flatmate" />
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ balance.flatmate.name }} share is
-                  <strong class="secondary--text">
-                    {{ balance.share | round }}
-                  </strong>
-                  CHF
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-        </v-list-item-group>
-      </v-list>
+      <BalancesList :balances="balances" />
+
+      <v-divider />
     </v-main>
   </div>
 </template>
 
 <script>
-import { calculateDaysBetween } from '@/utils/utils'
+import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
-import Avatar from '@/components/Avatar.vue'
+import Sheet from '@/components/Sheet.vue'
+import BalancesList from '@/components/BalancesList.vue'
 
 export default {
   components: {
-    Avatar
+    Sheet,
+    BalancesList
   },
   props: [
     'flatId'
@@ -89,7 +69,6 @@ export default {
       dateRules: [
         v => !!v || 'Date is required'
       ],
-      selectedFlatmateIndex: null,
       flat: {},
       balances: [],
       totalValue: 0
@@ -125,12 +104,7 @@ export default {
 
         this.totalValue = 0
         this.flat.items.filter(item => item.date <= this.balanceOnDate).forEach(item => {
-          const daysSincePurchase = this.calculateNumberOfDaysOwned(item.date)
-          const dailyDepreciationRate = item.depreciationRate / 100 / 365
-          const depreciation = daysSincePurchase * dailyDepreciationRate * item.price
-          const lowestPrice = item.price * item.lowestPriceRate / 100
-          const valueAfterDepreciation = item.price - depreciation
-          const valueOnDate = Math.max(valueAfterDepreciation, lowestPrice)
+          const valueOnDate = calculateItemValueOnDate(item, this.balanceOnDate)
           this.totalValue += valueOnDate
 
           item.idsOfFlatmatesThatShareThis.forEach(flatmateId => {
