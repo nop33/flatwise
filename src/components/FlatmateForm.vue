@@ -4,13 +4,16 @@
       <v-row>
         <v-col cols="12" sm="12" md="6">
           <div class="d-flex">
-            <Avatar v-if="isInEditMode" :user="flatmate" class="mr-5" />
+            <Avatar :user="flatmate" class="mr-5" />
             <v-text-field
               :value="value.name"
               @input="nameChanged($event)"
               :rules="nameRules"
               label="Name"
               required
+              :disabled="isNameDisabled"
+              persistent-hint
+              :hint="isNameDisabled ? 'Only themselves can change their name' : ''"
             />
           </div>
         </v-col>
@@ -81,6 +84,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Avatar from '@/components/Avatar.vue'
 
 export default {
@@ -108,6 +113,9 @@ export default {
     }
   },
   computed: {
+    ...mapState([
+      'user'
+    ]),
     isInEditMode () {
       return this.edit !== undefined
     },
@@ -116,6 +124,9 @@ export default {
     },
     endDateHint () {
       return this.value.endDate ? '' : 'Remove flatmate to add move out date'
+    },
+    isNameDisabled () {
+      return this.value.userRef && this.user.id !== this.value.userRef
     }
   },
   watch: {
