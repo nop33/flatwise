@@ -56,9 +56,7 @@
           >
             <template v-slot:selection="data">
               <v-chip v-bind="data.attrs">
-                <v-avatar left>
-                  <v-img :src="data.item.photo"></v-img>
-                </v-avatar>
+                <Avatar :user="data.item" left />
                 {{ data.item.name }}
               </v-chip>
             </template>
@@ -98,7 +96,12 @@
 </template>
 
 <script>
+import Avatar from '@/components/Avatar.vue'
+
 export default {
+  components: {
+    Avatar
+  },
   props: [
     'value',
     'allFlatmates'
