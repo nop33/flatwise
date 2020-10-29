@@ -34,6 +34,7 @@
                 required
                 v-bind="attrs"
                 v-on="on"
+                readonly
               ></v-text-field>
             </template>
             <v-date-picker
