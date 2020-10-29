@@ -22,7 +22,7 @@
             </div>
           </v-list-item-content>
         </v-list-item>
-        <v-divider v-if="index + 1 < flat.items.length" :key="index"></v-divider>
+        <v-divider :key="index"></v-divider>
         </template>
       </v-list-item-group>
     </v-list>
