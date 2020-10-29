@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     sortedItems () {
-      return this.flat.items ? [...this.flat.items].sort((a, b) => (a.data > b.date) ? 1 : -1) : []
+      return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
     }
   },
   watch: {
