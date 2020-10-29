@@ -1,5 +1,5 @@
 <template>
-  <v-avatar :color="color" :size="size" :left="left">
+  <v-avatar :size="size" :left="left" :class="classes" :style="`background-color: ${color}`">
     <img v-if="user.photo" :src="user.photo" alt="Avatar"/>
     <span v-else-if="user.name" class="white--text">{{ initials }}</span>
   </v-avatar>
@@ -12,7 +12,8 @@ export default {
   props: [
     'user',
     'size',
-    'left'
+    'left',
+    'border'
   ],
   computed: {
     color () {
@@ -22,6 +23,11 @@ export default {
       const words = this.user.name.split(' ')
       const initials = words.length > 1 ? `${words[0].charAt(0)}${words[1].charAt(0)}` : `${words[0].charAt(0)}${words[0].charAt(1)}`
       return initials.toUpperCase()
+    },
+    classes () {
+      return {
+        'has-border': this.border !== undefined
+      }
     }
   }
 }
@@ -30,5 +36,9 @@ export default {
 <style lang="scss">
 .v-avatar img {
   object-fit: cover;
+}
+
+.has-border {
+  border: 2px solid white;
 }
 </style>
