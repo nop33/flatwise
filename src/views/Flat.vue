@@ -17,6 +17,15 @@
     </v-app-bar>
     <v-main>
       <FlatItems :flat="flat" />
+      <v-container v-if="flat.items && flat.items.length === 0">
+        <v-row>
+          <v-col>
+            <div class="text--disabled">
+              Your flat seems unfurnished. Add some items with the button below!
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
       <v-btn
         fab
         color="secondary white--text"
