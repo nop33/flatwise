@@ -102,14 +102,17 @@ export default {
           flatmatesBalances[id] = 0
         })
 
-        this.totalValue = 0
         this.flat.items.filter(item => item.date <= this.balanceOnDate).forEach(item => {
           const valueOnDate = calculateItemValueOnDate(item, this.balanceOnDate)
-          this.totalValue += valueOnDate
-
-          item.idsOfFlatmatesThatShareThis.forEach(flatmateId => {
-            flatmatesBalances[flatmateId] += valueOnDate / item.idsOfFlatmatesThatShareThis.length
+          const flatmatesMovedInByChosenDate = item.idsOfFlatmatesThatShareThis.filter(id => {
+            const flatmate = this.flat.flatmates.find(flatmate => flatmate.id === id)
+            return flatmate.startDate <= this.balanceOnDate
           })
+
+          flatmatesMovedInByChosenDate.forEach(flatmateId => {
+            flatmatesBalances[flatmateId] += valueOnDate / flatmatesMovedInByChosenDate.length
+          })
+          this.totalValue += valueOnDate
         })
 
         this.flat.flatmates.forEach(flatmate => {
