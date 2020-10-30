@@ -1,5 +1,5 @@
 function getFlatmatesFromIds (flat, ids) {
-  return ids.map(id => (flat.flatmates.find(flatmate => flatmate.id === id) || { email: id, name: id, id }))
+  return ids.map(id => (flat.flatmates.find(flatmate => flatmate.id === id) || { email: id, name: id, id })).sort((a, b) => a.name < b.name ? -1 : 1)
 }
 
 function treatAsUTC (date) {
