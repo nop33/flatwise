@@ -26,7 +26,12 @@
                   hide-details="auto"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model="balanceOnDate" scrollable @input="$refs.dialog.save(balanceOnDate)"></v-date-picker>
+              <v-date-picker
+                v-model="balanceOnDate"
+                scrollable
+                @input="$refs.dialog.save(balanceOnDate)"
+                :min="earliestFlatmateMoveInDate"
+              ></v-date-picker>
             </v-dialog>
           </v-col>
         </v-row>
@@ -72,6 +77,13 @@ export default {
       flat: {},
       balances: [],
       totalValue: 0
+    }
+  },
+  computed: {
+    earliestFlatmateMoveInDate () {
+      return this.flat.flatmates.reduce((lowestDate, flatmate) => {
+        return lowestDate < flatmate.startDate ? lowestDate : flatmate.startDate
+      }, 0)
     }
   },
   watch: {
