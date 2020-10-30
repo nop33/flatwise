@@ -33,6 +33,7 @@
                 v-model="moveOutDate"
                 @input="$refs.endDateDialog.save(moveOutDate)"
                 scrollable
+                :min="flatmate.startDate"
               ></v-date-picker>
             </v-dialog>
           </v-col>
@@ -51,6 +52,10 @@
       <BalancesList :balances="debt" />
 
       <v-divider />
+
+      <div class="d-flex justify-center ma-5">
+        <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
+      </div>
     </v-main>
   </div>
 </template>
@@ -58,6 +63,7 @@
 <script>
 import { calculateItemValueOnDate } from '@/utils/utils'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
+import { generateBreakdown } from '@/utils/pdf'
 
 import Avatar from '@/components/Avatar.vue'
 import Sheet from '@/components/Sheet.vue'
@@ -80,7 +86,8 @@ export default {
       moveOutDate: new Date().toJSON().slice(0, 10),
       flatmatesDebtToPersonLeaving: {},
       debt: [],
-      totalDebt: 0
+      totalDebt: 0,
+      sharePerItem: []
     }
   },
   watch: {
@@ -102,6 +109,7 @@ export default {
     },
     calculateDebt () {
       this.debt = []
+      this.sharePerItem = []
       this.totalDebt = 0
       const remainingFlatmates = this.flat.flatmates.filter(flatmate => flatmate.id !== this.flatmate.id)
       remainingFlatmates.forEach(flatmate => {
@@ -111,12 +119,23 @@ export default {
                                                  item.date <= this.moveOutDate)
       items.forEach(item => {
         const valueOnDate = calculateItemValueOnDate(item, this.moveOutDate)
-        item.idsOfFlatmatesThatShareThis.filter(id => id !== this.flatmate.id).forEach(id => {
-          const numberOfFlatmatesSharingThis = item.idsOfFlatmatesThatShareThis.length
-          const shareOfFlatmateLeaving = valueOnDate / numberOfFlatmatesSharingThis
-          const shareSplitAmongstRemainingFlatmates = shareOfFlatmateLeaving / (numberOfFlatmatesSharingThis - 1)
+        const idsOfFlatmatesMovedInByChosenDate = item.idsOfFlatmatesThatShareThis.filter(id => {
+          const flatmate = this.flat.flatmates.find(flatmate => flatmate.id === id)
+          return flatmate.startDate <= this.moveOutDate
+        })
+
+        const numberOfFlatmatesSharingThisOnMoveOutDate = idsOfFlatmatesMovedInByChosenDate.length
+        const shareOfFlatmateLeaving = valueOnDate / numberOfFlatmatesSharingThisOnMoveOutDate
+        const shareSplitAmongstRemainingFlatmates = shareOfFlatmateLeaving / (numberOfFlatmatesSharingThisOnMoveOutDate - 1)
+
+        idsOfFlatmatesMovedInByChosenDate.filter(id => id !== this.flatmate.id).forEach(id => {
           this.flatmatesDebtToPersonLeaving[id] += shareSplitAmongstRemainingFlatmates
           this.totalDebt += shareSplitAmongstRemainingFlatmates
+        })
+
+        this.sharePerItem.push({
+          item: item,
+          share: shareOfFlatmateLeaving
         })
       })
 
@@ -126,6 +145,19 @@ export default {
           share: this.flatmatesDebtToPersonLeaving[flatmate.id]
         })
       })
+    },
+    downloadBreakdown () {
+      const data = this.sharePerItem.map(itemShare => {
+        const dataObject = {}
+        dataObject.itemName = itemShare.item.name
+        dataObject.itemPurchaseDate = itemShare.item.date
+        dataObject.itemPurchasePrice = `${itemShare.item.price} CHF`
+        dataObject.sharedBy = `${itemShare.item.idsOfFlatmatesThatShareThis.length}`
+        dataObject.annualDepreciationRate = `${itemShare.item.depreciationRate}%`
+        dataObject.share = `${Math.floor(itemShare.share * 100) / 100} CHF`
+        return dataObject
+      })
+      generateBreakdown(this.flatmate, this.moveOutDate, Math.floor(this.totalDebt * 100) / 100, data)
     }
   }
 }
