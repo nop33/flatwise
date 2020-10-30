@@ -84,7 +84,7 @@ export default new Vuex.Store({
       const flatmate = flat.flatmates.find(flatmate => flatmate.id === flatmateData.id)
       flatmate.name = flatmateData.name
       flatmate.startDate = flatmateData.startDate
-      flatmate.endDate = flatmateData.endDate
+      flatmate.endDate = flatmateData.endDate || null
     }
   },
   actions: {
