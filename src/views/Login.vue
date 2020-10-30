@@ -2,8 +2,10 @@
   <v-container class="fill-height sign-in" fluid>
     <v-row align="center" justify="center">
       <v-col cols="12" sm="8" md="4">
-        <div class="text-center text-h1">🏠</div>
-        <div class="text-center text-h3">Flatwise</div>
+        <div class="text-center">
+          <img src="../assets/logo.png" />
+        </div>
+        <div class="text-center text-h3" style="color: #66757f">Flatwise</div>
         <section id="firebaseui-auth-container"></section>
       </v-col>
     </v-row>
