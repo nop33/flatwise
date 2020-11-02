@@ -57,8 +57,22 @@
         <div class="d-flex justify-center ma-5">
           <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
         </div>
+        <div class="d-flex justify-center ma-5">
+          <v-btn color="warning" @click="downloadBreakdown" :disabled="!isReportDownloaded">Save move-out date</v-btn>
+        </div>
       </div>
     </v-main>
+    <v-snackbar v-model="isSnackbarVisible">
+      <div class="d-flex">
+        <v-icon class="mr-3">mdi-download</v-icon>
+        <span>Downloaded! Check your notification bar.</span>
+      </div>
+      <template v-slot:action="{ attrs }">
+        <v-btn icon text v-bind="attrs" @click="isSnackbarVisible = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -89,7 +103,9 @@ export default {
       flatmatesDebtToPersonLeaving: {},
       debt: [],
       totalDebt: 0,
-      sharePerItem: []
+      sharePerItem: [],
+      isReportDownloaded: false,
+      isSnackbarVisible: false
     }
   },
   watch: {
@@ -147,7 +163,7 @@ export default {
         })
       })
     },
-    downloadBreakdown () {
+    async downloadBreakdown () {
       const data = this.sharePerItem.map(itemShare => {
         const dataObject = {}
         dataObject.itemName = itemShare.item.name
@@ -158,7 +174,10 @@ export default {
         dataObject.share = `${Math.floor(itemShare.share * 100) / 100} CHF`
         return dataObject
       })
-      generateBreakdown(this.flatmate, this.moveOutDate, Math.floor(this.totalDebt * 100) / 100, data)
+      generateBreakdown(this.flatmate, this.moveOutDate, Math.floor(this.totalDebt * 100) / 100, data).then(() => {
+        this.isReportDownloaded = true
+        this.isSnackbarVisible = true
+      })
     }
   }
 }
