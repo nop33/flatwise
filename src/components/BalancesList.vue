@@ -38,3 +38,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.balances-list .v-list-item__title {
+  overflow: visible;
+  white-space: normal;
+}
+</style>
