@@ -98,12 +98,6 @@ export default new Vuex.Store({
       await Vue.prototype.$db.users.doc(user.id).set(user)
       commit('SET_USER', user)
     },
-    setFlatmateMovingOut ({ commit }, flatmate) {
-      commit('SET_FLATMATE_MOVING_OUT', flatmate)
-    },
-    setMoveOutDate ({ commit }, date) {
-      commit('SET_MOVE_OUT_DATE', date)
-    },
     async addItem ({ state, commit }, itemData) {
       commit('TOGGLE_LOADER', true)
       const selectedFlat = state.selectedFlat
