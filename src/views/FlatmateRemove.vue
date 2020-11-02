@@ -20,7 +20,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="moveOutDate"
-                  label="Move out date"
+                  label="Enter the move-out date"
                   prepend-icon="mdi-calendar"
                   v-bind="attrs"
                   v-on="on"
@@ -40,21 +40,23 @@
         </v-row>
       </v-container>
 
-      <v-divider/>
+      <div v-show="moveOutDate">
+        <v-divider />
 
-      <Sheet>
-        When {{ flatmate.name }} moves out on {{ moveOutDate | humanReadable }}, they should get back a total of
-        <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
-      </Sheet>
+        <Sheet>
+          When {{ flatmate.name }} moves out on {{ moveOutDate | humanReadable }}, they should get back a total of
+          <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
+        </Sheet>
 
-      <v-divider/>
+        <v-divider/>
 
-      <BalancesList :balances="debt" />
+        <BalancesList :balances="debt" />
 
-      <v-divider />
+        <v-divider />
 
-      <div class="d-flex justify-center ma-5">
-        <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
+        <div class="d-flex justify-center ma-5">
+          <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
+        </div>
       </div>
     </v-main>
   </div>
@@ -83,7 +85,7 @@ export default {
     return {
       flat: {},
       flatmate: {},
-      moveOutDate: new Date().toJSON().slice(0, 10),
+      moveOutDate: '',
       flatmatesDebtToPersonLeaving: {},
       debt: [],
       totalDebt: 0,
@@ -101,7 +103,6 @@ export default {
     if (!this.flat.items) {
       await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
     }
-    this.calculateDebt()
   },
   methods: {
     goToFlatSettings () {
