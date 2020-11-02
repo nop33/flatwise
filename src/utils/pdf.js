@@ -26,5 +26,5 @@ export function generateBreakdown (flatmate, moveOutDate, total, data) {
   })
 
   // doc.output('pdfobjectnewwindow')
-  doc.save(`${flatmate.name.split(' ').join('')}-flatwise-breakdown.pdf`)
+  return doc.save(`${flatmate.name.split(' ').join('')}-flatwise-breakdown.pdf`, { returnPromise: true })
 }
