@@ -84,6 +84,9 @@ export default {
       return this.flat.flatmates.reduce((lowestDate, flatmate) => {
         return lowestDate < flatmate.startDate ? lowestDate : flatmate.startDate
       }, 0)
+    },
+    flatmatesThatHaventMovedOutYet () {
+      return this.flat.flatmates.filter(flatmate => !flatmate.endDate || flatmate.endDate >= this.balanceOnDate)
     }
   },
   watch: {
@@ -110,15 +113,15 @@ export default {
       this.totalValue = 0
       if (this.flat && this.flat.items) {
         const flatmatesBalances = {}
-        this.flat.flatmates.map(flatmate => flatmate.id).forEach(id => {
+        this.flatmatesThatHaventMovedOutYet.map(flatmate => flatmate.id).forEach(id => {
           flatmatesBalances[id] = 0
         })
 
         this.flat.items.filter(item => item.date <= this.balanceOnDate).forEach(item => {
           const valueOnDate = calculateItemValueOnDate(item, this.balanceOnDate)
           const flatmatesMovedInByChosenDate = item.idsOfFlatmatesThatShareThis.filter(id => {
-            const flatmate = this.flat.flatmates.find(flatmate => flatmate.id === id)
-            return flatmate.startDate <= this.balanceOnDate
+            const flatmate = this.flatmatesThatHaventMovedOutYet.find(flatmate => flatmate.id === id)
+            return !!flatmate && flatmate.startDate <= this.balanceOnDate
           })
 
           flatmatesMovedInByChosenDate.forEach(flatmateId => {
@@ -127,7 +130,7 @@ export default {
           this.totalValue += valueOnDate
         })
 
-        this.flat.flatmates.forEach(flatmate => {
+        this.flatmatesThatHaventMovedOutYet.forEach(flatmate => {
           balances.push({
             flatmate,
             share: flatmatesBalances[flatmate.id]

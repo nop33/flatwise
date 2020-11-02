@@ -10,7 +10,7 @@
     </v-toolbar>
     <v-main>
     <FlatForm v-model="flat" edit />
-    <FlatmateGroupList :flat="flat" />
+    <FlatmateGroupList :flatmates="currentFlatmates(flatId)" :flatId="flatId" />
     <v-divider />
     <div class="d-flex justify-center ma-5">
       <v-btn color="warning" text @click="deleteFlat">Delete flat</v-btn>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { getFlatFromStateById } from '@/utils/getters'
 
 import FlatForm from '@/components/FlatForm.vue'
@@ -37,6 +38,11 @@ export default {
     return {
       flat: {}
     }
+  },
+  computed: {
+    ...mapGetters([
+      'currentFlatmates'
+    ])
   },
   created () {
     this.flat = getFlatFromStateById(this.flatId)

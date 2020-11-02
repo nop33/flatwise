@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import ItemForm from '@/components/ItemForm.vue'
@@ -40,10 +41,15 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'currentFlatmates'
+    ])
+  },
   created () {
     this.flat = getFlatFromStateById(this.flatId)
-    this.allFlatmates = this.flat.flatmates
-    this.item.idsOfFlatmatesThatShareThis = this.flat.flatmates.map(flatmate => flatmate.id)
+    this.allFlatmates = this.currentFlatmates(this.flatId)
+    this.item.idsOfFlatmatesThatShareThis = this.allFlatmates.map(flatmate => flatmate.id)
     this.item.depreciationRate = this.flat.depreciationRate
     this.item.lowestPriceRate = this.flat.lowestPriceRate
     fetchFlatItemsAndStoreInFlatWithId(this.flatId)
