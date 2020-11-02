@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getFlatmatesFromIds } from '@/utils/utils'
+import { mapGetters } from 'vuex'
 
 import Avatar from '@/components/Avatar.vue'
 
@@ -47,6 +47,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'currentFlatmates'
+    ]),
     sortedItems () {
       return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
     }
@@ -66,7 +69,7 @@ export default {
   },
   methods: {
     getFlatmatesThatShareThis (item) {
-      return getFlatmatesFromIds(this.flat, item.idsOfFlatmatesThatShareThis)
+      return this.currentFlatmates(this.flat.id).filter(flatmate => item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
     }
   }
 }

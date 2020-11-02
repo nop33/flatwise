@@ -18,9 +18,8 @@ export function generateBreakdown (flatmate, moveOutDate, total, data) {
     columns: [
       { header: 'Item', dataKey: 'itemName' },
       { header: 'Purchase Date', dataKey: 'itemPurchaseDate' },
-      { header: 'Purchase Price', dataKey: 'itemPurchasePrice' },
-      { header: 'Shared by', dataKey: 'sharedBy' },
       { header: 'Annual Depreciation Rate', dataKey: 'annualDepreciationRate' },
+      { header: 'Initial share', dataKey: 'initialShare' },
       { header: 'Gets Back', dataKey: 'share' }
     ]
   })

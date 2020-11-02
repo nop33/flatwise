@@ -1,7 +1,3 @@
-function getFlatmatesFromIds (flat, ids) {
-  return ids.map(id => (flat.flatmates.find(flatmate => flatmate.id === id) || { email: id, name: id, id })).sort((a, b) => a.name < b.name ? -1 : 1)
-}
-
 function treatAsUTC (date) {
   var result = new Date(date)
   result.setMinutes(result.getMinutes() - result.getTimezoneOffset())
@@ -35,7 +31,6 @@ function stringToHslColor (str, saturation = 30, lightness = 75) {
 }
 
 export {
-  getFlatmatesFromIds,
   calculateDaysBetween,
   calculateItemValueOnDate,
   stringToHslColor

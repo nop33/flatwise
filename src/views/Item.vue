@@ -56,8 +56,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
-
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import Avatar from '@/components/Avatar.vue'
@@ -77,14 +77,10 @@ export default {
       today: new Date().toJSON().slice(0, 10)
     }
   },
-  async created () {
-    this.flat = getFlatFromStateById(this.flatId)
-    if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
-    }
-    this.item = this.flat.items.find(item => item.id === this.itemId)
-  },
   computed: {
+    ...mapGetters([
+      'currentFlatmates'
+    ]),
     numberOfDaysOwned () {
       return Math.floor(calculateDaysBetween(this.item.date, this.today))
     },
@@ -94,6 +90,13 @@ export default {
     currentValuePercentage () {
       return (this.currentValue / this.item.price) * 100
     }
+  },
+  async created () {
+    this.flat = getFlatFromStateById(this.flatId)
+    if (!this.flat.items) {
+      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
+    }
+    this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
     goToFlat () {
@@ -105,7 +108,9 @@ export default {
       }
     },
     getFlatmatesThatShareThis (item) {
-      return this.flat.flatmates.filter(flatmate => item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
+      return this.currentFlatmates(this.flat.id).filter(flatmate => {
+        return item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
+      })
     }
   }
 }

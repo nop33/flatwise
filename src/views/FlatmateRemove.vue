@@ -58,7 +58,7 @@
           <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
         </div>
         <div class="d-flex justify-center ma-5">
-          <v-btn color="warning" @click="downloadBreakdown" :disabled="!isReportDownloaded">Save move-out date</v-btn>
+          <v-btn color="warning" @click="saveMoveOutDate" :disabled="!isReportDownloaded">Save move-out date</v-btn>
         </div>
       </div>
     </v-main>
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { calculateItemValueOnDate } from '@/utils/utils'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 import { generateBreakdown } from '@/utils/pdf'
@@ -108,6 +109,11 @@ export default {
       isSnackbarVisible: false
     }
   },
+  computed: {
+    ...mapGetters([
+      'currentFlatmates'
+    ])
+  },
   watch: {
     moveOutDate () {
       this.calculateDebt()
@@ -128,7 +134,7 @@ export default {
       this.debt = []
       this.sharePerItem = []
       this.totalDebt = 0
-      const remainingFlatmates = this.flat.flatmates.filter(flatmate => flatmate.id !== this.flatmate.id)
+      const remainingFlatmates = this.currentFlatmates(this.flatId).filter(flatmate => flatmate.id !== this.flatmate.id)
       remainingFlatmates.forEach(flatmate => {
         this.flatmatesDebtToPersonLeaving[flatmate.id] = 0
       })
@@ -137,10 +143,9 @@ export default {
       items.forEach(item => {
         const valueOnDate = calculateItemValueOnDate(item, this.moveOutDate)
         const idsOfFlatmatesMovedInByChosenDate = item.idsOfFlatmatesThatShareThis.filter(id => {
-          const flatmate = this.flat.flatmates.find(flatmate => flatmate.id === id)
-          return flatmate.startDate <= this.moveOutDate
+          const flatmate = this.currentFlatmates(this.flatId).find(flatmate => flatmate.id === id)
+          return !!flatmate && flatmate.startDate <= this.moveOutDate
         })
-
         const numberOfFlatmatesSharingThisOnMoveOutDate = idsOfFlatmatesMovedInByChosenDate.length
         const shareOfFlatmateLeaving = valueOnDate / numberOfFlatmatesSharingThisOnMoveOutDate
         const shareSplitAmongstRemainingFlatmates = shareOfFlatmateLeaving / (numberOfFlatmatesSharingThisOnMoveOutDate - 1)
@@ -165,18 +170,28 @@ export default {
     },
     async downloadBreakdown () {
       const data = this.sharePerItem.map(itemShare => {
+        const item = itemShare.item
+        const initialShare = Math.floor((item.price / item.idsOfFlatmatesThatShareThis.length) * 100) / 100
         const dataObject = {}
-        dataObject.itemName = itemShare.item.name
-        dataObject.itemPurchaseDate = itemShare.item.date
-        dataObject.itemPurchasePrice = `${itemShare.item.price} CHF`
-        dataObject.sharedBy = `${itemShare.item.idsOfFlatmatesThatShareThis.length}`
-        dataObject.annualDepreciationRate = `${itemShare.item.depreciationRate}%`
+        dataObject.itemName = item.name
+        dataObject.itemPurchaseDate = item.date
+        dataObject.initialShare = `${initialShare} CHF`
+        dataObject.annualDepreciationRate = `${item.depreciationRate}%`
         dataObject.share = `${Math.floor(itemShare.share * 100) / 100} CHF`
         return dataObject
       })
       generateBreakdown(this.flatmate, this.moveOutDate, Math.floor(this.totalDebt * 100) / 100, data).then(() => {
         this.isReportDownloaded = true
         this.isSnackbarVisible = true
+      })
+    },
+    saveMoveOutDate () {
+      this.$store.dispatch('setMoveOutDate', {
+        flatId: this.flatId,
+        flatmateId: this.flatmateId,
+        moveOutDate: this.moveOutDate
+      }).then(() => {
+        this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
       })
     }
   }
