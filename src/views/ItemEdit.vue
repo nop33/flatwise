@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import ItemForm from '@/components/ItemForm.vue'
@@ -34,9 +35,14 @@ export default {
       allFlatmates: []
     }
   },
+  computed: {
+    ...mapGetters([
+      'currentFlatmates'
+    ])
+  },
   async created () {
     this.flat = getFlatFromStateById(this.flatId)
-    this.allFlatmates = this.flat.flatmates
+    this.allFlatmates = this.currentFlatmates(this.flatId)
     if (!this.flat.items) {
       await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
     }

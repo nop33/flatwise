@@ -24,6 +24,9 @@ export default new Vuex.Store({
         return flat.items.find(item => item.id === itemId)
       }
       return null
+    },
+    currentFlatmates: state => (flatId) => {
+      return state.flats.find(flat => flat.id === flatId).flatmates.filter(flatmate => !flatmate.endDate)
     }
   },
   mutations: {
@@ -66,7 +69,6 @@ export default new Vuex.Store({
       flat.name = flatData.name
       flat.depreciationRate = flatData.depreciationRate
       flat.lowestPriceRate = flatData.lowestPriceRate
-      flat.flatmatesNames = flatData.flatmatesNames
     },
     SET_FLATS (state, flats) {
       state.flats = flats
@@ -85,6 +87,11 @@ export default new Vuex.Store({
       flatmate.name = flatmateData.name
       flatmate.startDate = flatmateData.startDate
       flatmate.endDate = flatmateData.endDate || null
+    },
+    SET_FLATMATE_MOVE_OUT_DATE (state, { flatId, flatmateId, moveOutDate }) {
+      const flat = state.flats.find(flat => flat.id === flatId)
+      const flatmate = flat.flatmates.find(flatmate => flatmate.id === flatmateId)
+      flatmate.endDate = moveOutDate
     }
   },
   actions: {
@@ -235,9 +242,14 @@ export default new Vuex.Store({
     },
     async updateFlatmate ({ commit }, { flatmateData, flatId }) {
       commit('TOGGLE_LOADER', true)
-      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').doc(flatmateData.id).update(flatmateData).then(() => {
-        commit('UPDATE_FLATMATE', { flatId, flatmateData })
-      })
+      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').doc(flatmateData.id).update(flatmateData)
+      commit('UPDATE_FLATMATE', { flatId, flatmateData })
+      commit('TOGGLE_LOADER', false)
+    },
+    async setMoveOutDate ({ commit }, { flatId, flatmateId, moveOutDate }) {
+      commit('TOGGLE_LOADER', true)
+      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').doc(flatmateId).update({ endDate: moveOutDate })
+      commit('SET_FLATMATE_MOVE_OUT_DATE', { flatId, flatmateId, moveOutDate })
       commit('TOGGLE_LOADER', false)
     }
   },

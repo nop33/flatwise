@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   data: () => {
@@ -29,6 +29,9 @@ export default {
   computed: {
     ...mapState([
       'flats'
+    ]),
+    ...mapGetters([
+      'currentFlatmates'
     ])
   },
   watch: {
@@ -43,7 +46,7 @@ export default {
   },
   methods: {
     formatFlatmateNames (flat) {
-      return flat.flatmates.map(flatmate => flatmate.name).join(', ')
+      return this.currentFlatmates(flat.id).map(flatmate => flatmate.name).join(', ')
     }
   }
 }

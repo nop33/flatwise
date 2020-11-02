@@ -14,7 +14,7 @@
             <v-list-item-title class="primary--text">Add new flatmate</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-for="flatmate in flat.flatmates" :key="flatmate.id">
+        <v-list-item v-for="flatmate in flatmates" :key="flatmate.id">
           <v-list-item-avatar>
             <Avatar :user="flatmate" />
           </v-list-item-avatar>
@@ -38,7 +38,8 @@ export default {
     Avatar
   },
   props: [
-    'flat'
+    'flatmates',
+    'flatId'
   ],
   data: () => {
     return {
@@ -48,10 +49,10 @@ export default {
   watch: {
     selectedFlatmateIndex (flatmateIndex) {
       if (flatmateIndex === 0) {
-        this.$router.push({ name: 'Add Flatmate', params: { flatId: this.flat.id } })
+        this.$router.push({ name: 'Add Flatmate', params: { flatId: this.flatId } })
       } else {
-        const flatmateId = this.flat.flatmates[flatmateIndex - 1].id
-        this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flat.id, flatmateId } })
+        const flatmateId = this.flatmates[flatmateIndex - 1].id
+        this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId } })
       }
     }
   }
