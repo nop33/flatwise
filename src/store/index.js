@@ -11,8 +11,6 @@ export default new Vuex.Store({
   state: {
     user: null,
     loading: false,
-    moveOutDate: new Date().toISOString().substr(0, 10),
-    flatmateMovingOut: '',
     flats: [],
     selectedFlat: null
   },
@@ -35,12 +33,6 @@ export default new Vuex.Store({
     },
     SET_USER (state, user) {
       state.user = user
-    },
-    SET_FLATMATE_MOVING_OUT (state, flatmate) {
-      state.flatmateMovingOut = flatmate
-    },
-    SET_MOVE_OUT_DATE (state, date) {
-      state.moveOutDate = date
     },
     ADD_ITEM (state, { itemData, selectedFlat }) {
       selectedFlat.items.push(itemData)
