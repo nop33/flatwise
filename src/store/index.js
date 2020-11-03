@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 import firebase from 'firebase/app'
 
+import firestore from '../firebase.js'
 import { createFlatObject } from './models.js'
 
 Vue.use(Vuex)
+
+const db = {
+  users: firestore.collection('users'),
+  flats: firestore.collection('flats')
+}
 
 export default new Vuex.Store({
   state: {
@@ -94,27 +99,27 @@ export default new Vuex.Store({
       commit('SET_USER', user)
     },
     async registerUser ({ commit }, user) {
-      await Vue.prototype.$db.users.doc(user.id).set(user)
+      await db.users.doc(user.id).set(user)
       commit('SET_USER', user)
     },
     async addItem ({ state, commit }, itemData) {
       commit('TOGGLE_LOADER', true)
       const selectedFlat = state.selectedFlat
-      await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').add(itemData).then(itemRef => {
+      await db.flats.doc(state.selectedFlat.id).collection('items').add(itemData).then(itemRef => {
         commit('ADD_ITEM', { itemData: { id: itemRef.id, ...itemData }, selectedFlat })
         commit('TOGGLE_LOADER', false)
       })
     },
     async updateItem ({ state, commit }, itemData) {
-      await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
+      await db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
       commit('UPDATE_ITEM', itemData)
     },
     async deleteItem ({ state, commit }, itemData) {
-      await Vue.prototype.$db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).delete()
+      await db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).delete()
       commit('DELETE_ITEM', itemData)
     },
     async fetchFlatItems ({ commit }, flat) {
-      const response = await Vue.prototype.$db.flats.doc(flat.id).collection('items').get()
+      const response = await db.flats.doc(flat.id).collection('items').get()
       const items = response.docs.map(doc => ({ id: doc.id, ...doc.data() }))
       commit('SET_FLAT_ITEMS', { flat, items })
     },
@@ -122,11 +127,11 @@ export default new Vuex.Store({
       commit('TOGGLE_LOADER', true)
 
       // Initialize user in flats (s)he have been added to but not initialized yet
-      let flatQueryResponse = await Vue.prototype.$db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
+      let flatQueryResponse = await db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
       for (let index = 0; index < flatQueryResponse.docs.length; index++) {
         const flat = flatQueryResponse.docs[index]
         // const flatData =   flat.data()
-        const flatDoc = Vue.prototype.$db.flats.doc(flat.id)
+        const flatDoc = db.flats.doc(flat.id)
 
         await flatDoc.update({
           uidsOfUsersWithAccess: firebase.firestore.FieldValue.arrayUnion(state.user.id),
@@ -148,12 +153,12 @@ export default new Vuex.Store({
       }
 
       const flats = []
-      flatQueryResponse = await Vue.prototype.$db.flats.where('uidsOfUsersWithAccess', 'array-contains', state.user.id).get()
+      flatQueryResponse = await db.flats.where('uidsOfUsersWithAccess', 'array-contains', state.user.id).get()
       for (let i = 0; i < flatQueryResponse.docs.length; i++) {
         const flat = flatQueryResponse.docs[i]
         const flatData = flat.data()
         // get flatmates details and store it in each flat
-        const flatmatesResponse = await Vue.prototype.$db.flats.doc(flat.id).collection('flatmates').get()
+        const flatmatesResponse = await db.flats.doc(flat.id).collection('flatmates').get()
         const flatmates = flatmatesResponse.docs.map(flatmateRef => ({ id: flatmateRef.id, ...flatmateRef.data() }))
         flats.push(createFlatObject(
           flat.id,
@@ -182,7 +187,7 @@ export default new Vuex.Store({
           uidsOfUsersWithAccess: [state.user.id]
         }
         // Update Firebase with new flat doc
-        Vue.prototype.$db.flats.add(databaseFlat).then((flatRef) => {
+        db.flats.add(databaseFlat).then((flatRef) => {
           // Update Firebase by creating flatmate doc in flat doc
           const initialFlatmateData = {
             userRef: state.user.id,
@@ -192,7 +197,7 @@ export default new Vuex.Store({
             startDate: formFlat.initialMoveInDate,
             endDate: null
           }
-          Vue.prototype.$db.flats.doc(flatRef.id).collection('flatmates').add(initialFlatmateData).then((flatmateRef) => {
+          db.flats.doc(flatRef.id).collection('flatmates').add(initialFlatmateData).then((flatmateRef) => {
             const storeFlat = {
               id: flatRef.id,
               name: databaseFlat.name,
@@ -214,7 +219,7 @@ export default new Vuex.Store({
     },
     async updateFlat ({ commit }, flatData) {
       commit('TOGGLE_LOADER', true)
-      await Vue.prototype.$db.flats.doc(flatData.id).update({
+      await db.flats.doc(flatData.id).update({
         name: flatData.name,
         depreciationRate: flatData.depreciationRate,
         lowestPriceRate: flatData.lowestPriceRate
@@ -224,23 +229,23 @@ export default new Vuex.Store({
     },
     async addFlatmate ({ commit }, { flatmateData, flatId }) {
       commit('TOGGLE_LOADER', true)
-      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').add(flatmateData).then(flatmateRef => {
+      await db.flats.doc(flatId).collection('flatmates').add(flatmateData).then(flatmateRef => {
         commit('ADD_FLATMATE', { flatId, flatmateData: { ...flatmateData, id: flatmateRef.id } })
       })
-      await Vue.prototype.$db.flats.doc(flatId).update({
+      await db.flats.doc(flatId).update({
         emailsOfUninitializedUsers: firebase.firestore.FieldValue.arrayUnion(flatmateData.email)
       })
       commit('TOGGLE_LOADER', false)
     },
     async updateFlatmate ({ commit }, { flatmateData, flatId }) {
       commit('TOGGLE_LOADER', true)
-      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').doc(flatmateData.id).update(flatmateData)
+      await db.flats.doc(flatId).collection('flatmates').doc(flatmateData.id).update(flatmateData)
       commit('UPDATE_FLATMATE', { flatId, flatmateData })
       commit('TOGGLE_LOADER', false)
     },
     async setMoveOutDate ({ commit }, { flatId, flatmateId, moveOutDate }) {
       commit('TOGGLE_LOADER', true)
-      await Vue.prototype.$db.flats.doc(flatId).collection('flatmates').doc(flatmateId).update({ endDate: moveOutDate })
+      await db.flats.doc(flatId).collection('flatmates').doc(flatmateId).update({ endDate: moveOutDate })
       commit('SET_FLATMATE_MOVE_OUT_DATE', { flatId, flatmateId, moveOutDate })
       commit('TOGGLE_LOADER', false)
     }
