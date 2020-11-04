@@ -12,6 +12,10 @@
       <FlatmateForm v-model="flatmate" edit />
       <v-divider />
       <div class="d-flex justify-center ma-5">
+        <v-btn color="primary" :to="{ name: 'Flatmate Items', params: { flatId, flatmateId } }">See flatmate items</v-btn>
+      </div>
+      <v-divider />
+      <div class="d-flex justify-center ma-5">
         <v-btn color="warning" :to="{ name: 'Remove Flatmate', params: { flatId, flatmateId } }">Remove flatmate</v-btn>
       </div>
       <v-snackbar v-model="snackbar.enabled" :multi-line="snackbar.multiLine" timeout="-1">
