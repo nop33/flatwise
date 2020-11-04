@@ -23,16 +23,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'flats',
-      'selectedFlat'
+      'flats'
     ])
-  },
-  watch: {
-    selectedFlat (newValue) {
-      if (newValue) {
-        this.$router.push({ name: 'Flat', params: { flatId: newValue.id } })
-      }
-    }
   }
 }
 </script>

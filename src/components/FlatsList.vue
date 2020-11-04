@@ -36,7 +36,9 @@ export default {
   },
   watch: {
     selectedFlatIndex (flatIndex) {
-      this.$store.dispatch('selectFlat', this.flats[flatIndex])
+      const selectedFlat = this.flats[flatIndex]
+      this.$store.dispatch('selectFlat', selectedFlat)
+      this.$router.push({ name: 'Flat', params: { flatId: selectedFlat.id } })
     },
     flats (newValue) {
       if (newValue.length === 1) {
