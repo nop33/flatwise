@@ -31,6 +31,7 @@
 
 <script>
 import { getFlatFromStateById } from '@/utils/getters'
+import { getFirstName } from '@/utils/utils'
 
 import { mapState } from 'vuex'
 
@@ -60,7 +61,7 @@ export default {
     ]),
     invitationText () {
       const subject = encodeURI('Join me on Flatwise!')
-      const body = encodeURI(`Hey ${this.flatmate.name}!
+      const body = encodeURI(`Hey ${getFirstName(this.flatmate.name)}!
 
 I'd like to invite you to Flatwise where we calculate the depreciation of our furniture.
 
@@ -71,7 +72,7 @@ If you'd prefer to use a different one let me know!
 You can access the app here: ${process.env.VUE_APP_FLATWISE_URL}
 
 Thanks,
-${this.user.name}`)
+${getFirstName(this.user.name)}`)
       const href = `mailto:${this.flatmate.email}?subject=${subject}&body=${body}`
       return `${this.flatmate.name} did not yet check out the app, but you can <a href="${href}">send an invite</a>!`
     }
@@ -91,9 +92,6 @@ ${this.user.name}`)
       this.$store.dispatch('updateFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
         this.goToFlatSettings()
       })
-    },
-    removeFlatmate () {
-      // TODO
     }
   }
 }
