@@ -229,13 +229,16 @@ export default new Vuex.Store({
     },
     async addFlatmate ({ commit }, { flatmateData, flatId }) {
       commit('TOGGLE_LOADER', true)
+      let newFlatmate = {}
       await db.flats.doc(flatId).collection('flatmates').add(flatmateData).then(flatmateRef => {
-        commit('ADD_FLATMATE', { flatId, flatmateData: { ...flatmateData, id: flatmateRef.id } })
+        newFlatmate = { ...flatmateData, id: flatmateRef.id }
+        commit('ADD_FLATMATE', { flatId, flatmateData: newFlatmate })
       })
       await db.flats.doc(flatId).update({
         emailsOfUninitializedUsers: firebase.firestore.FieldValue.arrayUnion(flatmateData.email)
       })
       commit('TOGGLE_LOADER', false)
+      return newFlatmate
     },
     async updateFlatmate ({ commit }, { flatmateData, flatId }) {
       commit('TOGGLE_LOADER', true)

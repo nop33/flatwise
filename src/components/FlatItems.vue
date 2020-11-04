@@ -7,20 +7,7 @@
           <v-list-item-icon>
             <v-icon>mdi-seat-outline</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>
-            <div class="d-flex justify-space-between align-center">
-              <span>{{ item.name }}</span>
-              <div class="flex-shrink-0 ml-3">
-                <Avatar
-                  v-for="flatmate in getFlatmatesThatShareThis(item)"
-                  :key="flatmate.id"
-                  size="24"
-                  class="text-caption ml-1"
-                  :user="flatmate"
-                />
-              </div>
-            </div>
-          </v-list-item-content>
+          <FlatItemsListItemContent :item="item" :flatId="flat.id" />
         </v-list-item>
         <v-divider :key="index"></v-divider>
         </template>
@@ -30,13 +17,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 
-import Avatar from '@/components/Avatar.vue'
+import FlatItemsListItemContent from '@/components/FlatItemsListItemContent.vue'
 
 export default {
   components: {
-    Avatar
+    FlatItemsListItemContent
   },
   props: [
     'flat'
@@ -47,9 +33,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ]),
     sortedItems () {
       return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
     }

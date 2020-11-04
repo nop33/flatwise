@@ -41,8 +41,8 @@ export default {
   },
   methods: {
     save () {
-      this.$store.dispatch('addFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
-        this.goToFlatSettings()
+      this.$store.dispatch('addFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then((flatmate) => {
+        this.$router.push({ name: 'Flatmate Items', params: { flatId: this.flatId, flatmateId: flatmate.id } })
       })
     }
   }
