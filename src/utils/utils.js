@@ -30,8 +30,13 @@ function stringToHslColor (str, saturation = 30, lightness = 75) {
   return 'hsl(' + h + ', ' + saturation + '%, ' + lightness + '%)'
 }
 
+function getFirstName (name) {
+  return name.split(' ')[0]
+}
+
 export {
   calculateDaysBetween,
   calculateItemValueOnDate,
-  stringToHslColor
+  stringToHslColor,
+  getFirstName
 }
