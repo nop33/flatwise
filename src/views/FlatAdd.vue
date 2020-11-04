@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="goHome">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>Create new flat</v-toolbar-title>
@@ -40,9 +40,6 @@ export default {
     ])
   },
   methods: {
-    goHome () {
-      this.$router.push({ name: 'Home' })
-    },
     save () {
       this.$store.dispatch('createFlat', this.flat).then(flatId => {
         this.$router.push({ name: 'Flat', params: { flatId } })

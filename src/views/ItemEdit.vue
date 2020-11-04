@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="goToItem">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>Edit item</v-toolbar-title>
@@ -49,9 +49,6 @@ export default {
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
-    goToItem () {
-      this.$router.push({ name: 'Item', params: { flatId: this.flatId, itemId: this.itemId } })
-    },
     save () {
       this.$store.dispatch('updateItem', this.item).then(this.goToItem)
     }

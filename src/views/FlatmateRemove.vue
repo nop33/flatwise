@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll>
-      <v-btn icon @click="goToFlatSettings">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
@@ -127,9 +127,6 @@ export default {
     }
   },
   methods: {
-    goToFlatSettings () {
-      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
-    },
     calculateDebt () {
       this.debt = []
       this.sharePerItem = []

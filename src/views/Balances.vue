@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="goToFlat">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>Balances</v-toolbar-title>
@@ -102,9 +102,6 @@ export default {
     this.calculateBalances()
   },
   methods: {
-    goToFlat () {
-      this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
-    },
     calculateNumberOfDaysOwned (date) {
       return Math.floor(calculateDaysBetween(date, this.balanceOnDate))
     },

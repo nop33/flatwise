@@ -1,7 +1,7 @@
 <template>
   <div v-if="flat">
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll>
-      <v-btn icon @click="goHome">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
@@ -57,16 +57,10 @@ export default {
       flat: {}
     }
   },
-  created () {
+  async created () {
     this.flat = getFlatFromStateById(this.flatId)
     if (!this.flat.items) {
-      fetchFlatItemsAndStoreInFlatWithId(this.flat.id)
-    }
-  },
-  methods: {
-    goHome () {
-      this.$router.push({ name: 'Home' })
-      this.$store.dispatch('selectFlat', null)
+      await fetchFlatItemsAndStoreInFlatWithId(this.flat.id)
     }
   }
 }
