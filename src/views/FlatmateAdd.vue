@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="goToFlatSettings">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>Add flatmate</v-toolbar-title>
@@ -40,9 +40,6 @@ export default {
     this.flat = getFlatFromStateById(this.flatId)
   },
   methods: {
-    goToFlatSettings () {
-      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
-    },
     save () {
       this.$store.dispatch('addFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
         this.goToFlatSettings()

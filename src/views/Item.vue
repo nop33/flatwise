@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll >
-      <v-btn icon @click="goToFlat">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>
@@ -99,9 +99,6 @@ export default {
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
-    goToFlat () {
-      this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
-    },
     deleteItem () {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
         this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)

@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="goToFlat">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>Add item</v-toolbar-title>
@@ -55,9 +55,6 @@ export default {
     fetchFlatItemsAndStoreInFlatWithId(this.flatId)
   },
   methods: {
-    goToFlat () {
-      this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
-    },
     save () {
       this.$store.dispatch('addItem', this.item).then(() => {
         this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })

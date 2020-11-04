@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="goToFlatSettings">
+      <v-btn icon @click="$router.go(-1)">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>Edit flatmate settings</v-toolbar-title>
@@ -85,9 +85,6 @@ ${getFirstName(this.user.name)}`)
     }
   },
   methods: {
-    goToFlatSettings () {
-      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
-    },
     save () {
       this.$store.dispatch('updateFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
         this.goToFlatSettings()
