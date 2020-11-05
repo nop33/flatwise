@@ -246,10 +246,21 @@ export default new Vuex.Store({
       commit('UPDATE_FLATMATE', { flatId, flatmateData })
       commit('TOGGLE_LOADER', false)
     },
-    async setMoveOutDate ({ commit }, { flatId, flatmateId, moveOutDate }) {
+    async removeFlatmate ({ commit }, { flatId, flatmate, moveOutDate }) {
       commit('TOGGLE_LOADER', true)
-      await db.flats.doc(flatId).collection('flatmates').doc(flatmateId).update({ endDate: moveOutDate })
-      commit('SET_FLATMATE_MOVE_OUT_DATE', { flatId, flatmateId, moveOutDate })
+      const flatDoc = db.flats.doc(flatId)
+      await flatDoc.collection('flatmates').doc(flatmate.id).update({ endDate: moveOutDate })
+
+      // Remove access
+      const updatedField = {}
+      if (flatmate.userRef) {
+        updatedField.uidsOfUsersWithAccess = firebase.firestore.FieldValue.arrayRemove(flatmate.userRef)
+      } else {
+        updatedField.emailsOfUninitializedUsers = firebase.firestore.FieldValue.arrayRemove(flatmate.email)
+      }
+      await flatDoc.update(updatedField)
+
+      commit('SET_FLATMATE_MOVE_OUT_DATE', { flatId, flatmateId: flatmate.id, moveOutDate })
       commit('TOGGLE_LOADER', false)
     }
   },

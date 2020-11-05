@@ -44,17 +44,26 @@
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import FlatItems from '@/components/FlatItems.vue'
+import Snackbar from '@/components/Snackbar.vue'
 
 export default {
   components: {
-    FlatItems
+    FlatItems,
+    Snackbar
   },
   props: [
-    'flatId'
+    'flatId',
+    'flatmateRemoved'
   ],
   data: () => {
     return {
-      flat: {}
+      flat: {},
+      isSnackbarVisible: true
+    }
+  },
+  computed: {
+    snackbarText () {
+      return this.flatmateRemoved ? `Successfully removed ${this.flatmateRemoved.name}.` : ''
     }
   },
   async created () {
