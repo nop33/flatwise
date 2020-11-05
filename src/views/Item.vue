@@ -21,7 +21,7 @@
             <Avatar :user="flatmate" />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
+            <v-list-item-title>{{ flatmate.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
