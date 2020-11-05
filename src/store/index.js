@@ -30,6 +30,9 @@ export default new Vuex.Store({
     },
     currentFlatmates: state => (flatId) => {
       return state.flats.find(flat => flat.id === flatId).flatmates.filter(flatmate => !flatmate.endDate)
+    },
+    pastFlatmates: state => (flatId) => {
+      return state.flats.find(flat => flat.id === flatId).flatmates.filter(flatmate => !!flatmate.endDate)
     }
   },
   mutations: {

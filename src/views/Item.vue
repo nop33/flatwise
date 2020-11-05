@@ -16,7 +16,7 @@
     <v-main v-if="item.idsOfFlatmatesThatShareThis">
       <v-list>
         <v-subheader class="font-weight-medium">Shared amongst</v-subheader>
-        <v-list-item v-for="flatmate in getFlatmatesThatShareThis(item)" :key="flatmate.id">
+        <v-list-item v-for="flatmate in flatmatesThatShareThis" :key="flatmate.id">
           <v-list-item-avatar>
             <Avatar :user="flatmate" />
           </v-list-item-avatar>
@@ -51,6 +51,22 @@
       <div class="d-flex justify-center ma-5">
         <v-btn color="warning" @click="deleteItem">Delete item</v-btn>
       </div>
+
+      <!-- TODO: Create component -->
+      <div v-if="pastFlatmatesThatSharedThis.length">
+        <v-divider/>
+        <v-list>
+          <v-subheader class="font-weight-medium">Past flatmates that shared this</v-subheader>
+          <v-list-item v-for="flatmate in pastFlatmatesThatSharedThis" :key="flatmate.id">
+            <v-list-item-avatar>
+              <Avatar :user="flatmate" />
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>{{ flatmate.name }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </div>
     </v-main>
   </div>
 </template>
@@ -79,7 +95,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'currentFlatmates'
+      'currentFlatmates',
+      'pastFlatmates'
     ]),
     numberOfDaysOwned () {
       return Math.floor(calculateDaysBetween(this.item.date, this.today))
@@ -89,6 +106,16 @@ export default {
     },
     currentValuePercentage () {
       return (this.currentValue / this.item.price) * 100
+    },
+    flatmatesThatShareThis () {
+      return this.currentFlatmates(this.flat.id).filter(flatmate => {
+        return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
+      })
+    },
+    pastFlatmatesThatSharedThis () {
+      return this.pastFlatmates(this.flat.id).filter(flatmate => {
+        return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
+      })
     }
   },
   async created () {
@@ -103,11 +130,6 @@ export default {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
         this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
       }
-    },
-    getFlatmatesThatShareThis (item) {
-      return this.currentFlatmates(this.flat.id).filter(flatmate => {
-        return item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
-      })
     }
   }
 }
