@@ -1,7 +1,7 @@
 <template>
   <div v-if="flat">
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll>
-      <v-btn icon @click="$router.go(-1)">
+      <v-btn icon @click="$router.push({name: 'Home'})">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
