@@ -58,7 +58,7 @@
           <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
         </div>
         <div class="d-flex justify-center ma-5">
-          <v-btn color="warning" @click="saveMoveOutDate" :disabled="!isReportDownloaded">Save move-out date</v-btn>
+          <v-btn color="warning" @click="removeFlatmate" :disabled="!isReportDownloaded">2. Remove flatmate</v-btn>
         </div>
       </div>
     </v-main>
@@ -182,14 +182,16 @@ export default {
         this.isSnackbarVisible = true
       })
     },
-    saveMoveOutDate () {
-      this.$store.dispatch('setMoveOutDate', {
-        flatId: this.flatId,
-        flatmateId: this.flatmateId,
-        moveOutDate: this.moveOutDate
-      }).then(() => {
-        this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
-      })
+    removeFlatmate () {
+      if (confirm(`Last confirmation before removing ${this.flatmate.name} from "${this.flat.name}"!`)) {
+        this.$store.dispatch('removeFlatmate', {
+          flatId: this.flatId,
+          flatmate: this.flatmate,
+          moveOutDate: this.moveOutDate
+        }).then(() => {
+          this.$router.push({ name: 'Flat', params: { flatId: this.flatId, flatmateRemoved: this.flatmate } })
+        })
+      }
     }
   }
 }
