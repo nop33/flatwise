@@ -55,24 +55,17 @@
         <v-divider />
 
         <div class="d-flex justify-center ma-5">
-          <v-btn color="primary" @click="downloadBreakdown">Download breakdown report</v-btn>
+          <v-btn color="primary" @click="downloadBreakdown">1. Download breakdown report</v-btn>
         </div>
+
+        <v-divider />
+
         <div class="d-flex justify-center ma-5">
           <v-btn color="warning" @click="removeFlatmate" :disabled="!isReportDownloaded">2. Remove flatmate</v-btn>
         </div>
       </div>
     </v-main>
-    <v-snackbar v-model="isSnackbarVisible">
-      <div class="d-flex">
-        <v-icon class="mr-3">mdi-download</v-icon>
-        <span>Downloaded! Check your notification bar.</span>
-      </div>
-      <template v-slot:action="{ attrs }">
-        <v-btn icon text v-bind="attrs" @click="isSnackbarVisible = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <Snackbar v-model="isSnackbarVisible" icon="mdi-download" :text="snackbarText" color="success" />
   </div>
 </template>
 
@@ -85,12 +78,14 @@ import { generateBreakdown } from '@/utils/pdf'
 import Avatar from '@/components/Avatar.vue'
 import Sheet from '@/components/Sheet.vue'
 import BalancesList from '@/components/BalancesList.vue'
+import Snackbar from '@/components/Snackbar.vue'
 
 export default {
   components: {
     Avatar,
     Sheet,
-    BalancesList
+    BalancesList,
+    Snackbar
   },
   props: [
     'flatId',
@@ -106,7 +101,8 @@ export default {
       totalDebt: 0,
       sharePerItem: [],
       isReportDownloaded: false,
-      isSnackbarVisible: false
+      isSnackbarVisible: false,
+      snackbarText: 'Downloaded! Check your notification bar.'
     }
   },
   computed: {

@@ -18,17 +18,7 @@
       <div class="d-flex justify-center ma-5">
         <v-btn color="warning" :to="{ name: 'Remove Flatmate', params: { flatId, flatmateId } }">Remove flatmate</v-btn>
       </div>
-      <v-snackbar v-model="snackbar.enabled" :multi-line="snackbar.multiLine" timeout="-1">
-        <div class="d-flex">
-          <v-icon class="mr-3">mdi-account-clock-outline</v-icon>
-          <span v-html="invitationText"></span>
-        </div>
-        <template v-slot:action="{ attrs }">
-          <v-btn icon text v-bind="attrs" @click="snackbar.enabled = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
+      <Snackbar v-model="snackbar.enabled" timeout="-1" icon="mdi-account-clock-outline" :text="invitationText" />
     </v-main>
   </div>
 </template>
@@ -40,10 +30,12 @@ import { getFirstName } from '@/utils/utils'
 import { mapState } from 'vuex'
 
 import FlatmateForm from '@/components/FlatmateForm.vue'
+import Snackbar from '@/components/Snackbar.vue'
 
 export default {
   components: {
-    FlatmateForm
+    FlatmateForm,
+    Snackbar
   },
   props: [
     'flatId',
