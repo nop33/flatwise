@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     save () {
-      this.$store.dispatch('updateItem', this.item).then(this.goToItem)
+      this.$store.dispatch('updateItem', this.item).then(this.$router.go(-1))
     }
   }
 }
