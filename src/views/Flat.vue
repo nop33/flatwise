@@ -37,6 +37,7 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-main>
+    <Snackbar v-model="isSnackbarVisible" icon="mdi-account-arrow-right-outline" :text="snackbarText" color="success" />
   </div>
 </template>
 
@@ -58,7 +59,7 @@ export default {
   data: () => {
     return {
       flat: {},
-      isSnackbarVisible: true
+      isSnackbarVisible: false
     }
   },
   computed: {
