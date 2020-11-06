@@ -16,14 +16,9 @@
     <v-main v-if="item.idsOfFlatmatesThatShareThis">
       <v-list>
         <v-subheader class="font-weight-medium">Shared amongst</v-subheader>
-        <v-list-item v-for="flatmate in flatmatesThatShareThis" :key="flatmate.id">
-          <v-list-item-avatar>
-            <Avatar :user="flatmate" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ flatmate.name }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item-group v-model="selectedFlatmateIndex" color="primary">
+          <FlatmateListItem v-for="flatmate in flatmatesThatShareThis" :flatmate="flatmate" :key="flatmate.id" />
+        </v-list-item-group>
       </v-list>
 
       <v-divider/>
@@ -46,15 +41,6 @@
 
       </v-card>
 
-      <v-divider/>
-
-      <div class="d-flex justify-center ma-5">
-        <v-btn color="warning" text @click="deleteItem">
-          <v-icon left>mdi-trash-can-outline</v-icon>
-          Delete item
-        </v-btn>
-      </div>
-
       <!-- TODO: Create component -->
       <div v-if="pastFlatmatesThatSharedThis.length">
         <v-divider/>
@@ -70,6 +56,16 @@
           </v-list-item>
         </v-list>
       </div>
+
+      <v-divider/>
+
+      <div class="d-flex justify-center ma-5">
+        <v-btn color="warning" text @click="deleteItem">
+          <v-icon left>mdi-trash-can-outline</v-icon>
+          Delete item
+        </v-btn>
+      </div>
+
     </v-main>
   </div>
 </template>
@@ -80,10 +76,12 @@ import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import Avatar from '@/components/Avatar.vue'
+import FlatmateListItem from '@/components/FlatmateListItem.vue'
 
 export default {
   components: {
-    Avatar
+    Avatar,
+    FlatmateListItem
   },
   props: [
     'flatId',
@@ -93,7 +91,8 @@ export default {
     return {
       flat: {},
       item: {},
-      today: new Date().toJSON().slice(0, 10)
+      today: new Date().toJSON().slice(0, 10),
+      selectedFlatmateIndex: null
     }
   },
   computed: {
@@ -119,6 +118,12 @@ export default {
       return this.pastFlatmates(this.flat.id).filter(flatmate => {
         return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
       })
+    }
+  },
+  watch: {
+    selectedFlatmateIndex (flatmateIndex) {
+      const flatmateId = this.flatmatesThatShareThis[flatmateIndex].id
+      this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId } })
     }
   },
   async created () {
