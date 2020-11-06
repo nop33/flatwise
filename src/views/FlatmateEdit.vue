@@ -12,9 +12,15 @@
       <FlatmateForm v-model="flatmate" edit />
       <v-divider />
       <div class="d-flex justify-center ma-5">
-        <v-btn color="primary" :to="{ name: 'Flatmate Items', params: { flatId, flatmateId } }">
+        <v-btn block color="primary" :to="{ name: 'Flatmate Items', params: { flatId, flatmateId } }">
           <v-icon left>mdi-format-list-checks</v-icon>
           See flatmate items
+        </v-btn>
+      </div>
+      <div class="d-flex justify-center ma-5">
+        <v-btn block color="secondary" :to="{ name: 'Flatmate Move In', params: { flatId, flatmateId } }">
+          <v-icon left>mdi-currency-usd</v-icon>
+          Move in payment
         </v-btn>
       </div>
       <v-divider />
