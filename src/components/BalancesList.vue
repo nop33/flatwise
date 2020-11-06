@@ -1,25 +1,21 @@
 <template>
   <v-list class="balances-list">
-    <v-list-item-group v-model="selectedFlatmateIndex">
-      <template v-for="(balance, index) in balances">
-        <v-list-item :key="index">
-          <v-list-item-avatar>
-            <Avatar :user="balance.flatmate" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              <slot name="rowText" v-bind:balance="balance">
-                {{ balance.flatmate.name }} share is
-                <strong class="secondary--text">
-                  {{ balance.share | round }}
-                </strong>
-                CHF
-              </slot>
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </template>
-    </v-list-item-group>
+    <v-list-item v-for="(balance, index) in balances" :key="index">
+      <v-list-item-avatar>
+        <Avatar :user="balance.flatmate" />
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title>
+          <slot name="rowText" v-bind:balance="balance">
+            {{ balance.flatmate.name }} share is
+            <strong class="secondary--text">
+              {{ balance.share | round }}
+            </strong>
+            CHF
+          </slot>
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
   </v-list>
 </template>
 
@@ -32,12 +28,7 @@ export default {
   },
   props: [
     'balances'
-  ],
-  data: () => {
-    return {
-      selectedFlatmateIndex: null
-    }
-  }
+  ]
 }
 </script>
 

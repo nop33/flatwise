@@ -63,13 +63,13 @@
         <v-divider />
 
         <div class="d-flex justify-center ma-5">
-          <v-btn color="primary" @click="downloadBreakdown">1. Download breakdown report</v-btn>
+          <v-btn block color="primary" @click="downloadBreakdown">1. Download breakdown report</v-btn>
         </div>
 
-        <v-divider />
-
         <div class="d-flex justify-center ma-5">
-          <v-btn color="warning" @click="removeFlatmate" :disabled="!isReportDownloaded">2. Remove flatmate</v-btn>
+          <v-btn block color="warning" @click="removeFlatmate" :disabled="!isReportDownloaded">
+            2. Remove flatmate
+          </v-btn>
         </div>
       </div>
     </v-main>
