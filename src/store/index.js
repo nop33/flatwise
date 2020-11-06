@@ -92,6 +92,15 @@ export default new Vuex.Store({
       const flat = state.flats.find(flat => flat.id === flatId)
       const flatmate = flat.flatmates.find(flatmate => flatmate.id === flatmateId)
       flatmate.endDate = moveOutDate
+    },
+    UPDATE_FLAT_ITEMS_SHARING_INFO (state, { flatId, flatmateId, itemIdsToBeRemovedFrom, itemIdsToBeAddedAt }) {
+      const flat = state.flats.find(flat => flat.id === flatId)
+      flat.items.filter(item => itemIdsToBeRemovedFrom.includes(item.id)).forEach(item => {
+        item.idsOfFlatmatesThatShareThis.splice(item.idsOfFlatmatesThatShareThis.indexOf(flatmateId), 1)
+      })
+      flat.items.filter(item => itemIdsToBeAddedAt.includes(item.id)).forEach(item => {
+        item.idsOfFlatmatesThatShareThis.push(flatmateId)
+      })
     }
   },
   actions: {
@@ -265,6 +274,30 @@ export default new Vuex.Store({
 
       commit('SET_FLATMATE_MOVE_OUT_DATE', { flatId, flatmateId: flatmate.id, moveOutDate })
       commit('TOGGLE_LOADER', false)
+    },
+    async updateFlatmateItems ({ commit }, { flatId, flatmate, itemIdsToBeRemovedFrom, itemIdsToBeAddedAt }) {
+      commit('TOGGLE_LOADER', true)
+      const batch = firestore.batch()
+      const itemsCollection = db.flats.doc(flatId).collection('items')
+      // TODO: This only works for 500: https://firebase.google.com/docs/firestore/manage-data/transactions
+      itemIdsToBeRemovedFrom.forEach(itemId => {
+        const itemRef = itemsCollection.doc(itemId)
+        batch.update(itemRef, { idsOfFlatmatesThatShareThis: firebase.firestore.FieldValue.arrayRemove(flatmate.id) })
+      })
+      itemIdsToBeAddedAt.forEach(itemId => {
+        const itemRef = itemsCollection.doc(itemId)
+        batch.update(itemRef, { idsOfFlatmatesThatShareThis: firebase.firestore.FieldValue.arrayUnion(flatmate.id) })
+      })
+
+      batch.commit().then(function () {
+        commit('UPDATE_FLAT_ITEMS_SHARING_INFO', {
+          flatId,
+          flatmateId: flatmate.id,
+          itemIdsToBeRemovedFrom,
+          itemIdsToBeAddedAt
+        })
+        commit('TOGGLE_LOADER', false)
+      })
     }
   },
   modules: {
