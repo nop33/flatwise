@@ -1,17 +1,23 @@
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
 
-export function generateBreakdown (flatmate, moveOutDate, total, data) {
+export function generateBreakdown (flatmate, moveOutDate, total, data, debt) {
   // eslint-disable-next-line new-cap
   const doc = new jsPDF()
-
-  doc.text(10, 10, flatmate.name)
-  doc.text(10, 20, `Move out date: ${moveOutDate}`)
-  doc.text(10, 30, `Gets back in total: ${total} CHF`)
+  const step = 10
+  const x = 10
+  let y = step
+  doc.text(x, y += step, flatmate.name)
+  doc.text(x, y += step, `Move out date: ${moveOutDate}`)
+  doc.text(x, y += step, `Gets back in total: ${total} CHF`)
+  debt.forEach(debtShare => {
+    const roundedShare = Math.floor(debtShare.share * 100) / 100
+    doc.text(x, y += step, `${debtShare.flatmate.name} pays ${roundedShare} CHF`)
+  })
 
   doc.autoTable({
     body: data,
-    margin: { top: 40 },
+    margin: { top: y += step },
     headStyles: {
       fontSize: 8
     },

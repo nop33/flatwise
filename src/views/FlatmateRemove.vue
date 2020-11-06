@@ -181,7 +181,8 @@ export default {
         dataObject.share = `${Math.floor(itemShare.share * 100) / 100} CHF`
         return dataObject
       })
-      generateBreakdown(this.flatmate, this.moveOutDate, Math.floor(this.totalDebt * 100) / 100, data).then(() => {
+      const roundedTotal = Math.floor(this.totalDebt * 100) / 100
+      generateBreakdown(this.flatmate, this.moveOutDate, roundedTotal, data, this.debt).then(() => {
         this.isReportDownloaded = true
         this.isSnackbarVisible = true
       })
