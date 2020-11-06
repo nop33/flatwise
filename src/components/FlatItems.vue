@@ -1,5 +1,6 @@
 <template>
   <v-card flat class="mb-16">
+    <v-text-field solo hide-details placeholder="Search..." v-model="searchInput" prepend-inner-icon="mdi-magnify" />
     <v-list>
       <v-list-item-group v-model="selectedItemIndex">
         <template v-for="(item, index) in sortedItems">
@@ -29,12 +30,20 @@ export default {
   ],
   data: () => {
     return {
-      selectedItemIndex: null
+      selectedItemIndex: null,
+      searchInput: ''
     }
   },
   computed: {
     sortedItems () {
-      return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
+      let items = []
+      if (this.flat.items) {
+        items = [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1)
+      }
+      if (this.searchInput.length >= 2) {
+        items = items.filter(item => item.name.toLowerCase().includes(this.searchInput.toLowerCase()))
+      }
+      return items
     }
   },
   watch: {
