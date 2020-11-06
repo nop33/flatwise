@@ -14,28 +14,18 @@
             <v-list-item-title class="primary--text">Add new flatmate</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-list-item v-for="flatmate in flatmates" :key="flatmate.id">
-          <v-list-item-avatar>
-            <Avatar :user="flatmate" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ flatmate.name || flatmate.email }}</v-list-item-title>
-          </v-list-item-content>
-          <v-list-item-icon v-if="!flatmate.userRef">
-            <v-icon>mdi-account-clock-outline</v-icon>
-          </v-list-item-icon>
-        </v-list-item>
+        <FlatmateListItem v-for="flatmate in flatmates" :flatmate="flatmate" :key="flatmate.id" showInfo />
       </v-list-item-group>
     </v-list>
   </div>
 </template>
 
 <script>
-import Avatar from '@/components/Avatar.vue'
+import FlatmateListItem from '@/components/FlatmateListItem.vue'
 
 export default {
   components: {
-    Avatar
+    FlatmateListItem
   },
   props: [
     'flatmates',
