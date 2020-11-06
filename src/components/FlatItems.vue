@@ -3,13 +3,13 @@
     <v-list>
       <v-list-item-group v-model="selectedItemIndex">
         <template v-for="(item, index) in sortedItems">
-        <v-list-item :key="item.id">
-          <v-list-item-icon>
-            <v-icon>mdi-seat-outline</v-icon>
-          </v-list-item-icon>
-          <FlatItemsListItemContent :item="item" :flatId="flat.id" />
-        </v-list-item>
-        <v-divider :key="index"></v-divider>
+          <v-list-item :key="item.id">
+            <v-list-item-icon>
+              <v-icon>mdi-seat-outline</v-icon>
+            </v-list-item-icon>
+            <FlatItemsListItemContent :item="item" :flatId="flat.id" />
+          </v-list-item>
+          <v-divider :key="index"></v-divider>
         </template>
       </v-list-item-group>
     </v-list>

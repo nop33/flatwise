@@ -11,14 +11,21 @@
     <v-main>
       <v-list flat>
         <v-list-item-group v-model="checkedItems" multiple>
-          <v-list-item v-for="item in sortedItems" :key="item.id">
-            <template v-slot:default="{ active }">
-              <v-list-item-action>
-                <v-checkbox :input-value="active" color="primary"></v-checkbox>
-              </v-list-item-action>
-              <FlatItemsListItemContent :item="item" :flatId="flat.id" />
-            </template>
-          </v-list-item>
+          <template v-for="(item, index) in sortedItems">
+            <v-list-item :key="item.id">
+              <template v-slot:default="{ active }">
+                <v-list-item-action>
+                  <v-checkbox :input-value="active" color="primary"></v-checkbox>
+                </v-list-item-action>
+                <FlatItemsListItemContent :item="item" :flatId="flat.id" />
+                <!-- TODO: Go to item details, but save state when going back -->
+                <!-- <v-list-item-icon @click.stop="iconClicked">
+                  <v-icon>mdi-information-outline</v-icon>
+                </v-list-item-icon> -->
+              </template>
+            </v-list-item>
+            <v-divider :key="index"></v-divider>
+          </template>
         </v-list-item-group>
       </v-list>
     </v-main>
@@ -43,7 +50,8 @@ export default {
     return {
       flat: {},
       flatmate: {},
-      checkedItems: []
+      checkedItems: [],
+      initialItemIds: []
     }
   },
   computed: {
@@ -60,6 +68,8 @@ export default {
     if (!this.flat.items) {
       await fetchFlatItemsAndStoreInFlatWithId(this.flat.id)
     }
+    this.initialItemIds = this.flat.items.filter(item => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id))
+      .map(item => item.id)
     this.sortedItems.forEach((item, index) => {
       if (item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id)) {
         this.checkedItems.push(index)
@@ -68,7 +78,17 @@ export default {
   },
   methods: {
     save () {
-      // todo
+      const checkedItemIds = this.checkedItems.map(index => this.sortedItems[index].id)
+      const itemIdsToBeRemovedFrom = this.initialItemIds.filter(itemId => !checkedItemIds.includes(itemId))
+      const itemIdsToBeAddedAt = checkedItemIds.filter(itemId => !this.initialItemIds.includes(itemId))
+      this.$store.dispatch('updateFlatmateItems', {
+        flatId: this.flatId,
+        flatmate: this.flatmate,
+        itemIdsToBeRemovedFrom,
+        itemIdsToBeAddedAt
+      }).then(() => {
+        this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
+      })
     }
   }
 }
