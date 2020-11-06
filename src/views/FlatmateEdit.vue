@@ -95,7 +95,7 @@ ${getFirstName(this.user.name)}`)
   methods: {
     save () {
       this.$store.dispatch('updateFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
-        this.goToFlatSettings()
+        this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
       })
     }
   }
