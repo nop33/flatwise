@@ -12,11 +12,17 @@
       <FlatmateForm v-model="flatmate" edit />
       <v-divider />
       <div class="d-flex justify-center ma-5">
-        <v-btn color="primary" :to="{ name: 'Flatmate Items', params: { flatId, flatmateId } }">See flatmate items</v-btn>
+        <v-btn color="primary" :to="{ name: 'Flatmate Items', params: { flatId, flatmateId } }">
+          <v-icon left>mdi-format-list-checks</v-icon>
+          See flatmate items
+        </v-btn>
       </div>
       <v-divider />
       <div class="d-flex justify-center ma-5">
-        <v-btn color="warning" :to="{ name: 'Remove Flatmate', params: { flatId, flatmateId } }">Remove flatmate</v-btn>
+        <v-btn color="warning" text :to="{ name: 'Remove Flatmate', params: { flatId, flatmateId } }">
+          <v-icon left>mdi-account-arrow-right-outline</v-icon>
+          Remove flatmate
+        </v-btn>
       </div>
       <Snackbar v-model="snackbar.enabled" timeout="-1" icon="mdi-account-clock-outline" :text="invitationText" />
     </v-main>

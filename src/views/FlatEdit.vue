@@ -13,7 +13,10 @@
     <FlatmateGroupList :flatmates="currentFlatmates(flatId)" :flatId="flatId" />
     <v-divider />
     <div class="d-flex justify-center ma-5">
-      <v-btn color="warning" text @click="deleteFlat">Delete flat</v-btn>
+      <v-btn color="warning" text @click="deleteFlat">
+        <v-icon left>mdi-trash-can-outline</v-icon>
+        Delete flat
+      </v-btn>
     </div>
     </v-main>
   </div>
