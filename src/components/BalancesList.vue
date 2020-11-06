@@ -8,11 +8,13 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              {{ balance.flatmate.name }} share is
-              <strong class="secondary--text">
-                {{ balance.share | round }}
-              </strong>
-              CHF
+              <slot name="rowText" v-bind:balance="balance">
+                {{ balance.flatmate.name }} share is
+                <strong class="secondary--text">
+                  {{ balance.share | round }}
+                </strong>
+                CHF
+              </slot>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>

@@ -50,7 +50,15 @@
 
         <v-divider/>
 
-        <BalancesList :balances="debt" />
+        <BalancesList :balances="debt">
+          <template #rowText="{ balance }">
+            {{ balance.flatmate.name }} pays
+            <strong class="secondary--text">
+              {{ balance.share | round }}
+            </strong>
+            CHF
+          </template>
+        </BalancesList>
 
         <v-divider />
 
