@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar :value="value" @input="changed($event)" :color="color">
+  <v-snackbar :value="value" @input="changed($event)" :color="color" :timeout="timeout">
     <div class="d-flex">
       <v-icon class="mr-3" v-html="icon"></v-icon>
       <span v-html="text"></span>
@@ -18,7 +18,8 @@ export default {
     'value',
     'icon',
     'text',
-    'color'
+    'color',
+    'timeout'
   ],
   data: () => {
     return {
