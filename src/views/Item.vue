@@ -49,7 +49,10 @@
       <v-divider/>
 
       <div class="d-flex justify-center ma-5">
-        <v-btn color="warning" @click="deleteItem">Delete item</v-btn>
+        <v-btn color="warning" text @click="deleteItem">
+          <v-icon left>mdi-trash-can-outline</v-icon>
+          Delete item
+        </v-btn>
       </div>
 
       <!-- TODO: Create component -->
