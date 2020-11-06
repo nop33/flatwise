@@ -10,7 +10,7 @@
       <v-container>
         <v-row>
           <v-col>
-            <!-- TODO: Make new component to share with FlatmateRemove.vue -->
+            <!-- TODO: Make new component to share with FlatmateMoveOut.vue -->
             <v-dialog ref="dialog" :return-value.sync="balanceOnDate" width="290px">
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
