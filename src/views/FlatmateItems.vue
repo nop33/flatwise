@@ -9,6 +9,14 @@
       <v-btn text large @click="save">Save</v-btn>
     </v-toolbar>
     <v-main>
+      <v-card flat>
+        <v-card-text>
+          <v-checkbox v-model="selectAll" color="secondary" label="Select all"></v-checkbox>
+        </v-card-text>
+      </v-card>
+
+      <v-divider/>
+
       <v-list flat>
         <v-list-item-group v-model="checkedItems" multiple>
           <template v-for="(item, index) in sortedItems">
@@ -51,7 +59,9 @@ export default {
       flat: {},
       flatmate: {},
       checkedItems: [],
-      initialItemIds: []
+      initialItemIds: [],
+      initialCheckedItems: [],
+      selectAll: false
     }
   },
   computed: {
@@ -60,6 +70,16 @@ export default {
     },
     sortedItems () {
       return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
+    }
+  },
+  watch: {
+    selectAll (newValue) {
+      if (newValue === true) {
+        console.log([...Array(this.flat.items.length).keys()])
+        this.checkedItems = [...Array(this.flat.items.length).keys()]
+      } else {
+        this.checkedItems = this.initialCheckedItems
+      }
     }
   },
   async created () {
@@ -75,6 +95,7 @@ export default {
         this.checkedItems.push(index)
       }
     })
+    this.initialCheckedItems = [...this.checkedItems]
   },
   methods: {
     save () {
