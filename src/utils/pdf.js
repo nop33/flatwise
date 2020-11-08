@@ -32,7 +32,8 @@ export function generateMoveOutReport (flatmate, moveOutDate, total, data, debt)
   })
 
   // doc.output('pdfobjectnewwindow')
-  return doc.save(`${flatmate.name.split(' ').join('')}-flatwise-breakdown.pdf`, { returnPromise: true })
+  const filename = `${flatmate.name.split(' ').join('-').toLowerCase()}-move-out-flatwise-breakdown.pdf`
+  return doc.save(filename, { returnPromise: true })
 }
 
 export function generateMoveInReport (flatmate, total, data, debt) {
@@ -61,5 +62,6 @@ export function generateMoveInReport (flatmate, total, data, debt) {
   })
 
   // doc.output('pdfobjectnewwindow')
-  return doc.save(`${flatmate.name.split(' ').join('')}-flatwise-breakdown.pdf`, { returnPromise: true })
+  const filename = `${flatmate.name.split(' ').join('-').toLowerCase()}-move-in-flatwise-breakdown.pdf`
+  return doc.save(filename, { returnPromise: true })
 }
