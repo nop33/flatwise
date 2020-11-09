@@ -136,7 +136,10 @@ export default {
   methods: {
     deleteItem () {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
-        this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
+        this.$store.dispatch('deleteItem', this.item).then(this.$router.push({
+          name: 'Flat',
+          params: { flatId: this.flatId }
+        }))
       }
     }
   }
