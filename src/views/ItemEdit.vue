@@ -6,10 +6,10 @@
       </v-btn>
       <v-toolbar-title>Edit item</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text large @click="save">Save</v-btn>
+      <v-btn text large @click="save" :disabled="!isButtonEnabled">Save</v-btn>
     </v-toolbar>
     <v-main>
-      <ItemForm v-model="item" :allFlatmates="allFlatmates" />
+      <ItemForm v-model="item" :allFlatmates="allFlatmates" @form-validity="isButtonEnabled = $event" />
     </v-main>
   </div>
 </template>
@@ -32,7 +32,8 @@ export default {
     return {
       flat: {},
       item: {},
-      allFlatmates: []
+      allFlatmates: [],
+      isButtonEnabled: false
     }
   },
   computed: {

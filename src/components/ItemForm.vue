@@ -54,6 +54,8 @@
             chips
             label="Shared amongst"
             multiple
+            required
+            :rules="flatmatesRules"
           >
             <template v-slot:selection="data">
               <v-chip v-bind="data.attrs">
@@ -122,6 +124,9 @@ export default {
       ],
       rateRules: [
         v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
+      ],
+      flatmatesRules: [
+        v => v.length > 0 || 'Somebody must have paid for this, don\'t you think? :)'
       ]
     }
   },
@@ -135,6 +140,9 @@ export default {
       if (newValue === 100) {
         this.lowestPriceRateChanged(0)
       }
+    },
+    isFormValid (newValue) {
+      this.$emit('form-validity', newValue)
     }
   },
   created () {
