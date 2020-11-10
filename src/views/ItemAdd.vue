@@ -1,15 +1,13 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="$router.go(-1)">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>Add item</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn text large @click="save" :disabled="!isButtonEnabled">Save</v-btn>
-    </v-toolbar>
+    <AppBarThin
+      :backButtonCallback="back"
+      title="Add item"
+      :actionButtonCallback="save"
+      actionButtonText="Save"
+    />
     <v-main>
-      <ItemForm v-model="item" :allFlatmates="allFlatmates" @form-validity="isButtonEnabled = $event" />
+      <ItemForm v-model="item" :allFlatmates="allFlatmates" />
     </v-main>
   </div>
 </template>
@@ -19,10 +17,12 @@ import { mapGetters } from 'vuex'
 import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import ItemForm from '@/components/ItemForm.vue'
+import AppBarThin from '@/components/AppBarThin.vue'
 
 export default {
   components: {
-    ItemForm
+    ItemForm,
+    AppBarThin
   },
   props: [
     'flatId'
@@ -38,8 +38,7 @@ export default {
         idsOfFlatmatesThatShareThis: [],
         depreciationRate: 0,
         lowestPriceRate: 0
-      },
-      isButtonEnabled: false
+      }
     }
   },
   computed: {
@@ -56,10 +55,14 @@ export default {
     fetchFlatItemsAndStoreInFlatWithId(this.flatId)
   },
   methods: {
+    goToFlat () {
+      this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
+    },
+    back () {
+      this.goToFlat()
+    },
     save () {
-      this.$store.dispatch('addItem', this.item).then(() => {
-        this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
-      })
+      this.$store.dispatch('addItem', this.item).then(this.goToFlat)
     }
   }
 }

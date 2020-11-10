@@ -142,7 +142,7 @@ export default {
       }
     },
     isFormValid (newValue) {
-      this.$emit('form-validity', newValue)
+      this.$store.dispatch('setPageFormValidity', newValue)
     }
   },
   created () {
