@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll >
-      <v-btn icon @click="$router.go(-1)">
+      <v-btn icon @click="back">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title>
@@ -85,7 +85,8 @@ export default {
   },
   props: [
     'flatId',
-    'itemId'
+    'itemId',
+    'backButtonCallback'
   ],
   data: () => {
     return {
@@ -134,6 +135,13 @@ export default {
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
+    back () {
+      if (this.backButtonCallback) {
+        this.backButtonCallback()
+      } else {
+        this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
+      }
+    },
     deleteItem () {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
         this.$store.dispatch('deleteItem', this.item).then(this.$router.push({

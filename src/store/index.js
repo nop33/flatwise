@@ -17,7 +17,8 @@ export default new Vuex.Store({
     user: null,
     loading: false,
     flats: [],
-    selectedFlat: null
+    selectedFlat: null,
+    isPageFormValid: false
   },
   getters: {
     flatById: state => flatId => state.flats.find(flat => flat.id === flatId),
@@ -36,6 +37,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    SET_PAGE_FORM_VALIDITY (state, validity) {
+      state.isPageFormValid = validity
+    },
     SET_SELECTED_FLAT (state, flat) {
       state.selectedFlat = flat
     },
@@ -104,6 +108,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    setPageFormValidity ({ commit }, validity) {
+      commit('SET_PAGE_FORM_VALIDITY', validity)
+    },
     selectFlat ({ commit }, flat) {
       commit('SET_SELECTED_FLAT', flat)
     },
