@@ -112,6 +112,9 @@ export default {
       if (Object.keys(this.flat).length === 0 && this.item.constructor === Object) {
         this.flat = newValue
       }
+    },
+    isFormValid (newValue) {
+      this.$store.dispatch('setPageFormValidity', newValue)
     }
   },
   created () {

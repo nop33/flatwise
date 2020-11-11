@@ -1,13 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="$router.go(-1)">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>Create new flat</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn text large @click="save">Save</v-btn>
-    </v-toolbar>
+    <AppBarThin
+      :backButtonCallback="back"
+      title="Create new flat"
+      :actionButtonCallback="save"
+      actionButtonText="Save"
+    />
     <v-main>
       <FlatForm v-model="flat" />
     </v-main>
@@ -18,10 +16,12 @@
 import { mapState } from 'vuex'
 
 import FlatForm from '@/components/FlatForm.vue'
+import AppBarThin from '@/components/AppBarThin.vue'
 
 export default {
   components: {
-    FlatForm
+    FlatForm,
+    AppBarThin
   },
   data: () => {
     return {
@@ -40,6 +40,9 @@ export default {
     ])
   },
   methods: {
+    back () {
+      this.$router.push({ name: 'Home' })
+    },
     save () {
       this.$store.dispatch('createFlat', this.flat).then(flatId => {
         this.$router.push({ name: 'Flat', params: { flatId } })
