@@ -1,13 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="$router.go(-1)">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>{{ firstName }}'s items</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn text large @click="save">Save</v-btn>
-    </v-toolbar>
+    <AppBarThin
+      :backButtonCallback="back"
+      :title="pageTitle"
+      :actionButtonCallback="save"
+      actionButtonText="Save"
+    />
     <v-main>
       <v-card flat>
         <v-card-text>
@@ -45,10 +43,12 @@ import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/util
 import { getFirstName } from '@/utils/utils'
 
 import FlatItemsListItemContent from '@/components/FlatItemsListItemContent.vue'
+import AppBarThin from '@/components/AppBarThin.vue'
 
 export default {
   components: {
-    FlatItemsListItemContent
+    FlatItemsListItemContent,
+    AppBarThin
   },
   props: [
     'flatId',
@@ -65,17 +65,16 @@ export default {
     }
   },
   computed: {
-    firstName () {
-      return getFirstName(this.flatmate.name)
-    },
     sortedItems () {
       return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
+    },
+    pageTitle () {
+      return `${getFirstName(this.flatmate.name)}'s items`
     }
   },
   watch: {
     selectAll (newValue) {
       if (newValue === true) {
-        console.log([...Array(this.flat.items.length).keys()])
         this.checkedItems = [...Array(this.flat.items.length).keys()]
       } else {
         this.checkedItems = this.initialCheckedItems
@@ -96,8 +95,13 @@ export default {
       }
     })
     this.initialCheckedItems = [...this.checkedItems]
+    // page form is always valid here
+    this.$store.dispatch('setPageFormValidity', true)
   },
   methods: {
+    back () {
+      this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId: this.flatmateId } })
+    },
     save () {
       const checkedItemIds = this.checkedItems.map(index => this.sortedItems[index].id)
       const itemIdsToBeRemovedFrom = this.initialItemIds.filter(itemId => !checkedItemIds.includes(itemId))
