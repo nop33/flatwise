@@ -1,6 +1,15 @@
 <template>
   <v-card flat class="mb-16">
-    <v-text-field solo hide-details placeholder="Search..." v-model="searchInput" prepend-inner-icon="mdi-magnify" />
+    <v-text-field
+      v-if="sortedItems.length > 0"
+      solo
+      flat
+      hide-details
+      placeholder="Search..."
+      v-model="searchInput"
+      prepend-inner-icon="mdi-magnify"
+    />
+    <v-divider />
     <v-list>
       <v-list-item-group v-model="selectedItemIndex">
         <template v-for="(item, index) in sortedItems">
