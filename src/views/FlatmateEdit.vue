@@ -51,7 +51,8 @@ export default {
   },
   props: [
     'flatId',
-    'flatmateId'
+    'flatmateId',
+    'backButtonCallback' // TODO: Use it wherever this view is called from
   ],
   data: () => {
     return {
@@ -93,13 +94,21 @@ ${getFirstName(this.user.name)}`)
     }
   },
   methods: {
+    goToFlatEdit () {
+      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
+    },
     back () {
-      this.$router.go(-1)
+      if (this.backButtonCallback) {
+        this.backButtonCallback()
+      } else {
+        this.goToFlatEdit()
+      }
     },
     save () {
-      this.$store.dispatch('updateFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
-        this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
-      })
+      this.$store.dispatch('updateFlatmate', {
+        flatmateData: this.flatmate,
+        flatId: this.flatId
+      }).then(this.goToFlatEdit)
     }
   }
 }
