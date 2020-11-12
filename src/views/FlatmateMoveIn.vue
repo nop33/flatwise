@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-app-bar app flat color="primary" dark prominent hide-on-scroll>
-      <v-btn icon @click="$router.go(-1)">
+      <v-btn icon @click="back">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
@@ -84,6 +84,9 @@ export default {
     }
   },
   methods: {
+    back () {
+      this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId: this.flatmateId } })
+    },
     async downloadBreakdown () {
       const data = this.calculatorData.sharePerItem.map(itemShare => {
         const item = itemShare.item
