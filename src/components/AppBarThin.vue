@@ -5,7 +5,9 @@
     </v-btn>
     <v-toolbar-title>{{ title }}</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn text large @click="performAction" :disabled="!isPageFormValid">{{ actionButtonText }}</v-btn>
+    <v-btn v-if="actionButtonText" text large @click="performAction" :disabled="!isPageFormValid">
+      {{ actionButtonText }}
+    </v-btn>
   </v-toolbar>
 </template>
 
