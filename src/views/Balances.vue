@@ -1,11 +1,9 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="$router.go(-1)">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>Balances</v-toolbar-title>
-    </v-toolbar>
+    <AppBarThin
+      :backButtonCallback="back"
+      title="Balances"
+    />
     <v-main>
       <v-container>
         <v-row>
@@ -59,11 +57,13 @@ import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/util
 
 import Sheet from '@/components/Sheet.vue'
 import BalancesList from '@/components/BalancesList.vue'
+import AppBarThin from '@/components/AppBarThin.vue'
 
 export default {
   components: {
     Sheet,
-    BalancesList
+    BalancesList,
+    AppBarThin
   },
   props: [
     'flatId'
@@ -102,6 +102,9 @@ export default {
     this.calculateBalances()
   },
   methods: {
+    back () {
+      this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
+    },
     calculateNumberOfDaysOwned (date) {
       return Math.floor(calculateDaysBetween(date, this.balanceOnDate))
     },
