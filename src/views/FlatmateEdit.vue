@@ -1,13 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="$router.go(-1)">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>Edit flatmate settings</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn text large @click="save">Save</v-btn>
-    </v-toolbar>
+    <AppBarThin
+      :backButtonCallback="back"
+      title="Edit flatmate settings"
+      :actionButtonCallback="save"
+      actionButtonText="Save"
+    />
     <v-main>
       <FlatmateForm v-model="flatmate" edit />
       <v-divider />
@@ -43,11 +41,13 @@ import { mapState } from 'vuex'
 
 import FlatmateForm from '@/components/FlatmateForm.vue'
 import Snackbar from '@/components/Snackbar.vue'
+import AppBarThin from '@/components/AppBarThin.vue'
 
 export default {
   components: {
     FlatmateForm,
-    Snackbar
+    Snackbar,
+    AppBarThin
   },
   props: [
     'flatId',
@@ -93,6 +93,9 @@ ${getFirstName(this.user.name)}`)
     }
   },
   methods: {
+    back () {
+      this.$router.go(-1)
+    },
     save () {
       this.$store.dispatch('updateFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then(() => {
         this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
