@@ -7,11 +7,9 @@
       actionButtonText="Save"
     />
     <v-main>
-      <v-card flat>
-        <v-card-text>
-          <v-checkbox v-model="selectAll" color="secondary" label="Select all"></v-checkbox>
-        </v-card-text>
-      </v-card>
+      <div class="d-flex justify-center ma-5">
+        <v-btn color="primary" @click="selectAll = !selectAll">{{ selectAllLabel }}</v-btn>
+      </div>
 
       <v-divider/>
 
@@ -70,6 +68,9 @@ export default {
     },
     pageTitle () {
       return `${getFirstName(this.flatmate.name)}'s items`
+    },
+    selectAllLabel () {
+      return this.selectAll ? 'Reset to current items' : 'Select all'
     }
   },
   watch: {
