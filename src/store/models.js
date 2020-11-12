@@ -10,12 +10,6 @@ export function createFlatObject (id, name, depreciationRate, lowestPriceRate, e
   }
 }
 
-export function createFlatmateObject (userRef) {
-  return {
-    userRef
-  }
-}
-
 export function createUserObject (id, name, email, photo) {
   return {
     id,
