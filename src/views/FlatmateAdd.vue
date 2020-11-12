@@ -1,13 +1,11 @@
 <template>
   <div>
-    <v-toolbar flat color="primary" dark fixed>
-      <v-btn icon @click="$router.go(-1)">
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>Add flatmate</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn text large @click="save">Save</v-btn>
-    </v-toolbar>
+    <AppBarThin
+      :backButtonCallback="back"
+      title="Add flatmate"
+      :actionButtonCallback="save"
+      actionButtonText="Save"
+    />
     <v-main>
       <FlatmateForm v-model="flatmate" />
     </v-main>
@@ -18,10 +16,12 @@
 import { getFlatFromStateById } from '@/utils/getters'
 
 import FlatmateForm from '@/components/FlatmateForm.vue'
+import AppBarThin from '@/components/AppBarThin.vue'
 
 export default {
   components: {
-    FlatmateForm
+    FlatmateForm,
+    AppBarThin
   },
   props: [
     'flatId'
@@ -40,6 +40,9 @@ export default {
     this.flat = getFlatFromStateById(this.flatId)
   },
   methods: {
+    back () {
+      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
+    },
     save () {
       this.$store.dispatch('addFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then((flatmate) => {
         this.$router.push({ name: 'Flatmate Items', params: { flatId: this.flatId, flatmateId: flatmate.id } })
