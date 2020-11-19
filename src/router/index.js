@@ -108,7 +108,7 @@ router.beforeEach((to, from, next) => {
     if (user) {
       // TODO: Clean this up
       // if (!store.state.user) {
-      //   store.dispatch('setUser', {
+      //   store.commit('SET_USER', {
       //     id: user.uid,
       //     name: user.displayName,
       //     email: user.email,
@@ -116,7 +116,7 @@ router.beforeEach((to, from, next) => {
       //   })
       // }
     } else if (to.name !== 'Login') {
-      store.dispatch('setUser', null)
+      store.commit('SET_USER', null)
       next({ name: 'Login' })
     }
     next()

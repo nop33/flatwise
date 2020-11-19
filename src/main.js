@@ -47,7 +47,7 @@ new Vue({
             user.email,
             user.photoURL
           )
-          store.dispatch('setUser', storeUser)
+          store.commit('SET_USER', storeUser)
         }
         store.dispatch('initializeStore')
       }
