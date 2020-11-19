@@ -1,11 +1,6 @@
 <template>
   <div>
-    <AppBarThin
-      :backButtonCallback="back"
-      title="Add flatmate"
-      :actionButtonCallback="save"
-      actionButtonText="Save"
-    />
+    <AppBarThin :backButtonCallback="back" title="Add flatmate" :actionButtonCallback="save" actionButtonText="Save" />
     <v-main>
       <FlatmateForm v-model="flatmate" />
     </v-main>
@@ -13,8 +8,6 @@
 </template>
 
 <script>
-import { getFlatFromStateById } from '@/utils/getters'
-
 import FlatmateForm from '@/components/FlatmateForm.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
 
@@ -37,15 +30,15 @@ export default {
     }
   },
   created () {
-    this.flat = getFlatFromStateById(this.flatId)
+    this.flat = this.$store.getters.currentFlat
   },
   methods: {
     back () {
       this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
     },
     save () {
-      this.$store.dispatch('addFlatmate', { flatmateData: this.flatmate, flatId: this.flatId }).then((flatmate) => {
-        this.$router.push({ name: 'Flatmate Items', params: { flatId: this.flatId, flatmateId: flatmate.id } })
+      this.$store.dispatch('addFlatmate', this.flatmate).then(flatmateId => {
+        this.$router.push({ name: 'Flatmate Items', params: { flatId: this.flatId, flatmateId } })
       })
     }
   }

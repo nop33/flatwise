@@ -4,7 +4,7 @@
       <span>{{ item.name }}</span>
       <div class="flex-shrink-0 ml-3">
         <Avatar
-          v-for="flatmate in getFlatmatesThatShareThis(item)"
+          v-for="flatmate in flatmatesThatShareThis"
           :key="flatmate.id"
           size="24"
           class="text-caption ml-1"
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 import Avatar from '@/components/Avatar.vue'
 
 export default {
@@ -25,17 +23,12 @@ export default {
     Avatar
   },
   props: [
-    'item',
-    'flatId'
+    'item'
   ],
   computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ])
-  },
-  methods: {
-    getFlatmatesThatShareThis (item) {
-      return this.currentFlatmates(this.flatId).filter(flatmate => item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
+    flatmatesThatShareThis () {
+      const currentFlatmates = this.$store.getters.currentFlatmates
+      return currentFlatmates.filter(flatmate => this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
     }
   }
 }

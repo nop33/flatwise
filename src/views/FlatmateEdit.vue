@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { getFlatFromStateById } from '@/utils/getters'
 import { getFirstName } from '@/utils/utils'
 
 import { mapState } from 'vuex'
@@ -87,7 +86,7 @@ ${getFirstName(this.user.name)}`)
     }
   },
   created () {
-    this.flat = getFlatFromStateById(this.flatId)
+    this.flat = this.$store.getters.currentFlat
     this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
     if (!this.flatmate.userRef) {
       this.snackbar.enabled = true
@@ -98,17 +97,10 @@ ${getFirstName(this.user.name)}`)
       this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
     },
     back () {
-      if (this.backButtonCallback) {
-        this.backButtonCallback()
-      } else {
-        this.goToFlatEdit()
-      }
+      this.backButtonCallback ? this.backButtonCallback() : this.goToFlatEdit()
     },
     save () {
-      this.$store.dispatch('updateFlatmate', {
-        flatmateData: this.flatmate,
-        flatId: this.flatId
-      }).then(this.goToFlatEdit)
+      this.$store.dispatch('updateFlatmate', this.flatmate).then(this.goToFlatEdit)
     }
   }
 }

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <AppBarThin
-      :backButtonCallback="back"
-      title="Balances"
-    />
+    <AppBarThin :backButtonCallback="back" title="Balances" />
     <v-main>
       <v-container>
         <v-row>
@@ -38,8 +35,8 @@
       <v-divider />
 
       <Sheet>
-        As of {{ balanceOnDate | humanReadable }}, the total worth of all items (after applying the depreciation rate of each)
-        is <strong class="secondary--text">{{ totalValue | round }}</strong> CHF
+        As of {{ balanceOnDate | humanReadable }}, the total worth of all items (after applying the depreciation rate of
+        each) is <strong class="secondary--text">{{ totalValue | round }}</strong> CHF
       </Sheet>
 
       <v-divider />
@@ -53,7 +50,6 @@
 
 <script>
 import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import Sheet from '@/components/Sheet.vue'
 import BalancesList from '@/components/BalancesList.vue'
@@ -95,9 +91,9 @@ export default {
     }
   },
   async created () {
-    this.flat = getFlatFromStateById(this.flatId)
+    this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
+      await this.$store.dispatch('fetchCurrentFlatItems')
     }
     this.calculateBalances()
   },

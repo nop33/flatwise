@@ -24,7 +24,6 @@
       <v-divider/>
 
       <v-card flat>
-
         <v-card-subtitle class="font-weight-medium">Price details</v-card-subtitle>
         <v-card-text>
           <div>Loses its value by <strong>{{ item.depreciationRate }}%</strong> each year</div>
@@ -38,7 +37,6 @@
           </div>
           <v-progress-linear class="mt-2" :value="currentValuePercentage" rounded></v-progress-linear>
         </v-card-text>
-
       </v-card>
 
       <!-- TODO: Create component -->
@@ -71,9 +69,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 
 import Avatar from '@/components/Avatar.vue'
 import FlatmateListItem from '@/components/FlatmateListItem.vue'
@@ -97,10 +93,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'currentFlatmates',
-      'pastFlatmates'
-    ]),
     numberOfDaysOwned () {
       return Math.floor(calculateDaysBetween(this.item.date, this.today))
     },
@@ -111,12 +103,12 @@ export default {
       return (this.currentValue / this.item.price) * 100
     },
     flatmatesThatShareThis () {
-      return this.currentFlatmates(this.flat.id).filter(flatmate => {
+      return this.$store.getters.currentFlatmates.filter(flatmate => {
         return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
       })
     },
     pastFlatmatesThatSharedThis () {
-      return this.pastFlatmates(this.flat.id).filter(flatmate => {
+      return this.$store.getters.pastFlatmates.filter(flatmate => {
         return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
       })
     }
@@ -128,26 +120,22 @@ export default {
     }
   },
   async created () {
-    this.flat = getFlatFromStateById(this.flatId)
+    this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
+      await this.$store.dispatch('fetchCurrentFlatItems')
     }
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
     back () {
-      if (this.backButtonCallback) {
-        this.backButtonCallback()
-      } else {
-        this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
-      }
+      this.backButtonCallback ? this.backButtonCallback() : this.goToFlat()
+    },
+    goToFlat () {
+      this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
     },
     deleteItem () {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
-        this.$store.dispatch('deleteItem', this.item).then(this.$router.push({
-          name: 'Flat',
-          params: { flatId: this.flatId }
-        }))
+        this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
       }
     }
   }

@@ -6,6 +6,8 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
+import { createUserObject } from '../store/models.js'
+
 export default {
   created () {
     firebase.auth().onAuthStateChanged(user => {
@@ -13,12 +15,8 @@ export default {
         const currentUserId = firebase.auth().currentUser.uid
         this.$db.users.doc(currentUserId).get().then(doc => {
           if (!doc.exists) {
-            this.$store.dispatch('registerUser', {
-              id: user.uid,
-              name: user.displayName,
-              email: user.email,
-              photo: user.photoURL
-            }).then(() => {
+            const newUser = createUserObject(user.uid, user.displayName, user.email, user.photoURL)
+            this.$store.dispatch('registerUser', newUser).then(() => {
               this.$router.push('/')
             })
           } else {
