@@ -136,7 +136,7 @@ export default {
       }
     },
     isFormValid (newValue) {
-      this.$store.dispatch('setPageFormValidity', newValue)
+      this.$store.commit('SET_PAGE_FORM_VALIDITY', newValue)
     }
   },
   created () {

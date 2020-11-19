@@ -36,7 +36,7 @@ export default {
       this.invalidatePageForm()
     },
     invalidatePageForm () {
-      this.$store.dispatch('setPageFormValidity', false)
+      this.$store.commit('SET_PAGE_FORM_VALIDITY', false)
     }
   }
 }
