@@ -1,11 +1,6 @@
 <template>
   <div>
-    <AppBarThin
-      :backButtonCallback="back"
-      title="Add item"
-      :actionButtonCallback="save"
-      actionButtonText="Save"
-    />
+    <AppBarThin :backButtonCallback="back" title="Add item" :actionButtonCallback="save" actionButtonText="Save" />
     <v-main>
       <ItemForm v-model="item" :allFlatmates="allFlatmates" />
     </v-main>
@@ -13,9 +8,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
-
 import ItemForm from '@/components/ItemForm.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
 
@@ -41,18 +33,15 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ])
-  },
-  created () {
-    this.flat = getFlatFromStateById(this.flatId)
-    this.allFlatmates = this.currentFlatmates(this.flatId)
+  async created () {
+    this.flat = this.$store.getters.currentFlat
+    if (!this.flat.items) {
+      await this.$store.dispatch('fetchCurrentFlatItems')
+    }
+    this.allFlatmates = this.$store.getters.currentFlatmates
     this.item.idsOfFlatmatesThatShareThis = this.allFlatmates.map(flatmate => flatmate.id)
     this.item.depreciationRate = this.flat.depreciationRate
     this.item.lowestPriceRate = this.flat.lowestPriceRate
-    fetchFlatItemsAndStoreInFlatWithId(this.flatId)
   },
   methods: {
     goToFlat () {

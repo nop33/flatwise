@@ -13,8 +13,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import FlatForm from '@/components/FlatForm.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
 
@@ -33,11 +31,6 @@ export default {
         initialMoveInDate: null
       }
     }
-  },
-  computed: {
-    ...mapState([
-      'user'
-    ])
   },
   methods: {
     back () {
