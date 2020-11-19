@@ -31,13 +31,13 @@ export default {
       'flats'
     ]),
     ...mapGetters([
-      'currentFlatmates'
+      'currentFlatmatesOfFlat'
     ])
   },
   watch: {
     selectedFlatIndex (flatIndex) {
       const selectedFlat = this.flats[flatIndex]
-      this.$store.commit('SET_SELECTED_FLAT', selectedFlat)
+      this.$store.commit('SET_CURRENT_FLAT_ID', selectedFlat.id)
       this.$router.push({ name: 'Flat', params: { flatId: selectedFlat.id } })
     },
     flats (newValue) {
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     formatFlatmateNames (flat) {
-      return this.currentFlatmates(flat.id).map(flatmate => flatmate.name).join(', ')
+      return this.currentFlatmatesOfFlat(flat.id).map(flatmate => flatmate.name).join(', ')
     }
   }
 }

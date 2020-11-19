@@ -104,6 +104,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  if (to.params.flatId) {
+    store.commit('SET_CURRENT_FLAT_ID', to.params.flatId)
+  }
   firebase.auth().onAuthStateChanged(user => {
     if (user) {
       // TODO: Clean this up

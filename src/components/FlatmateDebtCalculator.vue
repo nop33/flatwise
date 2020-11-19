@@ -55,12 +55,13 @@ export default {
   methods: {
     calculateDebt () {
       const amountsPerFlatmate = {}
+      const currentFlatmates = this.$store.getters.currentFlatmates
 
       this.debt = []
       this.sharePerItem = []
       this.totalDebt = 0
 
-      const remainingFlatmates = this.currentFlatmates(this.flat.id).filter(flatmate => flatmate.id !== this.flatmate.id)
+      const remainingFlatmates = currentFlatmates.filter(flatmate => flatmate.id !== this.flatmate.id)
       remainingFlatmates.forEach(flatmate => {
         amountsPerFlatmate[flatmate.id] = 0
       })
@@ -69,7 +70,7 @@ export default {
       items.forEach(item => {
         const valueOnDate = calculateItemValueOnDate(item, this.date)
         const idsOfFlatmatesMovedInByDate = item.idsOfFlatmatesThatShareThis.filter(id => {
-          const flatmate = this.currentFlatmates(this.flat.id).find(flatmate => flatmate.id === id)
+          const flatmate = currentFlatmates.find(flatmate => flatmate.id === id)
           return !!flatmate && flatmate.startDate <= this.date
         })
         const numberOfFlatmatesSharingThisOnDate = idsOfFlatmatesMovedInByDate.length

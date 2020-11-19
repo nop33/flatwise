@@ -5,7 +5,7 @@
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
 
-      <div class="absolute-toolbar-content d-flex flex-column justify-space-between my-3">
+      <div v-if="flatmate.name" class="absolute-toolbar-content d-flex flex-column justify-space-between my-3">
         <div class="mx-10 text-truncate text-center text-h6 d-flex flex-column align-center">
           <Avatar :user="flatmate" border />
           <span class="mt-2">{{ flatmate.name }}</span>
@@ -84,8 +84,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 import { generateMoveOutReport } from '@/utils/pdf'
 
 import Avatar from '@/components/Avatar.vue'
@@ -113,17 +111,12 @@ export default {
       calculatorData: {}
     }
   },
-  computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ])
-  },
   async created () {
-    this.flat = getFlatFromStateById(this.flatId)
-    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
+    this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
+      await this.$store.dispatch('fetchCurrentFlatItems')
     }
+    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
   },
   methods: {
     back () {
@@ -150,11 +143,7 @@ export default {
     },
     removeFlatmate () {
       if (confirm(`Last confirmation before removing ${this.flatmate.name} from "${this.flat.name}"!`)) {
-        this.$store.dispatch('removeFlatmate', {
-          flatId: this.flatId,
-          flatmate: this.flatmate,
-          moveOutDate: this.moveOutDate
-        }).then(() => {
+        this.$store.dispatch('removeFlatmate', { flatmate: this.flatmate, moveOutDate: this.moveOutDate }).then(() => {
           this.$router.push({ name: 'Flat', params: { flatId: this.flatId, flatmateRemoved: this.flatmate } })
         })
       }
