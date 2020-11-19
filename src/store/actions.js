@@ -10,8 +10,10 @@ const db = {
 
 export default {
   async registerUser ({ commit }, user) {
+    commit('TOGGLE_LOADER', true)
     await db.users.doc(user.id).set(user)
     commit('SET_USER', user)
+    commit('TOGGLE_LOADER', false)
   },
   async addItem ({ state, commit }, itemData) {
     commit('TOGGLE_LOADER', true)
@@ -22,12 +24,16 @@ export default {
     })
   },
   async updateItem ({ state, commit }, itemData) {
+    commit('TOGGLE_LOADER', true)
     await db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
     commit('UPDATE_ITEM', itemData)
+    commit('TOGGLE_LOADER', false)
   },
   async deleteItem ({ state, commit }, itemData) {
+    commit('TOGGLE_LOADER', true)
     await db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).delete()
     commit('DELETE_ITEM', itemData)
+    commit('TOGGLE_LOADER', false)
   },
   async fetchFlatItems ({ commit }, flat) {
     const response = await db.flats.doc(flat.id).collection('items').get()
