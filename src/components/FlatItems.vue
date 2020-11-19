@@ -17,7 +17,7 @@
             <v-list-item-icon>
               <v-icon>mdi-seat-outline</v-icon>
             </v-list-item-icon>
-            <FlatItemsListItemContent :item="item" :flatId="flat.id" />
+            <FlatItemsListItemContent :item="item" />
           </v-list-item>
           <v-divider :key="index"></v-divider>
         </template>
@@ -58,19 +58,8 @@ export default {
   watch: {
     selectedItemIndex (newValue) {
       if (newValue >= 0) {
-        this.$router.push({
-          name: 'Item',
-          params: {
-            flatId: this.flat.id,
-            itemId: this.sortedItems[newValue].id
-          }
-        })
+        this.$router.push({ name: 'Item', params: { flatId: this.flat.id, itemId: this.sortedItems[newValue].id } })
       }
-    }
-  },
-  methods: {
-    getFlatmatesThatShareThis (item) {
-      return this.currentFlatmates(this.flat.id).filter(flatmate => item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
     }
   }
 }

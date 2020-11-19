@@ -15,30 +15,30 @@ export default {
     commit('SET_USER', user)
     commit('TOGGLE_LOADER', false)
   },
-  async addItem ({ state, commit }, itemData) {
+  async addItem ({ commit, getters }, itemData) {
     commit('TOGGLE_LOADER', true)
-    const selectedFlat = state.selectedFlat
-    await db.flats.doc(state.selectedFlat.id).collection('items').add(itemData).then(itemRef => {
-      commit('ADD_ITEM', { itemData: { id: itemRef.id, ...itemData }, selectedFlat })
+    const flat = getters.currentFlat
+    await db.flats.doc(flat.id).collection('items').add(itemData).then(itemRef => {
+      commit('ADD_ITEM', { itemData: { id: itemRef.id, ...itemData }, flat })
       commit('TOGGLE_LOADER', false)
     })
   },
-  async updateItem ({ state, commit }, itemData) {
+  async updateItem ({ state, commit, getters }, itemData) {
     commit('TOGGLE_LOADER', true)
-    await db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).update(itemData)
-    commit('UPDATE_ITEM', itemData)
+    await db.flats.doc(state.currentFlatId).collection('items').doc(itemData.id).update(itemData)
+    commit('UPDATE_ITEM', { itemData, flat: getters.currentFlat })
     commit('TOGGLE_LOADER', false)
   },
-  async deleteItem ({ state, commit }, itemData) {
+  async deleteItem ({ state, commit, getters }, itemData) {
     commit('TOGGLE_LOADER', true)
-    await db.flats.doc(state.selectedFlat.id).collection('items').doc(itemData.id).delete()
-    commit('DELETE_ITEM', itemData)
+    await db.flats.doc(state.currentFlatId).collection('items').doc(itemData.id).delete()
+    commit('DELETE_ITEM', { itemData, flat: getters.currentFlat })
     commit('TOGGLE_LOADER', false)
   },
-  async fetchFlatItems ({ commit }, flat) {
-    const response = await db.flats.doc(flat.id).collection('items').get()
+  async fetchCurrentFlatItems ({ state, commit, getters }) {
+    const response = await db.flats.doc(state.currentFlatId).collection('items').get()
     const items = response.docs.map(doc => ({ id: doc.id, ...doc.data() }))
-    commit('SET_FLAT_ITEMS', { flat, items })
+    commit('SET_FLAT_ITEMS', { flat: getters.currentFlat, items })
   },
   async initializeStore ({ state, commit }) {
     commit('TOGGLE_LOADER', true)
@@ -144,28 +144,28 @@ export default {
     commit('UPDATE_FLAT', flatData)
     commit('TOGGLE_LOADER', false)
   },
-  async addFlatmate ({ commit }, { flatmateData, flatId }) {
+  async addFlatmate ({ state, commit, getters }, flatmateData) {
     commit('TOGGLE_LOADER', true)
     let newFlatmate = {}
-    await db.flats.doc(flatId).collection('flatmates').add(flatmateData).then(flatmateRef => {
+    await db.flats.doc(state.currentFlatId).collection('flatmates').add(flatmateData).then(flatmateRef => {
       newFlatmate = { ...flatmateData, id: flatmateRef.id }
-      commit('ADD_FLATMATE', { flatId, flatmateData: newFlatmate })
+      commit('ADD_FLATMATE', { flat: getters.currentFlat, flatmateData: newFlatmate })
     })
-    await db.flats.doc(flatId).update({
+    await db.flats.doc(state.currentFlatId).update({
       emailsOfUninitializedUsers: firebase.firestore.FieldValue.arrayUnion(flatmateData.email)
     })
     commit('TOGGLE_LOADER', false)
-    return newFlatmate
+    return newFlatmate.id
   },
-  async updateFlatmate ({ commit }, { flatmateData, flatId }) {
+  async updateFlatmate ({ state, commit, getters }, flatmateData) {
     commit('TOGGLE_LOADER', true)
-    await db.flats.doc(flatId).collection('flatmates').doc(flatmateData.id).update(flatmateData)
-    commit('UPDATE_FLATMATE', { flatId, flatmateData })
+    await db.flats.doc(state.currentFlatId).collection('flatmates').doc(flatmateData.id).update(flatmateData)
+    commit('UPDATE_FLATMATE', { flat: getters.currentFlat, flatmateData })
     commit('TOGGLE_LOADER', false)
   },
-  async removeFlatmate ({ commit }, { flatId, flatmate, moveOutDate }) {
+  async removeFlatmate ({ state, commit, getters }, { flatmate, moveOutDate }) {
     commit('TOGGLE_LOADER', true)
-    const flatDoc = db.flats.doc(flatId)
+    const flatDoc = db.flats.doc(state.currentFlatId)
     await flatDoc.collection('flatmates').doc(flatmate.id).update({ endDate: moveOutDate })
 
     // Remove access
@@ -177,14 +177,14 @@ export default {
     }
     await flatDoc.update(updatedField)
 
-    commit('SET_FLATMATE_MOVE_OUT_DATE', { flatId, flatmateId: flatmate.id, moveOutDate })
+    commit('SET_FLATMATE_MOVE_OUT_DATE', { flat: getters.currentFlat, flatmateId: flatmate.id, moveOutDate })
     commit('TOGGLE_LOADER', false)
   },
-  async updateFlatmateItems ({ commit }, { flatId, flatmate, itemIdsToBeRemovedFrom, itemIdsToBeAddedAt }) {
+  async updateFlatmateItems ({ state, commit, getters }, { flatmate, itemIdsToBeRemovedFrom, itemIdsToBeAddedAt }) {
     commit('TOGGLE_LOADER', true)
     const batch = firestore.batch()
-    const itemsCollection = db.flats.doc(flatId).collection('items')
-    // TODO: This only works for 500: https://firebase.google.com/docs/firestore/manage-data/transactions
+    const itemsCollection = db.flats.doc(state.currentFlatId).collection('items')
+    // TODO: This only works for 500 records: https://firebase.google.com/docs/firestore/manage-data/transactions
     itemIdsToBeRemovedFrom.forEach(itemId => {
       const itemRef = itemsCollection.doc(itemId)
       batch.update(itemRef, { idsOfFlatmatesThatShareThis: firebase.firestore.FieldValue.arrayRemove(flatmate.id) })
@@ -196,7 +196,7 @@ export default {
 
     batch.commit().then(function () {
       commit('UPDATE_FLAT_ITEMS_SHARING_INFO', {
-        flatId,
+        flat: getters.currentFlat,
         flatmateId: flatmate.id,
         itemIdsToBeRemovedFrom,
         itemIdsToBeAddedAt

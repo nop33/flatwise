@@ -1,11 +1,6 @@
 <template>
   <div>
-    <AppBarThin
-      :backButtonCallback="back"
-      :title="pageTitle"
-      :actionButtonCallback="save"
-      actionButtonText="Save"
-    />
+    <AppBarThin :backButtonCallback="back" :title="pageTitle" :actionButtonCallback="save" actionButtonText="Save" />
     <v-main>
       <div class="d-flex justify-center ma-5">
         <v-btn color="primary" @click="selectAll = !selectAll">{{ selectAllLabel }}</v-btn>
@@ -21,7 +16,7 @@
                 <v-list-item-action>
                   <v-checkbox :input-value="active" color="primary"></v-checkbox>
                 </v-list-item-action>
-                <FlatItemsListItemContent :item="item" :flatId="flat.id" />
+                <FlatItemsListItemContent :item="item" />
                 <!-- TODO: Go to item details, but save state when going back -->
                 <!-- <v-list-item-icon @click.stop="iconClicked">
                   <v-icon>mdi-information-outline</v-icon>
@@ -37,7 +32,6 @@
 </template>
 
 <script>
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
 import { getFirstName } from '@/utils/utils'
 
 import FlatItemsListItemContent from '@/components/FlatItemsListItemContent.vue'
@@ -83,12 +77,13 @@ export default {
     }
   },
   async created () {
-    this.flat = getFlatFromStateById(this.flatId)
-    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
+    this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flat.id)
+      await this.$store.dispatch('fetchCurrentFlatItems')
     }
-    this.initialItemIds = this.flat.items.filter(item => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id))
+    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
+    this.initialItemIds = this.flat.items
+      .filter(item => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id))
       .map(item => item.id)
     this.sortedItems.forEach((item, index) => {
       if (item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id)) {
@@ -108,7 +103,6 @@ export default {
       const itemIdsToBeRemovedFrom = this.initialItemIds.filter(itemId => !checkedItemIds.includes(itemId))
       const itemIdsToBeAddedAt = checkedItemIds.filter(itemId => !this.initialItemIds.includes(itemId))
       this.$store.dispatch('updateFlatmateItems', {
-        flatId: this.flatId,
         flatmate: this.flatmate,
         itemIdsToBeRemovedFrom,
         itemIdsToBeAddedAt

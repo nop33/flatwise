@@ -32,7 +32,7 @@
         bottom
         right
         fixed
-        :to="{ name: 'Add Item', params: { flatId: flat.id } }"
+        :to="{ name: 'Add Item', params: { flatId } }"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
-
 import FlatItems from '@/components/FlatItems.vue'
 import Snackbar from '@/components/Snackbar.vue'
 
@@ -68,9 +66,9 @@ export default {
     }
   },
   async created () {
-    this.flat = getFlatFromStateById(this.flatId)
+    this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flat.id)
+      this.$store.dispatch('fetchCurrentFlatItems')
     }
   }
 }

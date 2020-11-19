@@ -1,11 +1,6 @@
 <template>
   <div>
-    <AppBarThin
-      :backButtonCallback="back"
-      title="Edit item"
-      :actionButtonCallback="save"
-      actionButtonText="Save"
-    />
+    <AppBarThin :backButtonCallback="back" title="Edit item" :actionButtonCallback="save" actionButtonText="Save" />
     <v-main>
       <ItemForm v-model="item" :allFlatmates="allFlatmates" />
     </v-main>
@@ -13,9 +8,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getFlatFromStateById, fetchFlatItemsAndStoreInFlatWithId } from '@/utils/getters'
-
 import ItemForm from '@/components/ItemForm.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
 
@@ -35,17 +27,12 @@ export default {
       allFlatmates: []
     }
   },
-  computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ])
-  },
   async created () {
-    this.flat = getFlatFromStateById(this.flatId)
-    this.allFlatmates = this.currentFlatmates(this.flatId)
+    this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
-      await fetchFlatItemsAndStoreInFlatWithId(this.flatId)
+      await this.$store.dispatch('fetchCurrentFlatItems')
     }
+    this.allFlatmates = this.$store.getters.currentFlatmates
     this.item = this.flat.items.find(item => item.id === this.itemId)
   },
   methods: {
