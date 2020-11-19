@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VueFirestore from 'vue-firestore'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
@@ -12,8 +11,6 @@ import firestore from './firebase.js'
 import { createUserObject } from './store/models.js'
 
 Vue.config.productionTip = false
-
-Vue.use(VueFirestore)
 
 Vue.prototype.$db = {
   users: firestore.collection('users')
