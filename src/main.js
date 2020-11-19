@@ -9,25 +9,13 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import firestore from './firebase.js'
 import { createUserObject } from './store/models.js'
+import './filters'
 
 Vue.config.productionTip = false
 
 Vue.prototype.$db = {
   users: firestore.collection('users')
 }
-
-Vue.filter('round', function (value) {
-  if (value !== 0 && !value) return ''
-  value = parseFloat(value)
-  return Math.floor(value * 100) / 100
-})
-
-Vue.filter('humanReadable', function (value) {
-  if (!value) return ''
-  const date = new Date(value)
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  return new Intl.DateTimeFormat('en-GB', options).format(date)
-})
 
 new Vue({
   router,
