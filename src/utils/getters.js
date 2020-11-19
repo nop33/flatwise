@@ -4,7 +4,7 @@ export function getFlatFromStateById (flatId) {
   let flat = store.selectedFlat
   if (!flat) {
     flat = store.getters.flatById(flatId)
-    store.dispatch('selectFlat', flat)
+    store.commit('SET_SELECTED_FLAT', flat)
   }
   return flat
 }

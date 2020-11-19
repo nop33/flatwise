@@ -97,7 +97,7 @@ export default {
     })
     this.initialCheckedItems = [...this.checkedItems]
     // page form is always valid here
-    this.$store.dispatch('setPageFormValidity', true)
+    this.$store.commit('SET_PAGE_FORM_VALIDITY', true)
   },
   methods: {
     back () {
