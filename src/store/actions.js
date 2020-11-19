@@ -9,15 +9,6 @@ const db = {
 }
 
 export default {
-  setPageFormValidity ({ commit }, validity) {
-    commit('SET_PAGE_FORM_VALIDITY', validity)
-  },
-  selectFlat ({ commit }, flat) {
-    commit('SET_SELECTED_FLAT', flat)
-  },
-  setUser ({ commit }, user) {
-    commit('SET_USER', user)
-  },
   async registerUser ({ commit }, user) {
     await db.users.doc(user.id).set(user)
     commit('SET_USER', user)
