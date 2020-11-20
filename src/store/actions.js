@@ -134,14 +134,15 @@ export default {
       })
     })
   },
-  async updateFlat ({ commit }, flatData) {
+  async updateFlat ({ commit, getters }, flatData) {
     commit('TOGGLE_LOADER', true)
+    const flat = getters.currentFlat
     await db.flats.doc(flatData.id).update({
       name: flatData.name,
       depreciationRate: flatData.depreciationRate,
       lowestPriceRate: flatData.lowestPriceRate
     })
-    commit('UPDATE_FLAT', flatData)
+    commit('UPDATE_FLAT', { flat, flatData })
     commit('TOGGLE_LOADER', false)
   },
   async addFlatmate ({ state, commit, getters }, flatmateData) {
