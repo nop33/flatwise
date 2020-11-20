@@ -11,7 +11,7 @@
         </div>
         <div class="d-flex justify-space-around">
           <v-btn :to="{name: 'Balances'}" color="secondary">Balances</v-btn>
-          <v-btn :to="{ name: 'Edit Flat', params: { flatId } }" color="primary">Settings</v-btn>
+          <v-btn :to="{ name: 'Flat Edit', params: { flatId } }" color="primary">Settings</v-btn>
         </div>
       </div>
     </v-app-bar>
@@ -32,7 +32,7 @@
         bottom
         right
         fixed
-        :to="{ name: 'Add Item', params: { flatId } }"
+        :to="{ name: 'Item Add', params: { flatId } }"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>

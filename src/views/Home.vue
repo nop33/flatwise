@@ -4,7 +4,7 @@
     <v-main>
       <FlatsList :flats="flats" />
       <div class="d-flex justify-center ma-5">
-        <v-btn :to="{name: 'Add Flat'}">Create new flat</v-btn>
+        <v-btn :to="{name: 'Flat Add'}">Create new flat</v-btn>
       </div>
     </v-main>
   </div>

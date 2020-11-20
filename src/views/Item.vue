@@ -9,7 +9,7 @@
         <div class="mt-2">{{ item.price }} CHF</div>
         <div class="text-caption mt-1">Bought on {{ item.date | humanReadable }}</div>
       </v-toolbar-title>
-      <v-btn color="secondary" dark absolute bottom right fab :to="{ name: 'Edit Item', params: { flatId, itemId } }">
+      <v-btn color="secondary" dark absolute bottom right fab :to="{ name: 'Item Edit', params: { flatId, itemId } }">
         <v-icon>mdi-pencil-outline</v-icon>
       </v-btn>
     </v-app-bar>
@@ -116,7 +116,7 @@ export default {
   watch: {
     selectedFlatmateIndex (flatmateIndex) {
       const flatmateId = this.flatmatesThatShareThis[flatmateIndex].id
-      this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId } })
+      this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId } })
     }
   },
   async created () {
