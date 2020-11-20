@@ -23,7 +23,7 @@
       </div>
       <v-divider />
       <div class="d-flex justify-center ma-5">
-        <v-btn color="warning" text :to="{ name: 'Remove Flatmate', params: { flatId, flatmateId } }">
+        <v-btn color="warning" text :to="{ name: 'Flatmate Move Out', params: { flatId, flatmateId } }">
           <v-icon left>mdi-account-arrow-right-outline</v-icon>
           Remove flatmate
         </v-btn>
@@ -94,7 +94,7 @@ ${getFirstName(this.user.name)}`)
   },
   methods: {
     goToFlatEdit () {
-      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
+      this.$router.push({ name: 'Flat Edit', params: { flatId: this.flatId } })
     },
     back () {
       this.backButtonCallback ? this.backButtonCallback() : this.goToFlatEdit()

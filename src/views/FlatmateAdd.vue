@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push({ name: 'Edit Flat', params: { flatId: this.flatId } })
+      this.$router.push({ name: 'Flat Edit', params: { flatId: this.flatId } })
     },
     save () {
       this.$store.dispatch('addFlatmate', this.flatmate).then(flatmateId => {

@@ -39,10 +39,10 @@ export default {
   watch: {
     selectedFlatmateIndex (flatmateIndex) {
       if (flatmateIndex === 0) {
-        this.$router.push({ name: 'Add Flatmate', params: { flatId: this.flatId } })
+        this.$router.push({ name: 'Flatmate Add', params: { flatId: this.flatId } })
       } else {
         const flatmateId = this.flatmates[flatmateIndex - 1].id
-        this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId } })
+        this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId } })
       }
     }
   }
