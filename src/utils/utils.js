@@ -11,6 +11,9 @@ function calculateDaysBetween (startDate, endDate) {
 
 function calculateItemValueOnDate (item, date) {
   const daysSincePurchase = calculateDaysBetween(item.date, date)
+  if (daysSincePurchase < 0) {
+    return 0
+  }
   const dailyDepreciationRate = item.depreciationRate / 100 / 365
   const depreciation = daysSincePurchase * dailyDepreciationRate * item.price
   const lowestPrice = item.price * item.lowestPriceRate / 100
