@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     back () {
-      this.$router.push({ name: 'Edit Flatmate', params: { flatId: this.flatId, flatmateId: this.flatmateId } })
+      this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId: this.flatmateId } })
     },
     save () {
       const checkedItemIds = this.checkedItems.map(index => this.sortedItems[index].id)
