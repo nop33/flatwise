@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
+import { calculateItemValueOnDate } from '@/utils/utils'
 
 import Sheet from '@/components/Sheet.vue'
 import BalancesList from '@/components/BalancesList.vue'
@@ -100,9 +100,6 @@ export default {
   methods: {
     back () {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
-    },
-    calculateNumberOfDaysOwned (date) {
-      return Math.floor(calculateDaysBetween(date, this.balanceOnDate))
     },
     calculateBalances () {
       const balances = []
