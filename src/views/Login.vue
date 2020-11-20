@@ -22,7 +22,7 @@ export default {
   mounted () {
     var ui = new firebaseui.auth.AuthUI(firebase.auth())
     var uiConfig = {
-      signInSuccessUrl: '/register',
+      signInSuccessUrl: '/',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID

@@ -24,17 +24,25 @@ new Vue({
   render: h => h(App),
   created () {
     firebase.auth().onAuthStateChanged(user => {
+      console.log('calling onAuthStateChanged in main.js')
       if (user) {
-        if (!store.state.user) {
-          const storeUser = createUserObject(
-            user.uid,
-            user.displayName,
-            user.email,
-            user.photoURL
-          )
-          store.commit('SET_USER', storeUser)
-        }
-        store.dispatch('initializeStore')
+        const currentUserId = firebase.auth().currentUser.uid
+        this.$db.users.doc(currentUserId).get().then(doc => {
+          if (!doc.exists) {
+            const newUser = createUserObject(user.uid, user.displayName, user.email, user.photoURL)
+            this.$store.dispatch('registerUser', newUser).then(() => {
+              console.log('initializeStore after registering user')
+              store.dispatch('initializeStore')
+            })
+          } else {
+            if (!store.state.user) {
+              const storeUser = createUserObject(user.uid, user.displayName, user.email, user.photoURL)
+              store.commit('SET_USER', storeUser)
+            }
+            console.log('initializeStore after just setting user in state')
+            store.dispatch('initializeStore')
+          }
+        })
       }
     })
   }

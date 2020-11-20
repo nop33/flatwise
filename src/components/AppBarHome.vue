@@ -55,9 +55,11 @@ export default {
   },
   methods: {
     logUserOut () {
-      firebase.auth().signOut().then(function () {
+      const self = this
+      firebase.auth().signOut().then(() => {
         console.log('Signed Out')
-      }, function (error) {
+        self.$router.push({ name: 'Login' })
+      }, (error) => {
         console.error('Sign Out Error', error)
       })
     }

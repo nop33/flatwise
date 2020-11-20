@@ -29,35 +29,32 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.params.flatId) {
-    store.commit('SET_CURRENT_FLAT_ID', to.params.flatId)
-  }
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      // TODO: Clean this up
-      // if (!store.state.user) {
-      //   store.commit('SET_USER', {
-      //     id: user.uid,
-      //     name: user.displayName,
-      //     email: user.email,
-      //     photo: user.photoURL
-      //   })
-      // }
-    } else if (to.name !== 'Login') {
-      store.commit('SET_USER', null)
-      next({ name: 'Login' })
-    }
-    next()
+function isUserAuthenticated () {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+      console.log('calling onAuthStateChanged in isUserAuthenticated (routes)')
+      unsubscribe()
+      resolve(!!user)
+    }, reject)
   })
-  // TODO: Clean this up
-  // router.beforeEach((to, from, next) => {
-  //   if (to.name !== 'login' && !isAuthenticated) {
-  //     next({ name: 'login' });
-  //   } else {
-  //     next();
-  //   }
-  // });
+}
+
+router.beforeEach(async (to, from, next) => {
+  console.log('entering guard...')
+
+  if (to.name !== 'Login' && !await isUserAuthenticated()) {
+    store.commit('SET_USER', null)
+    console.log('calling next(Login)')
+    next({ name: 'Login' })
+  } else {
+    if (to.params.flatId) {
+      store.commit('SET_CURRENT_FLAT_ID', to.params.flatId)
+    }
+    console.log('calling next()')
+    next()
+  }
+
+  console.log('exiting guard...')
 })
 
 export default router
