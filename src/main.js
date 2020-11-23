@@ -9,7 +9,7 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import firestore from './firebase.js'
 import { createUserObject } from './store/models.js'
-import './filters'
+import './utils/filters'
 
 Vue.config.productionTip = false
 
