@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { initializeFlatAndItems } from '@/utils/mixins'
+
 import ItemForm from '@/components/ItemForm.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
 
@@ -33,11 +35,10 @@ export default {
       }
     }
   },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      await this.$store.dispatch('fetchCurrentFlatItems')
-    }
+  mixins: [
+    initializeFlatAndItems
+  ],
+  created () {
     this.allFlatmates = this.$store.getters.currentFlatmates
     this.item.idsOfFlatmatesThatShareThis = this.allFlatmates.map(flatmate => flatmate.id)
     this.item.depreciationRate = this.flat.depreciationRate

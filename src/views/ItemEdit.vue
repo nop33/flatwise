@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import { initializeFlatAndItems } from '@/utils/mixins'
+
 import ItemForm from '@/components/ItemForm.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
 
@@ -27,14 +29,18 @@ export default {
       allFlatmates: []
     }
   },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      await this.$store.dispatch('fetchCurrentFlatItems')
+  watch: {
+    'flat.items' (newValue) {
+      if (!newValue) {
+        return
+      }
+      this.item = this.flat.items.find(item => item.id === this.itemId)
+      this.allFlatmates = this.$store.getters.currentFlatmates
     }
-    this.allFlatmates = this.$store.getters.currentFlatmates
-    this.item = this.flat.items.find(item => item.id === this.itemId)
   },
+  mixins: [
+    initializeFlatAndItems
+  ],
   methods: {
     goToItem () {
       return this.$router.push({ name: 'Item', params: { flatId: this.flatId, itemId: this.itemId } })
