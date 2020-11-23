@@ -44,6 +44,7 @@
 <script>
 import FlatItems from '@/components/FlatItems.vue'
 import Snackbar from '@/components/Snackbar.vue'
+import { initializeFlatAndItems } from '@/utils/mixins'
 
 export default {
   components: {
@@ -54,6 +55,9 @@ export default {
     'flatId',
     'flatmateRemoved'
   ],
+  mixins: [
+    initializeFlatAndItems
+  ],
   data: () => {
     return {
       flat: {},
@@ -63,12 +67,6 @@ export default {
   computed: {
     snackbarText () {
       return this.flatmateRemoved ? `Successfully removed ${this.flatmateRemoved.name}.` : ''
-    }
-  },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      this.$store.dispatch('fetchCurrentFlatItems')
     }
   }
 }

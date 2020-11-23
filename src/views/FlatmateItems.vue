@@ -33,6 +33,7 @@
 
 <script>
 import { getFirstName } from '@/utils/utils'
+import { initializeFlatAndItems } from '@/utils/mixins'
 
 import FlatItemsListItemContent from '@/components/FlatItemsListItemContent.vue'
 import AppBarThin from '@/components/AppBarThin.vue'
@@ -74,25 +75,29 @@ export default {
       } else {
         this.checkedItems = this.initialCheckedItems
       }
+    },
+    'flat.items' (newValue) {
+      if (!newValue) {
+        return
+      }
+      this.initialItemIds = this.flat.items
+        .filter(item => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id))
+        .map(item => item.id)
+      this.sortedItems.forEach((item, index) => {
+        if (item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id)) {
+          this.checkedItems.push(index)
+        }
+      })
+      this.initialCheckedItems = [...this.checkedItems]
+      // page form is always valid here
+      this.$store.commit('SET_PAGE_FORM_VALIDITY', true)
     }
   },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      await this.$store.dispatch('fetchCurrentFlatItems')
-    }
+  mixins: [
+    initializeFlatAndItems
+  ],
+  created () {
     this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
-    this.initialItemIds = this.flat.items
-      .filter(item => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id))
-      .map(item => item.id)
-    this.sortedItems.forEach((item, index) => {
-      if (item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id)) {
-        this.checkedItems.push(index)
-      }
-    })
-    this.initialCheckedItems = [...this.checkedItems]
-    // page form is always valid here
-    this.$store.commit('SET_PAGE_FORM_VALIDITY', true)
   },
   methods: {
     back () {
