@@ -70,6 +70,7 @@
 
 <script>
 import { calculateDaysBetween, calculateItemValueOnDate } from '@/utils/utils'
+import { initializeFlatAndItems } from '@/utils/mixins'
 
 import Avatar from '@/components/Avatar.vue'
 import FlatmateListItem from '@/components/FlatmateListItem.vue'
@@ -117,15 +118,17 @@ export default {
     selectedFlatmateIndex (flatmateIndex) {
       const flatmateId = this.flatmatesThatShareThis[flatmateIndex].id
       this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId } })
+    },
+    'flat.items' (newValue) {
+      if (!newValue) {
+        return
+      }
+      this.item = this.flat.items.find(item => item.id === this.itemId)
     }
   },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      await this.$store.dispatch('fetchCurrentFlatItems')
-    }
-    this.item = this.flat.items.find(item => item.id === this.itemId)
-  },
+  mixins: [
+    initializeFlatAndItems
+  ],
   methods: {
     back () {
       this.backButtonCallback ? this.backButtonCallback() : this.goToFlat()

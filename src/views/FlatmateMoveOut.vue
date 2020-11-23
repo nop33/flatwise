@@ -85,6 +85,7 @@
 
 <script>
 import { generateMoveOutReport } from '@/utils/pdf'
+import { initializeFlatAndItems } from '@/utils/mixins'
 
 import Avatar from '@/components/Avatar.vue'
 import FlatmateDebtCalculator from '@/components/FlatmateDebtCalculator.vue'
@@ -111,11 +112,10 @@ export default {
       calculatorData: {}
     }
   },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      await this.$store.dispatch('fetchCurrentFlatItems')
-    }
+  mixins: [
+    initializeFlatAndItems
+  ],
+  created () {
     this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
   },
   methods: {

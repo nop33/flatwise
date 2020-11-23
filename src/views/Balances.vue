@@ -50,6 +50,7 @@
 
 <script>
 import { calculateItemValueOnDate } from '@/utils/utils'
+import { initializeFlatAndItems } from '@/utils/mixins'
 
 import Sheet from '@/components/Sheet.vue'
 import BalancesList from '@/components/BalancesList.vue'
@@ -75,6 +76,9 @@ export default {
       totalValue: 0
     }
   },
+  mixins: [
+    initializeFlatAndItems
+  ],
   computed: {
     earliestFlatmateMoveInDate () {
       return this.flat.flatmates.reduce((lowestDate, flatmate) => {
@@ -88,14 +92,10 @@ export default {
   watch: {
     balanceOnDate () {
       this.calculateBalances()
+    },
+    'flat.items' () {
+      this.calculateBalances()
     }
-  },
-  async created () {
-    this.flat = this.$store.getters.currentFlat
-    if (!this.flat.items) {
-      await this.$store.dispatch('fetchCurrentFlatItems')
-    }
-    this.calculateBalances()
   },
   methods: {
     back () {
