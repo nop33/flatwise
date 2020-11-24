@@ -9,13 +9,11 @@ describe('Avatar.vue', () => {
 
   beforeEach(() => { vuetify = new Vuetify() })
 
-  function wrapperGenerator (user) {
+  function wrapperGenerator (propsData) {
     return shallowMount(Avatar, {
       localVue,
       vuetify,
-      propsData: {
-        user
-      }
+      propsData
     })
   }
 
@@ -24,8 +22,9 @@ describe('Avatar.vue', () => {
       photo: 'https://randomuser.me/api/portraits/lego/2.jpg',
       name: 'Lego figure'
     }
-    const wrapper = wrapperGenerator(user)
+    const wrapper = wrapperGenerator({ user })
     expect(wrapper.find('img').attributes().src).toBe(user.photo)
+    expect(wrapper.element).toMatchSnapshot()
   })
 
   test('renders an avatar with initials', () => {
@@ -33,7 +32,17 @@ describe('Avatar.vue', () => {
       photo: '',
       name: 'Lego figure'
     }
-    const wrapper = wrapperGenerator(user)
+    const wrapper = wrapperGenerator({ user })
     expect(wrapper.text()).toBe('LF')
+    expect(wrapper.element).toMatchSnapshot()
+  })
+
+  test('renders an smallere avatar with border', () => {
+    const user = {
+      photo: '',
+      name: 'Lego figure'
+    }
+    const wrapper = wrapperGenerator({ user, border: '', size: '24' })
+    expect(wrapper.element).toMatchSnapshot()
   })
 })
