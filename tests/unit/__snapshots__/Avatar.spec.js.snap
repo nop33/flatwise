@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Avatar.vue renders an avatar with an image 1`] = `
+<v-avatar-stub
+  class=""
+  size="48"
+  style="background-color: rgb(172, 172, 172);"
+>
+  <img
+    alt="Avatar"
+    src="https://randomuser.me/api/portraits/lego/2.jpg"
+  />
+</v-avatar-stub>
+`;
+
+exports[`Avatar.vue renders an avatar with initials 1`] = `
+<v-avatar-stub
+  class=""
+  size="48"
+  style="background-color: rgb(172, 172, 172);"
+>
+  <span
+    class="white--text"
+  >
+    LF
+  </span>
+</v-avatar-stub>
+`;
+
+exports[`Avatar.vue renders an smallere avatar with border 1`] = `
+<v-avatar-stub
+  class="has-border"
+  size="24"
+  style="background-color: rgb(172, 172, 172);"
+>
+  <span
+    class="white--text"
+  >
+    LF
+  </span>
+</v-avatar-stub>
+`;
