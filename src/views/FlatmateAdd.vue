@@ -36,10 +36,13 @@ export default {
     back () {
       this.$router.push({ name: 'Flat Edit', params: { flatId: this.flatId } })
     },
-    save () {
-      this.$store.dispatch('addFlatmate', this.flatmate).then(flatmateId => {
+    async save () {
+      const flatmateId = await this.$store.dispatch('addFlatmate', this.flatmate)
+      if (this.flat.items && this.flat.items.length) {
         this.$router.push({ name: 'Flatmate Items', params: { flatId: this.flatId, flatmateId } })
-      })
+      } else {
+        this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
+      }
     }
   }
 }
