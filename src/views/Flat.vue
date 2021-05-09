@@ -10,8 +10,13 @@
           {{ flat.name }}
         </div>
         <div class="d-flex justify-space-around">
-          <v-btn :to="{name: 'Balances'}" color="secondary">Balances</v-btn>
-          <v-btn :to="{ name: 'Flat Edit', params: { flatId } }" color="primary">Settings</v-btn>
+          <v-btn :to="{name: 'Balances'}" color="secondary">
+            <v-icon left>mdi-scale-balance</v-icon>
+            Balances
+          </v-btn>
+          <v-btn :to="{ name: 'Flat Edit', params: { flatId } }" color="primary">
+            <v-icon left>mdi-cog</v-icon>
+            Settings</v-btn>
         </div>
       </div>
     </v-app-bar>
