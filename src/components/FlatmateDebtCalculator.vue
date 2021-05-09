@@ -39,15 +39,16 @@ export default {
   ],
   data: () => {
     return {
-      totalDebt: 0,
-      debt: [],
-      sharePerItem: []
+      debt: []
     }
   },
   computed: {
     ...mapGetters([
       'currentFlatmates'
-    ])
+    ]),
+    totalDebt () {
+      return this.debt.reduce((accumulator, debtShare) => accumulator + debtShare.share, 0)
+    }
   },
   created () {
     this.calculateDebt()
@@ -58,8 +59,7 @@ export default {
       const currentFlatmates = this.$store.getters.currentFlatmates
 
       this.debt = []
-      this.sharePerItem = []
-      this.totalDebt = 0
+      const sharePerItem = []
 
       const remainingFlatmates = currentFlatmates.filter(flatmate => flatmate.id !== this.flatmate.id)
       remainingFlatmates.forEach(flatmate => {
@@ -79,10 +79,9 @@ export default {
 
         idsOfFlatmatesMovedInByDate.filter(id => id !== this.flatmate.id).forEach(id => {
           amountsPerFlatmate[id] += shareSplitBetweenRemainingFlatmates
-          this.totalDebt += shareSplitBetweenRemainingFlatmates
         })
 
-        this.sharePerItem.push({
+        sharePerItem.push({
           item: item,
           share: shareOfFlatmateOfInterest
         })
@@ -98,7 +97,7 @@ export default {
       this.$emit('input', {
         debt: this.debt,
         totalDebt: this.totalDebt,
-        sharePerItem: this.sharePerItem
+        sharePerItem: sharePerItem
       })
     }
   }

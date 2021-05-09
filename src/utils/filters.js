@@ -2,7 +2,6 @@ import Vue from 'vue'
 
 function round (value) {
   if (value !== 0 && !value) return ''
-  debugger
   value = parseFloat(value)
   return Math.round(value * 100) / 100
 }
