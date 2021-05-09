@@ -16,12 +16,12 @@
       </div>
     </v-app-bar>
     <v-main>
-      <FlatItems :flat="flat" />
-      <v-container v-if="flat.items && flat.items.length === 0">
+      <FlatItems :flat="flat" v-if="flat.items && flat.items.length" />
+      <v-container v-else>
         <v-row>
           <v-col>
             <div class="text--disabled">
-              Your flat seems unfurnished. Add some items with the button below!
+              Your flat seems unfurnished. <router-link :to="{name: 'Item Add'}">Add items</router-link> you have purchased or <router-link :to="{ name: 'Flatmate Add' }">add your flatmates</router-link>.
             </div>
           </v-col>
         </v-row>
