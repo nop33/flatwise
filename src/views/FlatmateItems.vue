@@ -2,9 +2,15 @@
   <div>
     <AppBarThin :backButtonCallback="back" :title="pageTitle" :actionButtonCallback="save" actionButtonText="Save" />
     <v-main>
-      <div class="d-flex justify-center ma-5">
-        <v-btn color="primary" @click="selectAll = !selectAll">{{ selectAllLabel }}</v-btn>
-      </div>
+      <v-banner two-line>
+
+        These are the items that exist in the flat.<br>
+        Which of these should be shared with {{ flatmatesFirstName }}?
+
+        <template v-slot:actions>
+          <v-btn color="primary" @click="selectAll = !selectAll">{{ selectAllLabel }}</v-btn>
+        </template>
+      </v-banner>
 
       <v-divider/>
 
@@ -62,10 +68,13 @@ export default {
       return this.flat.items ? [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1) : []
     },
     pageTitle () {
-      return `${getFirstName(this.flatmate.name)}'s items`
+      return `${this.flatmatesFirstName}'s items`
+    },
+    flatmatesFirstName () {
+      return getFirstName(this.flatmate.name)
     },
     selectAllLabel () {
-      return this.selectAll ? 'Reset to current items' : 'Select all'
+      return this.selectAll ? 'Reset' : 'Select all'
     }
   },
   watch: {
