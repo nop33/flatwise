@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="max-width">
     <router-view v-if="!loading"></router-view>
     <Loader v-else />
   </v-app>
@@ -36,5 +36,13 @@ export default {
   top: 0;
   padding: inherit;
   z-index: -1;
+}
+
+.max-width {
+  max-width: 768px;
+  margin: auto;
+  // TODO: Find a better way to theme this
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 </style>
