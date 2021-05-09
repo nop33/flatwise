@@ -12,13 +12,13 @@
       <div class="d-flex justify-center ma-5">
         <v-btn block color="primary" :to="{ name: 'Flatmate Items', params: { flatId, flatmateId } }">
           <v-icon left>mdi-format-list-checks</v-icon>
-          See flatmate items
+          See items shared with {{ flatmateFirstName }}
         </v-btn>
       </div>
       <div class="d-flex justify-center ma-5">
         <v-btn block color="secondary" :to="{ name: 'Flatmate Move In', params: { flatId, flatmateId } }">
           <v-icon left>mdi-currency-usd</v-icon>
-          Move in payment
+          Calculate {{ flatmateFirstName }}'s moving in payment
         </v-btn>
       </div>
       <v-divider />
@@ -67,9 +67,12 @@ export default {
     ...mapState([
       'user'
     ]),
+    flatmateFirstName () {
+      return getFirstName(this.flatmate.name)
+    },
     invitationText () {
       const subject = encodeURI('Join me on Flatwise!')
-      const body = encodeURI(`Hey ${getFirstName(this.flatmate.name)}!
+      const body = encodeURI(`Hey ${this.flatmateFirstName}!
 
 I'd like to invite you to Flatwise where we calculate the depreciation of our furniture.
 
