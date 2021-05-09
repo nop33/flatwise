@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="!selectedFlatIndex" class="mx-auto" max-width="500" flat>
+  <v-card v-if="!selectedFlatIndex" class="mx-auto" flat>
     <v-list two-line>
       <v-list-item-group v-model="selectedFlatIndex">
         <v-subheader v-if="flats.length > 0" inset>Flats</v-subheader>
