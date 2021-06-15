@@ -1,11 +1,11 @@
 function treatAsUTC (date) {
-  var result = new Date(date)
+  const result = new Date(date)
   result.setMinutes(result.getMinutes() - result.getTimezoneOffset())
   return result
 }
 
 function calculateDaysBetween (startDate, endDate) {
-  var millisecondsPerDay = 24 * 60 * 60 * 1000
+  const millisecondsPerDay = 24 * 60 * 60 * 1000
   return (treatAsUTC(endDate) - treatAsUTC(startDate)) / millisecondsPerDay
 }
 
@@ -24,12 +24,12 @@ function calculateItemValueOnDate (item, date) {
 
 // Stolen from https://medium.com/@pppped/compute-an-arbitrary-color-for-user-avatar-starting-from-his-username-with-javascript-cd0675943b66
 function stringToHslColor (str, saturation = 30, lightness = 75) {
-  var hash = 0
-  for (var i = 0; i < str.length; i++) {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash)
   }
 
-  var h = hash % 360
+  const h = hash % 360
   return 'hsl(' + h + ', ' + saturation + '%, ' + lightness + '%)'
 }
 

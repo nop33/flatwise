@@ -20,8 +20,8 @@ import 'firebaseui/dist/firebaseui.css'
 
 export default {
   mounted () {
-    var ui = new firebaseui.auth.AuthUI(firebase.auth())
-    var uiConfig = {
+    const ui = new firebaseui.auth.AuthUI(firebase.auth())
+    const uiConfig = {
       signInSuccessUrl: '/register',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
