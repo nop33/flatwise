@@ -75,65 +75,52 @@
 
 <script>
 export default {
-  props: [
-    'value',
-    'edit'
-  ],
+  props: ['value', 'edit'],
   data: () => {
     return {
       flat: {},
       isFormValid: false,
-      nameRules: [
-        v => !!v || 'Name is required'
-      ],
-      priceRules: [
-        v => !!v || 'Price is required',
-        v => v > 0 || 'Price cannot be 0 or below'
-      ],
-      rateRules: [
-        v => !!v || 'Rate is required',
-        v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
-      ],
-      dateRules: [
-        v => !!v || 'Date is required'
-      ]
+      nameRules: [(v) => !!v || 'Name is required'],
+      priceRules: [(v) => !!v || 'Price is required', (v) => v > 0 || 'Price cannot be 0 or below'],
+      rateRules: [(v) => !!v || 'Rate is required', (v) => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'],
+      dateRules: [(v) => !!v || 'Date is required']
     }
   },
   computed: {
-    isInEditMode () {
+    isInEditMode() {
       return this.edit !== undefined
     },
-    hint () {
-      return this.isInEditMode ? 'You can yet modify users, sorry :/ It\'ll come in the future!' : ''
+    hint() {
+      return this.isInEditMode ? "You can yet modify users, sorry :/ It'll come in the future!" : ''
     }
   },
   watch: {
-    flat (newValue) {
+    flat(newValue) {
       if (Object.keys(this.flat).length === 0 && this.item.constructor === Object) {
         this.flat = newValue
       }
     },
-    isFormValid (newValue) {
+    isFormValid(newValue) {
       this.$store.commit('SET_PAGE_FORM_VALIDITY', newValue)
     }
   },
-  created () {
+  created() {
     this.flat = { ...this.value }
   },
   methods: {
-    nameChanged ($event) {
+    nameChanged($event) {
       this.flat.name = $event
       this.$emit('input', this.flat)
     },
-    depreciationRateChanged ($event) {
+    depreciationRateChanged($event) {
       this.flat.depreciationRate = $event
       this.$emit('input', this.flat)
     },
-    lowestPriceRateChanged ($event) {
+    lowestPriceRateChanged($event) {
       this.flat.lowestPriceRate = $event
       this.$emit('input', this.flat)
     },
-    initialMoveInDateChanged ($event) {
+    initialMoveInDateChanged($event) {
       this.$refs.dialog.save($event)
       this.flat.initialMoveInDate = $event
       this.$emit('input', this.flat)

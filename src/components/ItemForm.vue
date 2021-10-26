@@ -37,11 +37,7 @@
                 readonly
               ></v-text-field>
             </template>
-            <v-date-picker
-              :value="value.date"
-              @input="dateChanged($event)"
-              scrollable
-            ></v-date-picker>
+            <v-date-picker :value="value.date" @input="dateChanged($event)" scrollable></v-date-picker>
           </v-dialog>
         </v-col>
         <v-col>
@@ -105,72 +101,59 @@ export default {
   components: {
     Avatar
   },
-  props: [
-    'value',
-    'allFlatmates'
-  ],
-  data () {
+  props: ['value', 'allFlatmates'],
+  data() {
     return {
       item: {},
       isFormValid: false,
-      nameRules: [
-        v => !!v || 'Name is required'
-      ],
-      dateRules: [
-        v => !!v || 'Date is required'
-      ],
-      priceRules: [
-        v => v > 0 || 'Price cannot be 0 or below'
-      ],
-      rateRules: [
-        v => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'
-      ],
-      flatmatesRules: [
-        v => v.length > 0 || 'Somebody must have paid for this, don\'t you think? :)'
-      ]
+      nameRules: [(v) => !!v || 'Name is required'],
+      dateRules: [(v) => !!v || 'Date is required'],
+      priceRules: [(v) => v > 0 || 'Price cannot be 0 or below'],
+      rateRules: [(v) => (v >= 0 && v <= 100) || 'Rate must be between 0 and 100'],
+      flatmatesRules: [(v) => v.length > 0 || "Somebody must have paid for this, don't you think? :)"]
     }
   },
   watch: {
-    value (newValue) {
+    value(newValue) {
       if (Object.keys(this.item).length === 0 && this.item.constructor === Object) {
         this.item = newValue
       }
     },
-    'value.depreciationRate' (newValue) {
+    'value.depreciationRate'(newValue) {
       if (newValue === 100) {
         this.lowestPriceRateChanged(0)
       }
     },
-    isFormValid (newValue) {
+    isFormValid(newValue) {
       this.$store.commit('SET_PAGE_FORM_VALIDITY', newValue)
     }
   },
-  created () {
+  created() {
     this.item = { ...this.value }
   },
   methods: {
-    nameChanged ($event) {
+    nameChanged($event) {
       this.item.name = $event
       this.$emit('input', this.item)
     },
-    priceChanged ($event) {
+    priceChanged($event) {
       this.item.price = parseFloat($event)
       this.$emit('input', this.item)
     },
-    dateChanged ($event) {
+    dateChanged($event) {
       this.$refs.dialog.save($event)
       this.item.date = $event
       this.$emit('input', this.item)
     },
-    depreciationRateChanged ($event) {
+    depreciationRateChanged($event) {
       this.item.depreciationRate = parseFloat($event)
       this.$emit('input', this.item)
     },
-    lowestPriceRateChanged ($event) {
+    lowestPriceRateChanged($event) {
       this.item.lowestPriceRate = parseFloat($event)
       this.$emit('input', this.item)
     },
-    idsOfFlatmatesThatShareThisChanged ($event) {
+    idsOfFlatmatesThatShareThisChanged($event) {
       this.item.idsOfFlatmatesThatShareThis = $event
       this.$emit('input', this.item)
     }

@@ -7,9 +7,11 @@ describe('Avatar.vue', () => {
   const localVue = createLocalVue()
   let vuetify
 
-  beforeEach(() => { vuetify = new Vuetify() })
+  beforeEach(() => {
+    vuetify = new Vuetify()
+  })
 
-  function wrapperGenerator (propsData) {
+  function wrapperGenerator(propsData) {
     return shallowMount(Avatar, {
       localVue,
       vuetify,

@@ -15,8 +15,7 @@ const argv = yargs
     }
   })
   .help()
-  .alias('help', 'h')
-  .argv
+  .alias('help', 'h').argv
 
 if (argv._.includes('export')) {
   if (!fs.existsSync(backupsDir)) {
@@ -25,14 +24,12 @@ if (argv._.includes('export')) {
 
   const serviceAccount = require('./keys/serviceAccountKey.json')
   firestoreService.initializeApp(serviceAccount, process.env.DATABASE_URL)
-  firestoreService
-    .backups([])
-    .then(data => {
-      const timestamp = new Date().toISOString()
-      fs.writeFile(`backups/${timestamp}-backup.json`, JSON.stringify(data), function (err) {
-        if (err) console.log('error', err)
-      })
+  firestoreService.backups([]).then((data) => {
+    const timestamp = new Date().toISOString()
+    fs.writeFile(`backups/${timestamp}-backup.json`, JSON.stringify(data), function (err) {
+      if (err) console.log('error', err)
     })
+  })
 } else if (argv._.includes('import')) {
   const serviceAccount = require('./keys/serviceAccountBackupKey.json')
   firestoreService.initializeApp(serviceAccount, process.env.BACKUP_DATABASE_URL)

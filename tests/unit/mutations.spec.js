@@ -23,7 +23,9 @@ describe('mutations.js', () => {
 
   let fakeState
 
-  beforeEach(() => { fakeState = { ...state } })
+  beforeEach(() => {
+    fakeState = { ...state }
+  })
 
   test('SET_CURRENT_FLAT_ID sets the state.currentFlatId', () => {
     const fakeId = 'abc'
@@ -56,20 +58,14 @@ describe('mutations.js', () => {
   })
 
   test('SET_FLATS sets the state.flats array', () => {
-    const fakeFlats = [
-      { ...flat },
-      { ...flat }
-    ]
+    const fakeFlats = [{ ...flat }, { ...flat }]
     mutations.SET_FLATS(fakeState, fakeFlats)
     expect(fakeState.flats.length).toBe(2)
   })
 
   test('SET_FLAT_ITEMS sets the flat.items', () => {
     const fakeFlat = { ...flat }
-    const fakeItems = [
-      { ...item },
-      { ...item }
-    ]
+    const fakeItems = [{ ...item }, { ...item }]
 
     fakeState.flats = [fakeFlat]
     mutations.SET_FLAT_ITEMS(fakeState, { flat: fakeFlat, items: fakeItems })

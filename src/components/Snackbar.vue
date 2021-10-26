@@ -14,20 +14,14 @@
 
 <script>
 export default {
-  props: [
-    'value',
-    'icon',
-    'text',
-    'color',
-    'timeout'
-  ],
+  props: ['value', 'icon', 'text', 'color', 'timeout'],
   data: () => {
     return {
       isVisible: false
     }
   },
   methods: {
-    changed ($event) {
+    changed($event) {
       this.isVisible = $event
       this.$emit('input', this.isVisible)
     }

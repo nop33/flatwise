@@ -21,17 +21,12 @@ new Vue({
   router,
   store,
   vuetify,
-  render: h => h(App),
-  created () {
-    firebase.auth().onAuthStateChanged(user => {
+  render: (h) => h(App),
+  created() {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         if (!store.state.user) {
-          const storeUser = createUserObject(
-            user.uid,
-            user.displayName,
-            user.email,
-            user.photoURL
-          )
+          const storeUser = createUserObject(user.uid, user.displayName, user.email, user.photoURL)
           store.commit('SET_USER', storeUser)
         }
         store.dispatch('initializeStore')

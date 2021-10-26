@@ -18,10 +18,7 @@ export default {
     ItemForm,
     AppBarThin
   },
-  props: [
-    'flatId',
-    'itemId'
-  ],
+  props: ['flatId', 'itemId'],
   data: () => {
     return {
       flat: {},
@@ -30,25 +27,26 @@ export default {
     }
   },
   watch: {
-    'flat.items' (newValue) {
+    'flat.items'(newValue) {
       if (!newValue) {
         return
       }
-      this.item = this.flat.items.find(item => item.id === this.itemId)
+      this.item = this.flat.items.find((item) => item.id === this.itemId)
       this.allFlatmates = this.$store.getters.currentFlatmates
     }
   },
-  mixins: [
-    initializeFlatAndItems
-  ],
+  mixins: [initializeFlatAndItems],
   methods: {
-    goToItem () {
-      return this.$router.push({ name: 'Item', params: { flatId: this.flatId, itemId: this.itemId } })
+    goToItem() {
+      return this.$router.push({
+        name: 'Item',
+        params: { flatId: this.flatId, itemId: this.itemId }
+      })
     },
-    back () {
+    back() {
       this.goToItem()
     },
-    save () {
+    save() {
       this.$store.dispatch('updateItem', this.item).then(this.goToItem)
     }
   }

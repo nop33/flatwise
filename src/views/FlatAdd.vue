@@ -33,11 +33,11 @@ export default {
     }
   },
   methods: {
-    back () {
+    back() {
       this.$router.push({ name: 'Home' })
     },
-    save () {
-      this.$store.dispatch('createFlat', this.flat).then(flatId => {
+    save() {
+      this.$store.dispatch('createFlat', this.flat).then((flatId) => {
         this.$router.push({ name: 'Flat', params: { flatId } })
       })
     }

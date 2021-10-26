@@ -21,8 +21,7 @@
         :date="flatmate.startDate"
       >
         <template #descriptionText="{ totalDebt }">
-          {{ flatmate.name }} has to pay a total of
-          <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
+          {{ flatmate.name }} has to pay a total of <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
           before moving in on {{ flatmate.startDate | humanReadable }}
         </template>
 
@@ -47,7 +46,6 @@
 </template>
 
 <script>
-
 import { generateMoveInReport } from '@/utils/pdf'
 import { initializeFlatAndItems } from '@/utils/mixins'
 
@@ -61,10 +59,7 @@ export default {
     Snackbar,
     FlatmateDebtCalculator
   },
-  props: [
-    'flatId',
-    'flatmateId'
-  ],
+  props: ['flatId', 'flatmateId'],
   data: () => {
     return {
       flat: {},
@@ -76,18 +71,19 @@ export default {
       calculatorData: {}
     }
   },
-  mixins: [
-    initializeFlatAndItems
-  ],
-  created () {
-    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
+  mixins: [initializeFlatAndItems],
+  created() {
+    this.flatmate = this.flat.flatmates.find((flatmate) => flatmate.id === this.flatmateId)
   },
   methods: {
-    back () {
-      this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId: this.flatmateId } })
+    back() {
+      this.$router.push({
+        name: 'Flatmate Edit',
+        params: { flatId: this.flatId, flatmateId: this.flatmateId }
+      })
     },
-    async downloadBreakdown () {
-      const data = this.calculatorData.sharePerItem.map(itemShare => {
+    async downloadBreakdown() {
+      const data = this.calculatorData.sharePerItem.map((itemShare) => {
         const item = itemShare.item
         const dataObject = {}
         dataObject.itemName = item.name

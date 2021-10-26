@@ -16,9 +16,7 @@ export default {
     FlatmateForm,
     AppBarThin
   },
-  props: [
-    'flatId'
-  ],
+  props: ['flatId'],
   data: () => {
     return {
       flat: {},
@@ -29,17 +27,20 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.flat = this.$store.getters.currentFlat
   },
   methods: {
-    back () {
+    back() {
       this.$router.push({ name: 'Flat Edit', params: { flatId: this.flatId } })
     },
-    async save () {
+    async save() {
       const flatmateId = await this.$store.dispatch('addFlatmate', this.flatmate)
       if (this.flat.items && this.flat.items.length) {
-        this.$router.push({ name: 'Flatmate Items', params: { flatId: this.flatId, flatmateId } })
+        this.$router.push({
+          name: 'Flatmate Items',
+          params: { flatId: this.flatId, flatmateId }
+        })
       } else {
         this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
       }

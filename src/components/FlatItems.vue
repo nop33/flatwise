@@ -27,16 +27,13 @@
 </template>
 
 <script>
-
 import FlatItemsListItemContent from '@/components/FlatItemsListItemContent.vue'
 
 export default {
   components: {
     FlatItemsListItemContent
   },
-  props: [
-    'flat'
-  ],
+  props: ['flat'],
   data: () => {
     return {
       selectedItemIndex: null,
@@ -44,21 +41,27 @@ export default {
     }
   },
   computed: {
-    sortedItems () {
+    sortedItems() {
       let items = []
       if (this.flat.items) {
-        items = [...this.flat.items].sort((a, b) => (a.date < b.date) ? 1 : -1)
+        items = [...this.flat.items].sort((a, b) => (a.date < b.date ? 1 : -1))
       }
       if (this.searchInput.length >= 2) {
-        items = items.filter(item => item.name.toLowerCase().includes(this.searchInput.toLowerCase()))
+        items = items.filter((item) => item.name.toLowerCase().includes(this.searchInput.toLowerCase()))
       }
       return items
     }
   },
   watch: {
-    selectedItemIndex (newValue) {
+    selectedItemIndex(newValue) {
       if (newValue >= 0) {
-        this.$router.push({ name: 'Item', params: { flatId: this.flat.id, itemId: this.sortedItems[newValue].id } })
+        this.$router.push({
+          name: 'Item',
+          params: {
+            flatId: this.flat.id,
+            itemId: this.sortedItems[newValue].id
+          }
+        })
       }
     }
   }

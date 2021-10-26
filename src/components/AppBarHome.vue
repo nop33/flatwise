@@ -14,7 +14,7 @@
         </v-list-item>
       </v-list>
       <v-list class="pa-0">
-        <v-divider/>
+        <v-divider />
         <v-list-item-group>
           <v-list-item v-if="user" @click="logUserOut">
             <v-list-item-icon>
@@ -49,17 +49,21 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'user'
-    ])
+    ...mapState(['user'])
   },
   methods: {
-    logUserOut () {
-      firebase.auth().signOut().then(function () {
-        console.log('Signed Out')
-      }, function (error) {
-        console.error('Sign Out Error', error)
-      })
+    logUserOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(
+          function () {
+            console.log('Signed Out')
+          },
+          function (error) {
+            console.error('Sign Out Error', error)
+          }
+        )
     }
   }
 }

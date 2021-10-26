@@ -25,10 +25,7 @@ describe('getters.js', () => {
   test('currentFlat returns the flat with id state.currentFlatId', () => {
     const fakeState = { ...state }
     fakeState.currentFlatId = 'def'
-    fakeState.flats = [
-      { ...flat },
-      { ...flat }
-    ]
+    fakeState.flats = [{ ...flat }, { ...flat }]
     fakeState.flats[1].id = 'def'
     const flatResult = getters.currentFlat(fakeState)
     expect(flatResult).toBeDefined()
@@ -38,10 +35,7 @@ describe('getters.js', () => {
   test('currentFlatmates returns the flatmates of the flat that have not moved out yet', () => {
     const fakeState = { ...state }
     const fakeFlat = { ...flat }
-    fakeFlat.flatmates = [
-      { ...flatmate },
-      { ...flatmate }
-    ]
+    fakeFlat.flatmates = [{ ...flatmate }, { ...flatmate }]
     fakeFlat.flatmates[0].endDate = '2020-07-31'
     fakeState.flats = [fakeFlat]
 
@@ -55,10 +49,7 @@ describe('getters.js', () => {
   test('pastFlatmates returns the flatmates of the flat that have moved out', () => {
     const fakeState = { ...state }
     const fakeFlat = { ...flat }
-    fakeFlat.flatmates = [
-      { ...flatmate },
-      { ...flatmate }
-    ]
+    fakeFlat.flatmates = [{ ...flatmate }, { ...flatmate }]
     fakeFlat.flatmates[0].endDate = '2020-07-31'
     fakeState.flats = [fakeFlat]
 

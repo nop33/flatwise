@@ -19,9 +19,6 @@ export default {
   components: {
     Avatar
   },
-  props: [
-    'flatmate',
-    'showInfo'
-  ]
+  props: ['flatmate', 'showInfo']
 }
 </script>

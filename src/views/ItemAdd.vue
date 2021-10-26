@@ -18,9 +18,7 @@ export default {
     ItemForm,
     AppBarThin
   },
-  props: [
-    'flatId'
-  ],
+  props: ['flatId'],
   data: () => {
     return {
       flat: {},
@@ -35,23 +33,21 @@ export default {
       }
     }
   },
-  mixins: [
-    initializeFlatAndItems
-  ],
-  created () {
+  mixins: [initializeFlatAndItems],
+  created() {
     this.allFlatmates = this.$store.getters.currentFlatmates
-    this.item.idsOfFlatmatesThatShareThis = this.allFlatmates.map(flatmate => flatmate.id)
+    this.item.idsOfFlatmatesThatShareThis = this.allFlatmates.map((flatmate) => flatmate.id)
     this.item.depreciationRate = this.flat.depreciationRate
     this.item.lowestPriceRate = this.flat.lowestPriceRate
   },
   methods: {
-    goToFlat () {
+    goToFlat() {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
     },
-    back () {
+    back() {
       this.goToFlat()
     },
-    save () {
+    save() {
       this.$store.dispatch('addItem', this.item).then(this.goToFlat)
     }
   }

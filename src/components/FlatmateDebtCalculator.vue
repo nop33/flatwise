@@ -2,13 +2,12 @@
   <div>
     <Sheet>
       <slot name="descriptionText" v-bind:totalDebt="totalDebt">
-        Total debt of {{ flatmate.name }}
-        on {{ flatmate.startDate | humanReadable }}
-        is <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
+        Total debt of {{ flatmate.name }} on {{ flatmate.startDate | humanReadable }} is
+        <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
       </slot>
     </Sheet>
 
-    <v-divider/>
+    <v-divider />
 
     <BalancesList :balances="debt">
       <template #rowText="{ balance }">
@@ -31,55 +30,51 @@ export default {
     Sheet,
     BalancesList
   },
-  props: [
-    'flat',
-    'flatmate',
-    'date',
-    'value'
-  ],
+  props: ['flat', 'flatmate', 'date', 'value'],
   data: () => {
     return {
       debt: []
     }
   },
   computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ]),
-    totalDebt () {
+    ...mapGetters(['currentFlatmates']),
+    totalDebt() {
       return this.debt.reduce((accumulator, debtShare) => accumulator + debtShare.share, 0)
     }
   },
-  created () {
+  created() {
     this.calculateDebt()
   },
   methods: {
-    calculateDebt () {
+    calculateDebt() {
       const amountsPerFlatmate = {}
       const currentFlatmates = this.$store.getters.currentFlatmates
 
       this.debt = []
       const sharePerItem = []
 
-      const remainingFlatmates = currentFlatmates.filter(flatmate => flatmate.id !== this.flatmate.id)
-      remainingFlatmates.forEach(flatmate => {
+      const remainingFlatmates = currentFlatmates.filter((flatmate) => flatmate.id !== this.flatmate.id)
+      remainingFlatmates.forEach((flatmate) => {
         amountsPerFlatmate[flatmate.id] = 0
       })
-      const items = this.flat.items.filter(item => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id) &&
-                                                   item.date <= this.date)
-      items.forEach(item => {
+      const items = this.flat.items.filter(
+        (item) => item.idsOfFlatmatesThatShareThis.includes(this.flatmate.id) && item.date <= this.date
+      )
+      items.forEach((item) => {
         const valueOnDate = calculateItemValueOnDate(item, this.date)
-        const idsOfFlatmatesMovedInByDate = item.idsOfFlatmatesThatShareThis.filter(id => {
-          const flatmate = currentFlatmates.find(flatmate => flatmate.id === id)
+        const idsOfFlatmatesMovedInByDate = item.idsOfFlatmatesThatShareThis.filter((id) => {
+          const flatmate = currentFlatmates.find((flatmate) => flatmate.id === id)
           return !!flatmate && flatmate.startDate <= this.date
         })
         const numberOfFlatmatesSharingThisOnDate = idsOfFlatmatesMovedInByDate.length
         const shareOfFlatmateOfInterest = valueOnDate / numberOfFlatmatesSharingThisOnDate
         const shareSplitBetweenRemainingFlatmates = shareOfFlatmateOfInterest / (numberOfFlatmatesSharingThisOnDate - 1)
 
-        idsOfFlatmatesMovedInByDate.filter(id => id !== this.flatmate.id).forEach(id => {
-          amountsPerFlatmate[id] += shareSplitBetweenRemainingFlatmates
-        })
+        idsOfFlatmatesMovedInByDate
+          .filter((id) => id !== this.flatmate.id)
+          .forEach((id) => {
+            amountsPerFlatmate[id] += shareSplitBetweenRemainingFlatmates
+          })
 
         sharePerItem.push({
           item: item,
@@ -87,7 +82,7 @@ export default {
         })
       })
 
-      remainingFlatmates.forEach(flatmate => {
+      remainingFlatmates.forEach((flatmate) => {
         this.debt.push({
           flatmate,
           share: amountsPerFlatmate[flatmate.id]

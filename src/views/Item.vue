@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app flat color="primary" dark prominent hide-on-scroll >
+    <v-app-bar app flat color="primary" dark prominent hide-on-scroll>
       <v-btn icon @click="back">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
@@ -21,17 +21,20 @@
         </v-list-item-group>
       </v-list>
 
-      <v-divider/>
+      <v-divider />
 
       <v-card flat>
         <v-card-subtitle class="font-weight-medium">Price details</v-card-subtitle>
         <v-card-text>
-          <div>Loses its value by <strong>{{ item.depreciationRate }}%</strong> each year</div>
+          <div>
+            Loses its value by
+            <strong>{{ item.depreciationRate }}%</strong> each year
+          </div>
           <div class="mt-2">
             It was bought
             <strong>{{ numberOfDaysOwned }}</strong>
             days ago, so it has lost its value by
-            <strong>{{ 100 - currentValuePercentage | round }}%</strong>
+            <strong>{{ (100 - currentValuePercentage) | round }}%</strong>
             so far and its current value is
             <strong>{{ currentValue | round }} CHF</strong>
           </div>
@@ -41,7 +44,7 @@
 
       <!-- TODO: Create component -->
       <div v-if="pastFlatmatesThatSharedThis.length">
-        <v-divider/>
+        <v-divider />
         <v-list>
           <v-subheader class="font-weight-medium">Past flatmates that shared this</v-subheader>
           <v-list-item v-for="flatmate in pastFlatmatesThatSharedThis" :key="flatmate.id">
@@ -55,7 +58,7 @@
         </v-list>
       </div>
 
-      <v-divider/>
+      <v-divider />
 
       <div class="d-flex justify-center ma-5">
         <v-btn color="warning" text @click="deleteItem">
@@ -63,7 +66,6 @@
           Delete item
         </v-btn>
       </div>
-
     </v-main>
   </div>
 </template>
@@ -80,11 +82,7 @@ export default {
     Avatar,
     FlatmateListItem
   },
-  props: [
-    'flatId',
-    'itemId',
-    'backButtonCallback'
-  ],
+  props: ['flatId', 'itemId', 'backButtonCallback'],
   data: () => {
     return {
       flat: {},
@@ -94,49 +92,50 @@ export default {
     }
   },
   computed: {
-    numberOfDaysOwned () {
+    numberOfDaysOwned() {
       return Math.floor(calculateDaysBetween(this.item.date, this.today))
     },
-    currentValue () {
+    currentValue() {
       return calculateItemValueOnDate(this.item, this.today)
     },
-    currentValuePercentage () {
+    currentValuePercentage() {
       return (this.currentValue / this.item.price) * 100
     },
-    flatmatesThatShareThis () {
-      return this.$store.getters.currentFlatmates.filter(flatmate => {
+    flatmatesThatShareThis() {
+      return this.$store.getters.currentFlatmates.filter((flatmate) => {
         return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
       })
     },
-    pastFlatmatesThatSharedThis () {
-      return this.$store.getters.pastFlatmates.filter(flatmate => {
+    pastFlatmatesThatSharedThis() {
+      return this.$store.getters.pastFlatmates.filter((flatmate) => {
         return this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id)
       })
     }
   },
   watch: {
-    selectedFlatmateIndex (flatmateIndex) {
+    selectedFlatmateIndex(flatmateIndex) {
       const flatmateId = this.flatmatesThatShareThis[flatmateIndex].id
-      this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId } })
+      this.$router.push({
+        name: 'Flatmate Edit',
+        params: { flatId: this.flatId, flatmateId }
+      })
     },
-    'flat.items' (newValue) {
+    'flat.items'(newValue) {
       if (!newValue) {
         return
       }
-      this.item = this.flat.items.find(item => item.id === this.itemId)
+      this.item = this.flat.items.find((item) => item.id === this.itemId)
     }
   },
-  mixins: [
-    initializeFlatAndItems
-  ],
+  mixins: [initializeFlatAndItems],
   methods: {
-    back () {
+    back() {
       this.backButtonCallback ? this.backButtonCallback() : this.goToFlat()
     },
-    goToFlat () {
+    goToFlat() {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
     },
-    deleteItem () {
+    deleteItem() {
       if (confirm(`Are you sure you wanna delete the "${this.item.name}"?`)) {
         this.$store.dispatch('deleteItem', this.item).then(this.goToFlat)
       }

@@ -51,9 +51,8 @@
           :date="moveOutDate"
         >
           <template #descriptionText="{ totalDebt }">
-            When {{ flatmate.name }} moves out
-            on {{ moveOutDate | humanReadable }},
-            they should get back a total of <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
+            When {{ flatmate.name }} moves out on {{ moveOutDate | humanReadable }}, they should get back a total of
+            <strong class="secondary--text">{{ totalDebt | round }}</strong> CHF
           </template>
 
           <template #balanceRowText="{ balance }">
@@ -97,10 +96,7 @@ export default {
     FlatmateDebtCalculator,
     Snackbar
   },
-  props: [
-    'flatId',
-    'flatmateId'
-  ],
+  props: ['flatId', 'flatmateId'],
   data: () => {
     return {
       flat: {},
@@ -112,18 +108,19 @@ export default {
       calculatorData: {}
     }
   },
-  mixins: [
-    initializeFlatAndItems
-  ],
-  created () {
-    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
+  mixins: [initializeFlatAndItems],
+  created() {
+    this.flatmate = this.flat.flatmates.find((flatmate) => flatmate.id === this.flatmateId)
   },
   methods: {
-    back () {
-      this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId: this.flatmateId } })
+    back() {
+      this.$router.push({
+        name: 'Flatmate Edit',
+        params: { flatId: this.flatId, flatmateId: this.flatmateId }
+      })
     },
-    async downloadBreakdown () {
-      const data = this.calculatorData.sharePerItem.map(itemShare => {
+    async downloadBreakdown() {
+      const data = this.calculatorData.sharePerItem.map((itemShare) => {
         const item = itemShare.item
         const initialShare = Math.floor((item.price / item.idsOfFlatmatesThatShareThis.length) * 100) / 100
         const dataObject = {}
@@ -141,11 +138,19 @@ export default {
         this.isSnackbarVisible = true
       })
     },
-    removeFlatmate () {
+    removeFlatmate() {
       if (confirm(`Last confirmation before removing ${this.flatmate.name} from "${this.flat.name}"!`)) {
-        this.$store.dispatch('removeFlatmate', { flatmate: this.flatmate, moveOutDate: this.moveOutDate }).then(() => {
-          this.$router.push({ name: 'Flat', params: { flatId: this.flatId, flatmateRemoved: this.flatmate } })
-        })
+        this.$store
+          .dispatch('removeFlatmate', {
+            flatmate: this.flatmate,
+            moveOutDate: this.moveOutDate
+          })
+          .then(() => {
+            this.$router.push({
+              name: 'Flat',
+              params: { flatId: this.flatId, flatmateRemoved: this.flatmate }
+            })
+          })
       }
     }
   }

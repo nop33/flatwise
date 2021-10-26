@@ -48,11 +48,7 @@
                 readonly
               ></v-text-field>
             </template>
-            <v-date-picker
-              :value="value.startDate"
-              @input="startDateChanged($event)"
-              scrollable
-            ></v-date-picker>
+            <v-date-picker :value="value.startDate" @input="startDateChanged($event)" scrollable></v-date-picker>
           </v-dialog>
         </v-col>
         <v-col md="6" v-if="isInEditMode">
@@ -71,11 +67,7 @@
                 readonly
               ></v-text-field>
             </template>
-            <v-date-picker
-              :value="value.endDate"
-              @input="endDateChanged($event)"
-              scrollable
-            ></v-date-picker>
+            <v-date-picker :value="value.endDate" @input="endDateChanged($event)" scrollable></v-date-picker>
           </v-dialog>
         </v-col>
       </v-row>
@@ -92,71 +84,59 @@ export default {
   components: {
     Avatar
   },
-  props: [
-    'value',
-    'edit'
-  ],
-  data () {
+  props: ['value', 'edit'],
+  data() {
     return {
       flatmate: {},
       isFormValid: false,
-      nameRules: [
-        v => !!v || 'Name is required'
-      ],
-      dateRules: [
-        v => !!v || 'Date is required'
-      ],
-      emailRules: [
-        v => !!v || 'Email is required',
-        v => /.+@.+/.test(v) || 'Email must be valid'
-      ]
+      nameRules: [(v) => !!v || 'Name is required'],
+      dateRules: [(v) => !!v || 'Date is required'],
+      emailRules: [(v) => !!v || 'Email is required', (v) => /.+@.+/.test(v) || 'Email must be valid']
     }
   },
   computed: {
-    ...mapState([
-      'user'
-    ]),
-    isInEditMode () {
+    ...mapState(['user']),
+    isInEditMode() {
       return this.edit !== undefined
     },
-    disabledEmailHint () {
-      return this.isInEditMode ? 'I\'m still working on this feature, sry!' : ''
+    disabledEmailHint() {
+      return this.isInEditMode ? "I'm still working on this feature, sry!" : ''
     },
-    endDateHint () {
+    endDateHint() {
       return this.value.endDate ? '' : 'Remove flatmate to add move out date'
     },
-    isNameDisabled () {
+    isNameDisabled() {
       return this.value.userRef && this.user.id !== this.value.userRef
     }
   },
   watch: {
-    value (newValue) {
+    value(newValue) {
       if (Object.keys(this.flatmate).length === 0 && this.flatmate.constructor === Object) {
         this.flatmate = newValue
       }
     },
-    isFormValid (newValue) {
+    isFormValid(newValue) {
       this.$store.commit('SET_PAGE_FORM_VALIDITY', newValue)
     }
   },
-  created () {
+  created() {
     this.flatmate = { ...this.value }
   },
   methods: {
-    nameChanged ($event) {
+    nameChanged($event) {
       this.flatmate.name = $event
       this.$emit('input', this.flatmate)
     },
-    emailChanged ($event) {
+    emailChanged($event) {
       this.flatmate.email = $event.trim()
       this.$emit('input', this.flatmate)
     },
-    startDateChanged ($event) {
+    startDateChanged($event) {
       this.$refs.startDateDialog.save($event)
       this.flatmate.startDate = $event
       this.$emit('input', this.flatmate)
     },
-    endDateChanged ($event) {
+    endDateChanged($event) {
       this.$refs.endDateDialog.save($event)
       this.flatmate.endDate = $event
       this.$emit('input', this.flatmate)
