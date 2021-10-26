@@ -22,13 +22,11 @@ export default {
   components: {
     Avatar
   },
-  props: [
-    'item'
-  ],
+  props: ['item'],
   computed: {
-    flatmatesThatShareThis () {
+    flatmatesThatShareThis() {
       const currentFlatmates = this.$store.getters.currentFlatmates
-      return currentFlatmates.filter(flatmate => this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
+      return currentFlatmates.filter((flatmate) => this.item.idsOfFlatmatesThatShareThis.includes(flatmate.id))
     }
   }
 }

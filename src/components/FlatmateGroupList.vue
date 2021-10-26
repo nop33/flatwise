@@ -2,10 +2,7 @@
   <div>
     <v-sheet color="grey lighten-3 py-1 px-5 text-caption">Flatmates</v-sheet>
     <v-list>
-      <v-list-item-group
-        v-model="selectedFlatmateIndex"
-        color="primary"
-      >
+      <v-list-item-group v-model="selectedFlatmateIndex" color="primary">
         <v-list-item>
           <v-list-item-avatar>
             <v-icon class="primary--text">mdi-account-plus-outline</v-icon>
@@ -27,22 +24,25 @@ export default {
   components: {
     FlatmateListItem
   },
-  props: [
-    'flatmates',
-    'flatId'
-  ],
+  props: ['flatmates', 'flatId'],
   data: () => {
     return {
       selectedFlatmateIndex: null
     }
   },
   watch: {
-    selectedFlatmateIndex (flatmateIndex) {
+    selectedFlatmateIndex(flatmateIndex) {
       if (flatmateIndex === 0) {
-        this.$router.push({ name: 'Flatmate Add', params: { flatId: this.flatId } })
+        this.$router.push({
+          name: 'Flatmate Add',
+          params: { flatId: this.flatId }
+        })
       } else {
         const flatmateId = this.flatmates[flatmateIndex - 1].id
-        this.$router.push({ name: 'Flatmate Edit', params: { flatId: this.flatId, flatmateId } })
+        this.$router.push({
+          name: 'Flatmate Edit',
+          params: { flatId: this.flatId, flatmateId }
+        })
       }
     }
   }

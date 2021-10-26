@@ -64,13 +64,11 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'user'
-    ]),
-    flatmateFirstName () {
+    ...mapState(['user']),
+    flatmateFirstName() {
       return getFirstName(this.flatmate.name)
     },
-    invitationText () {
+    invitationText() {
       const subject = encodeURI('Join me on Flatwise!')
       const body = encodeURI(`Hey ${this.flatmateFirstName}!
 
@@ -88,21 +86,21 @@ ${getFirstName(this.user.name)}`)
       return `${this.flatmate.name} did not yet check out the app, but you can <a href="${href}">send an invite</a>!`
     }
   },
-  created () {
+  created() {
     this.flat = this.$store.getters.currentFlat
-    this.flatmate = this.flat.flatmates.find(flatmate => flatmate.id === this.flatmateId)
+    this.flatmate = this.flat.flatmates.find((flatmate) => flatmate.id === this.flatmateId)
     if (!this.flatmate.userRef) {
       this.snackbar.enabled = true
     }
   },
   methods: {
-    goToFlatEdit () {
+    goToFlatEdit() {
       this.$router.push({ name: 'Flat Edit', params: { flatId: this.flatId } })
     },
-    back () {
+    back() {
       this.backButtonCallback ? this.backButtonCallback() : this.goToFlatEdit()
     },
-    save () {
+    save() {
       this.$store.dispatch('updateFlatmate', this.flatmate).then(this.goToFlatEdit)
     }
   }

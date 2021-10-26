@@ -1,6 +1,6 @@
 <template>
   <v-avatar :size="size" :left="left" :class="classes" :style="`background-color: ${color}`">
-    <img v-if="user.photo" :src="user.photo" alt="Avatar"/>
+    <img v-if="user.photo" :src="user.photo" alt="Avatar" />
     <span v-else-if="user.name" class="white--text">{{ initials }}</span>
   </v-avatar>
 </template>
@@ -9,22 +9,18 @@
 import { stringToHslColor } from '@/utils/utils.js'
 
 export default {
-  props: [
-    'user',
-    'size',
-    'left',
-    'border'
-  ],
+  props: ['user', 'size', 'left', 'border'],
   computed: {
-    color () {
+    color() {
       return stringToHslColor(this.user.name)
     },
-    initials () {
+    initials() {
       const words = this.user.name.split(' ')
-      const initials = words.length > 1 ? `${words[0].charAt(0)}${words[1].charAt(0)}` : `${words[0].charAt(0)}${words[0].charAt(1)}`
+      const initials =
+        words.length > 1 ? `${words[0].charAt(0)}${words[1].charAt(0)}` : `${words[0].charAt(0)}${words[0].charAt(1)}`
       return initials.toUpperCase()
     },
-    classes () {
+    classes() {
       return {
         'has-border': this.border !== undefined
       }

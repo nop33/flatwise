@@ -15,9 +15,7 @@ export default {
     Loader
   },
   computed: {
-    ...mapState([
-      'loading'
-    ])
+    ...mapState(['loading'])
   }
 }
 </script>

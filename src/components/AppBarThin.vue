@@ -15,27 +15,20 @@
 import { mapState } from 'vuex'
 
 export default {
-  props: [
-    'backButtonCallback',
-    'title',
-    'actionButtonCallback',
-    'actionButtonText'
-  ],
+  props: ['backButtonCallback', 'title', 'actionButtonCallback', 'actionButtonText'],
   computed: {
-    ...mapState([
-      'isPageFormValid'
-    ])
+    ...mapState(['isPageFormValid'])
   },
   methods: {
-    goBack () {
+    goBack() {
       this.backButtonCallback()
       this.invalidatePageForm()
     },
-    performAction () {
+    performAction() {
       this.actionButtonCallback()
       this.invalidatePageForm()
     },
-    invalidatePageForm () {
+    invalidatePageForm() {
       this.$store.commit('SET_PAGE_FORM_VALIDITY', false)
     }
   }

@@ -27,28 +27,26 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'flats'
-    ]),
-    ...mapGetters([
-      'currentFlatmatesOfFlat'
-    ])
+    ...mapState(['flats']),
+    ...mapGetters(['currentFlatmatesOfFlat'])
   },
   watch: {
-    selectedFlatIndex (flatIndex) {
+    selectedFlatIndex(flatIndex) {
       const selectedFlat = this.flats[flatIndex]
       this.$store.commit('SET_CURRENT_FLAT_ID', selectedFlat.id)
       this.$router.push({ name: 'Flat', params: { flatId: selectedFlat.id } })
     },
-    flats (newValue) {
+    flats(newValue) {
       if (newValue.length === 1) {
         this.selectedFlatIndex = 0
       }
     }
   },
   methods: {
-    formatFlatmateNames (flat) {
-      return this.currentFlatmatesOfFlat(flat.id).map(flatmate => flatmate.name).join(', ')
+    formatFlatmateNames(flat) {
+      return this.currentFlatmatesOfFlat(flat.id)
+        .map((flatmate) => flatmate.name)
+        .join(', ')
     }
   }
 }

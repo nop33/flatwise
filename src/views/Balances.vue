@@ -62,68 +62,66 @@ export default {
     BalancesList,
     AppBarThin
   },
-  props: [
-    'flatId'
-  ],
+  props: ['flatId'],
   data: () => {
     return {
       balanceOnDate: new Date().toJSON().slice(0, 10),
-      dateRules: [
-        v => !!v || 'Date is required'
-      ],
+      dateRules: [(v) => !!v || 'Date is required'],
       flat: {},
       balances: [],
       totalValue: 0
     }
   },
-  mixins: [
-    initializeFlatAndItems
-  ],
+  mixins: [initializeFlatAndItems],
   computed: {
-    earliestFlatmateMoveInDate () {
+    earliestFlatmateMoveInDate() {
       return this.flat.flatmates.reduce((lowestDate, flatmate) => {
         return lowestDate < flatmate.startDate ? lowestDate : flatmate.startDate
       }, 0)
     },
-    flatmatesThatHaventMovedOutYet () {
-      return this.flat.flatmates.filter(flatmate => !flatmate.endDate || flatmate.endDate >= this.balanceOnDate)
+    flatmatesThatHaventMovedOutYet() {
+      return this.flat.flatmates.filter((flatmate) => !flatmate.endDate || flatmate.endDate >= this.balanceOnDate)
     }
   },
   watch: {
-    balanceOnDate () {
+    balanceOnDate() {
       this.calculateBalances()
     },
-    'flat.items' () {
+    'flat.items'() {
       this.calculateBalances()
     }
   },
   methods: {
-    back () {
+    back() {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
     },
-    calculateBalances () {
+    calculateBalances() {
       const balances = []
       this.totalValue = 0
       if (this.flat && this.flat.items) {
         const flatmatesBalances = {}
-        this.flatmatesThatHaventMovedOutYet.map(flatmate => flatmate.id).forEach(id => {
-          flatmatesBalances[id] = 0
-        })
-
-        this.flat.items.filter(item => item.date <= this.balanceOnDate).forEach(item => {
-          const valueOnDate = calculateItemValueOnDate(item, this.balanceOnDate)
-          const flatmatesMovedInByChosenDate = item.idsOfFlatmatesThatShareThis.filter(id => {
-            const flatmate = this.flatmatesThatHaventMovedOutYet.find(flatmate => flatmate.id === id)
-            return !!flatmate && flatmate.startDate <= this.balanceOnDate
+        this.flatmatesThatHaventMovedOutYet
+          .map((flatmate) => flatmate.id)
+          .forEach((id) => {
+            flatmatesBalances[id] = 0
           })
 
-          flatmatesMovedInByChosenDate.forEach(flatmateId => {
-            flatmatesBalances[flatmateId] += valueOnDate / flatmatesMovedInByChosenDate.length
-          })
-          this.totalValue += valueOnDate
-        })
+        this.flat.items
+          .filter((item) => item.date <= this.balanceOnDate)
+          .forEach((item) => {
+            const valueOnDate = calculateItemValueOnDate(item, this.balanceOnDate)
+            const flatmatesMovedInByChosenDate = item.idsOfFlatmatesThatShareThis.filter((id) => {
+              const flatmate = this.flatmatesThatHaventMovedOutYet.find((flatmate) => flatmate.id === id)
+              return !!flatmate && flatmate.startDate <= this.balanceOnDate
+            })
 
-        this.flatmatesThatHaventMovedOutYet.forEach(flatmate => {
+            flatmatesMovedInByChosenDate.forEach((flatmateId) => {
+              flatmatesBalances[flatmateId] += valueOnDate / flatmatesMovedInByChosenDate.length
+            })
+            this.totalValue += valueOnDate
+          })
+
+        this.flatmatesThatHaventMovedOutYet.forEach((flatmate) => {
           balances.push({
             flatmate,
             share: flatmatesBalances[flatmate.id]

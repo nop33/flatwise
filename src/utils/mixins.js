@@ -1,5 +1,5 @@
 const initializeFlatAndItems = {
-  created () {
+  created() {
     this.flat = this.$store.getters.currentFlat
     if (!this.flat.items) {
       this.$store.dispatch('fetchCurrentFlatItems')
@@ -7,6 +7,4 @@ const initializeFlatAndItems = {
   }
 }
 
-export {
-  initializeFlatAndItems
-}
+export { initializeFlatAndItems }

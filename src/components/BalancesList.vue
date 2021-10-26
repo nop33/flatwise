@@ -26,9 +26,7 @@ export default {
   components: {
     Avatar
   },
-  props: [
-    'balances'
-  ]
+  props: ['balances']
 }
 </script>
 

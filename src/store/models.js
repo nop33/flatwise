@@ -1,4 +1,12 @@
-export function createFlatObject (id, name, depreciationRate, lowestPriceRate, emailsOfUninitializedUsers, flatmates, items) {
+export function createFlatObject(
+  id,
+  name,
+  depreciationRate,
+  lowestPriceRate,
+  emailsOfUninitializedUsers,
+  flatmates,
+  items
+) {
   return {
     id,
     name,
@@ -10,7 +18,7 @@ export function createFlatObject (id, name, depreciationRate, lowestPriceRate, e
   }
 }
 
-export function createUserObject (id, name, email, photo) {
+export function createUserObject(id, name, email, photo) {
   return {
     id,
     name,

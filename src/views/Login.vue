@@ -19,14 +19,11 @@ import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 
 export default {
-  mounted () {
+  mounted() {
     const ui = new firebaseui.auth.AuthUI(firebase.auth())
     const uiConfig = {
       signInSuccessUrl: '/register',
-      signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
-      ]
+      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.EmailAuthProvider.PROVIDER_ID]
     }
     ui.start('#firebaseui-auth-container', uiConfig)
   }

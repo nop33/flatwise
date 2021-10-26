@@ -7,15 +7,15 @@
       actionButtonText="Save"
     />
     <v-main>
-    <FlatForm v-model="flat" edit />
-    <FlatmateGroupList :flatmates="currentFlatmates" :flatId="flatId" />
-    <v-divider />
-    <div class="d-flex justify-center ma-5">
-      <v-btn color="warning" text @click="deleteFlat">
-        <v-icon left>mdi-trash-can-outline</v-icon>
-        Delete flat
-      </v-btn>
-    </div>
+      <FlatForm v-model="flat" edit />
+      <FlatmateGroupList :flatmates="currentFlatmates" :flatId="flatId" />
+      <v-divider />
+      <div class="d-flex justify-center ma-5">
+        <v-btn color="warning" text @click="deleteFlat">
+          <v-icon left>mdi-trash-can-outline</v-icon>
+          Delete flat
+        </v-btn>
+      </div>
     </v-main>
   </div>
 </template>
@@ -33,30 +33,26 @@ export default {
     FlatmateGroupList,
     AppBarThin
   },
-  props: [
-    'flatId'
-  ],
+  props: ['flatId'],
   data: () => {
     return {
       flat: {}
     }
   },
   computed: {
-    ...mapGetters([
-      'currentFlatmates'
-    ])
+    ...mapGetters(['currentFlatmates'])
   },
-  created () {
+  created() {
     this.flat = this.$store.getters.currentFlat
   },
   methods: {
-    goToFlat () {
+    goToFlat() {
       this.$router.push({ name: 'Flat', params: { flatId: this.flatId } })
     },
-    save () {
+    save() {
       this.$store.dispatch('updateFlat', this.flat).then(this.goToFlat)
     },
-    deleteFlat () {
+    deleteFlat() {
       // TODO
       alert('This feature is coming soon, sry!')
     }
