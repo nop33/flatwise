@@ -23,7 +23,8 @@ export default {
     const ui = new firebaseui.auth.AuthUI(firebase.auth())
     const uiConfig = {
       signInSuccessUrl: '/register',
-      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.EmailAuthProvider.PROVIDER_ID]
+      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID, firebase.auth.EmailAuthProvider.PROVIDER_ID],
+      signInFlow: 'popup'
     }
     ui.start('#firebaseui-auth-container', uiConfig)
   }
