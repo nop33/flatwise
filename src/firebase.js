@@ -1,7 +1,7 @@
-import firebase from 'firebase/app'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore'
 
 require('dotenv').config()
-require('firebase/firestore')
 
 const firebaseApp = firebase.initializeApp({
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,

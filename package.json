@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "firebase": "^8.6.7",
-    "firebaseui": "^4.6.1",
+    "firebase": "^9",
+    "firebaseui": "^6",
     "firestore-export-import": "^0.8.0",
     "jspdf": "^2.1.1",
     "jspdf-autotable": "^3.5.13",

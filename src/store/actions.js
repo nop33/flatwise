@@ -1,4 +1,4 @@
-import firebase from 'firebase/app'
+import firebase from 'firebase/compat/app'
 import firestore from '../firebase.js'
 
 import { createFlatObject } from './models.js'
@@ -49,6 +49,7 @@ export default {
 
     // Initialize user in flats (s)he have been added to but not initialized yet
     let flatQueryResponse = await db.flats.where('emailsOfUninitializedUsers', 'array-contains', state.user.email).get()
+
     for (let index = 0; index < flatQueryResponse.docs.length; index++) {
       const flat = flatQueryResponse.docs[index]
       // const flatData =   flat.data()
